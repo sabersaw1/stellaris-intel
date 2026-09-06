@@ -85,7 +85,7 @@ function PairIntel() {
           detail="This pair could not be observed. It may no longer be listed by the data source, or the source could not be reached."
         />
         <div className="mt-4">
-          <Link to="/discover" className="num rounded-sm border border-cyan/50 px-3 py-1.5 text-[10px] tracking-[0.16em] text-cyan hover:bg-cyan/10">
+          <Link to="/discover" search={{ q: "", focus: false }} className="num rounded-sm border border-cyan/50 px-3 py-1.5 text-[10px] tracking-[0.16em] text-cyan hover:bg-cyan/10">
             RETURN TO DISCOVERY
           </Link>
         </div>

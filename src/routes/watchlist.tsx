@@ -45,7 +45,7 @@ function Watchlist() {
             title="NO WATCHLIST ITEMS"
             hint="Add a token or pair to begin monitoring. Use the star control in any observation table, or open a pair and add it from its intelligence page."
             action={
-              <Link to="/discover" className="num rounded-sm border border-cyan/50 px-3 py-1.5 text-[10px] tracking-[0.16em] text-cyan hover:bg-cyan/10">
+              <Link to="/discover" search={{ q: "", focus: false }} className="num rounded-sm border border-cyan/50 px-3 py-1.5 text-[10px] tracking-[0.16em] text-cyan hover:bg-cyan/10">
                 OPEN DISCOVERY
               </Link>
             }
