@@ -8,6 +8,8 @@ import { clockOf, secondsSince } from "@/lib/format";
 import { useMarketIntelligence } from "@/hooks/useMarket";
 
 export const Route = createFileRoute("/alerts")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Alerts — DEX Market Intelligence" },

@@ -9,6 +9,8 @@ import { INCIDENT_VERSION, clearIncidents, getIncidents, resolveIncident, subscr
 import { clockOf } from "@/lib/format";
 
 export const Route = createFileRoute("/incidents")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Incidents — Market Intelligence OS" },

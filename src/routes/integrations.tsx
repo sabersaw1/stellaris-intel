@@ -24,6 +24,8 @@ import { clockOf } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/integrations")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Integrations Command Center — Market Intelligence OS" },

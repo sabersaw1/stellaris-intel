@@ -39,6 +39,8 @@ import { audit } from "@/lib/incidents";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/workspaces")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Workspaces & Preferences — Market Intelligence OS" },

@@ -15,6 +15,8 @@ import {
 import { clockOf } from "@/lib/format";
 
 export const Route = createFileRoute("/contradictions")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Contradiction Engine — Market Intelligence OS" },

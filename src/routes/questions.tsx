@@ -11,6 +11,8 @@ import { clockOf } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/questions")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Open Questions — Market Intelligence OS" },

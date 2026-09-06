@@ -13,6 +13,8 @@ import { cn } from "@/lib/utils";
 type Search = { key?: string | undefined };
 
 export const Route = createFileRoute("/room")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   validateSearch: (search: Record<string, unknown>): Search => ({
     key: typeof search["key"] === "string" ? search["key"] : undefined,
   }),

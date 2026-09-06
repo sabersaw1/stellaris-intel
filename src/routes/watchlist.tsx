@@ -9,6 +9,8 @@ import { getWatchlist, setWatchGroup, subscribeStore, toggleWatch, type WatchIte
 import { secondsSince, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/watchlist")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Watchlist — DEX Market Intelligence" },

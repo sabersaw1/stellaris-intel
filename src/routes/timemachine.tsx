@@ -13,6 +13,8 @@ import { clockOf, price, usd, count } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/timemachine")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Historical Time Machine — Market Intelligence OS" },
