@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommandRouteImport } from './routes/command'
+import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as MarketsRouteImport } from './routes/markets'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +24,49 @@ const CommandRoute = CommandRouteImport.update({
   path: '/command',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiscoverRoute = DiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketsRoute = MarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/command': typeof CommandRoute
+  '/discover': typeof DiscoverRoute
+  '/markets': typeof MarketsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/command': typeof CommandRoute
+  '/discover': typeof DiscoverRoute
+  '/markets': typeof MarketsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/command': typeof CommandRoute
+  '/discover': typeof DiscoverRoute
+  '/markets': typeof MarketsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/command'
+  fullPaths: '/' | '/command' | '/discover' | '/markets'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/command'
-  id: '__root__' | '/' | '/command'
+  to: '/' | '/command' | '/discover' | '/markets'
+  id: '__root__' | '/' | '/command' | '/discover' | '/markets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CommandRoute: typeof CommandRoute
+  DiscoverRoute: typeof DiscoverRoute
+  MarketsRoute: typeof MarketsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommandRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/discover': {
+      id: '/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/markets': {
+      id: '/markets'
+      path: '/markets'
+      fullPath: '/markets'
+      preLoaderRoute: typeof MarketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CommandRoute: CommandRoute,
+  DiscoverRoute: DiscoverRoute,
+  MarketsRoute: MarketsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
