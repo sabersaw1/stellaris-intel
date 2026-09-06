@@ -10,7 +10,7 @@ import { AGENT_SUITE_VERSION } from "@/lib/dex-types";
 import { clockOf } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-type Search = { key?: string };
+type Search = { key?: string | undefined };
 
 export const Route = createFileRoute("/room")({
   validateSearch: (search: Record<string, unknown>): Search => ({
