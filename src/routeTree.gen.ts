@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AnomaliesRouteImport } from './routes/anomalies'
+import { Route as AttentionRouteImport } from './routes/attention'
 import { Route as CommandRouteImport } from './routes/command'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as MarketsRouteImport } from './routes/markets'
@@ -40,6 +41,11 @@ const AlertsRoute = AlertsRouteImport.update({
 const AnomaliesRoute = AnomaliesRouteImport.update({
   id: '/anomalies',
   path: '/anomalies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AttentionRoute = AttentionRouteImport.update({
+  id: '/attention',
+  path: '/attention',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommandRoute = CommandRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AgentsRoute
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
+  '/attention': typeof AttentionRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/agents': typeof AgentsRoute
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
+  '/attention': typeof AttentionRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/agents': typeof AgentsRoute
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
+  '/attention': typeof AttentionRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
@@ -133,6 +142,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/alerts'
     | '/anomalies'
+    | '/attention'
     | '/command'
     | '/discover'
     | '/markets'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/alerts'
     | '/anomalies'
+    | '/attention'
     | '/command'
     | '/discover'
     | '/markets'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/agents'
     | '/alerts'
     | '/anomalies'
+    | '/attention'
     | '/command'
     | '/discover'
     | '/markets'
@@ -176,6 +188,7 @@ export interface RootRouteChildren {
   AgentsRoute: typeof AgentsRoute
   AlertsRoute: typeof AlertsRoute
   AnomaliesRoute: typeof AnomaliesRoute
+  AttentionRoute: typeof AttentionRoute
   CommandRoute: typeof CommandRoute
   DiscoverRoute: typeof DiscoverRoute
   MarketsRoute: typeof MarketsRoute
@@ -214,6 +227,13 @@ declare module '@tanstack/react-router' {
       path: '/anomalies'
       fullPath: '/anomalies'
       preLoaderRoute: typeof AnomaliesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/attention': {
+      id: '/attention'
+      path: '/attention'
+      fullPath: '/attention'
+      preLoaderRoute: typeof AttentionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/command': {
@@ -280,6 +300,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgentsRoute: AgentsRoute,
   AlertsRoute: AlertsRoute,
   AnomaliesRoute: AnomaliesRoute,
+  AttentionRoute: AttentionRoute,
   CommandRoute: CommandRoute,
   DiscoverRoute: DiscoverRoute,
   MarketsRoute: MarketsRoute,
