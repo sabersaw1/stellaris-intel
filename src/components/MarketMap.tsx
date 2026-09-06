@@ -22,7 +22,7 @@ export function MarketMap({ rows }: { rows: Assessment[] }) {
   );
 
   const nodes = useMemo(() => {
-    const map = new Map<string, { label: string; liquidity: number; volume: number; pairs: number; row?: Assessment }>();
+    const map = new Map<string, { label: string; liquidity: number; volume: number; pairs: number; row?: Assessment | undefined }>();
     for (const r of scoped) {
       const key = level === "MARKET" ? r.pair.chainId : level === "CHAIN" ? r.pair.dexId : r.pair.key;
       const e = map.get(key) ?? {

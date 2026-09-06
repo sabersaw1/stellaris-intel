@@ -187,10 +187,10 @@ export const trendingMetas = createServerFn({ method: "GET" }).handler(
 
 export const metaDetail = createServerFn({ method: "GET" })
   .inputValidator((i: unknown) => z.object({ slug: z.string().min(1) }).parse(i))
-  .handler(async ({ data }): Promise<Envelope<Record<string, unknown> | null>> => {
+  .handler(async ({ data }): Promise<Envelope<string | null>> => {
     const { dexFetch } = await import("./dexscreener.server");
-    const r = await dexFetch<Record<string, unknown>>(`/metas/meta/v1/${encodeURIComponent(data.slug)}`, { ttlMs: 120_000 });
-    return wrap(r, r.data ?? null);
+    const r = await dexFetch<unknown>(`/metas/meta/v1/${encodeURIComponent(data.slug)}`, { ttlMs: 120_000 });
+    return wrap(r, r.data == null ? null : JSON.stringify(r.data));
   });
 
 /* ---------------------------- system health --------------------------- */

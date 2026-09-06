@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Star } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import type { Assessment } from "@/lib/dex-types";
+import type { Severity, Assessment } from "@/lib/dex-types";
 import { ageFrom, count, price, usd } from "@/lib/format";
 import { ConfidenceBadge, Delta, EmptyState, RiskBadge, SeverityBadge } from "@/components/kit";
 import { isWatched, toggleWatch } from "@/lib/local-store";
@@ -149,7 +149,7 @@ export function PairTable({ rows, dense = false }: { rows: Assessment[]; dense?:
                   </td>
                   <td className="px-2 py-2">
                     {a.anomalies.length ? (
-                      <SeverityBadge severity={a.anomalies.reduce((w, x) => (rank(x.severity) > rank(w) ? x.severity : w), "NOTABLE" as const)} />
+                      <SeverityBadge severity={a.anomalies.reduce<Severity>((w, x) => (rank(x.severity) > rank(w) ? x.severity : w), "NOTABLE")} />
                     ) : (
                       <span className="num text-unknown">0</span>
                     )}

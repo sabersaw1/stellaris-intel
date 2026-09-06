@@ -84,7 +84,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
       }
       if (e.key === "/") {
         e.preventDefault();
-        void navigate({ to: "/discover", search: { focus: true } });
+        void navigate({ to: "/discover", search: { q: "", focus: true } });
         return;
       }
       if (e.key.toLowerCase() === "g") {
