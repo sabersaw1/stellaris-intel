@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AgentsRouteImport } from './routes/agents'
+import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AnomaliesRouteImport } from './routes/anomalies'
 import { Route as CommandRouteImport } from './routes/command'
 import { Route as DiscoverRouteImport } from './routes/discover'
@@ -20,6 +22,16 @@ import { Route as WatchlistRouteImport } from './routes/watchlist'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentsRoute = AgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AnomaliesRoute = AnomaliesRouteImport.update({
@@ -55,6 +67,8 @@ const WatchlistRoute = WatchlistRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agents': typeof AgentsRoute
+  '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
@@ -64,6 +78,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agents': typeof AgentsRoute
+  '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
@@ -74,6 +90,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agents': typeof AgentsRoute
+  '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
@@ -85,6 +103,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/agents'
+    | '/alerts'
     | '/anomalies'
     | '/command'
     | '/discover'
@@ -94,6 +114,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/agents'
+    | '/alerts'
     | '/anomalies'
     | '/command'
     | '/discover'
@@ -103,6 +125,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/agents'
+    | '/alerts'
     | '/anomalies'
     | '/command'
     | '/discover'
@@ -113,6 +137,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgentsRoute: typeof AgentsRoute
+  AlertsRoute: typeof AlertsRoute
   AnomaliesRoute: typeof AnomaliesRoute
   CommandRoute: typeof CommandRoute
   DiscoverRoute: typeof DiscoverRoute
@@ -128,6 +154,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agents': {
+      id: '/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AgentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/anomalies': {
@@ -177,6 +217,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgentsRoute: AgentsRoute,
+  AlertsRoute: AlertsRoute,
   AnomaliesRoute: AnomaliesRoute,
   CommandRoute: CommandRoute,
   DiscoverRoute: DiscoverRoute,
