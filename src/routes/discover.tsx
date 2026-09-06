@@ -11,8 +11,8 @@ import { searchQuery, useMarketIntelligence } from "@/hooks/useMarket";
 
 export const Route = createFileRoute("/discover")({
   validateSearch: (s: Record<string, unknown>) => ({
-    q: typeof s.q === "string" ? s.q : "",
-    focus: s.focus === true || s.focus === "true",
+    q: typeof s["q"] === "string" ? (s["q"] as string) : "",
+    focus: s["focus"] === true || s["focus"] === "true",
   }),
   head: () => ({
     meta: [

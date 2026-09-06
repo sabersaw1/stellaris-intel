@@ -208,10 +208,10 @@ export function SourceLine({
   stale,
 }: {
   observedAt: number | null;
-  calculatedAt?: number | null;
-  engineVersion?: string;
-  cached?: boolean;
-  stale?: boolean;
+  calculatedAt?: number | null | undefined;
+  engineVersion?: string | undefined;
+  cached?: boolean | undefined;
+  stale?: boolean | undefined;
 }) {
   return (
     <p className="num flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] tracking-[0.1em] text-muted-foreground">

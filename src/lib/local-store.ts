@@ -38,9 +38,11 @@ function write(key: string, value: unknown) {
 }
 
 const listeners = new Set<() => void>();
-export function subscribeStore(fn: () => void) {
+export function subscribeStore(fn: () => void): () => void {
   listeners.add(fn);
-  return () => listeners.delete(fn);
+  return () => {
+    listeners.delete(fn);
+  };
 }
 
 /* ------------------------------ history ------------------------------- */
