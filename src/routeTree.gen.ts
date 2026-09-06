@@ -20,6 +20,7 @@ import { Route as RiskRouteImport } from './routes/risk'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,6 +77,11 @@ const WatchlistRoute = WatchlistRouteImport.update({
   path: '/watchlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PairChainIdPairIdRoute = PairChainIdPairIdRouteImport.update({
+  id: '/pair/$chainId/$pairId',
+  path: '/pair/$chainId/$pairId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
+  '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
+  '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
+  '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/trends'
     | '/watchlist'
+    | '/pair/$chainId/$pairId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/trends'
     | '/watchlist'
+    | '/pair/$chainId/$pairId'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/trends'
     | '/watchlist'
+    | '/pair/$chainId/$pairId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,6 +183,7 @@ export interface RootRouteChildren {
   SystemRoute: typeof SystemRoute
   TrendsRoute: typeof TrendsRoute
   WatchlistRoute: typeof WatchlistRoute
+  PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WatchlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pair/$chainId/$pairId': {
+      id: '/pair/$chainId/$pairId'
+      path: '/pair/$chainId/$pairId'
+      fullPath: '/pair/$chainId/$pairId'
+      preLoaderRoute: typeof PairChainIdPairIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -267,6 +287,7 @@ const rootRouteChildren: RootRouteChildren = {
   SystemRoute: SystemRoute,
   TrendsRoute: TrendsRoute,
   WatchlistRoute: WatchlistRoute,
+  PairChainIdPairIdRoute: PairChainIdPairIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
