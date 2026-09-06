@@ -39,6 +39,8 @@ import { Route as WatchlistRouteImport } from './routes/watchlist'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
 import { Route as WorkspacesRouteImport } from './routes/workspaces'
 import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
+import { Route as ApiPublicWebhooksN8nRouteImport } from './routes/api/public/webhooks/n8n'
+import { Route as ApiPublicWebhooksTradingviewRouteImport } from './routes/api/public/webhooks/tradingview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -190,6 +192,17 @@ const PairChainIdPairIdRoute = PairChainIdPairIdRouteImport.update({
   path: '/pair/$chainId/$pairId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWebhooksN8nRoute = ApiPublicWebhooksN8nRouteImport.update({
+  id: '/api/public/webhooks/n8n',
+  path: '/api/public/webhooks/n8n',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicWebhooksTradingviewRoute =
+  ApiPublicWebhooksTradingviewRouteImport.update({
+    id: '/api/public/webhooks/tradingview',
+    path: '/api/public/webhooks/tradingview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -222,6 +235,8 @@ export interface FileRoutesByFullPath {
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
+  '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -254,6 +269,8 @@ export interface FileRoutesByTo {
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
+  '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -287,6 +304,8 @@ export interface FileRoutesById {
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
+  '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -321,6 +340,8 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/webhooks/n8n'
+    | '/api/public/webhooks/tradingview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -353,6 +374,8 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/webhooks/n8n'
+    | '/api/public/webhooks/tradingview'
   id:
     | '__root__'
     | '/'
@@ -385,6 +408,8 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/webhooks/n8n'
+    | '/api/public/webhooks/tradingview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -418,6 +443,8 @@ export interface RootRouteChildren {
   WorkflowsRoute: typeof WorkflowsRoute
   WorkspacesRoute: typeof WorkspacesRoute
   PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
+  ApiPublicWebhooksN8nRoute: typeof ApiPublicWebhooksN8nRoute
+  ApiPublicWebhooksTradingviewRoute: typeof ApiPublicWebhooksTradingviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -632,6 +659,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PairChainIdPairIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/webhooks/n8n': {
+      id: '/api/public/webhooks/n8n'
+      path: '/api/public/webhooks/n8n'
+      fullPath: '/api/public/webhooks/n8n'
+      preLoaderRoute: typeof ApiPublicWebhooksN8nRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/tradingview': {
+      id: '/api/public/webhooks/tradingview'
+      path: '/api/public/webhooks/tradingview'
+      fullPath: '/api/public/webhooks/tradingview'
+      preLoaderRoute: typeof ApiPublicWebhooksTradingviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -666,6 +707,8 @@ const rootRouteChildren: RootRouteChildren = {
   WorkflowsRoute: WorkflowsRoute,
   WorkspacesRoute: WorkspacesRoute,
   PairChainIdPairIdRoute: PairChainIdPairIdRoute,
+  ApiPublicWebhooksN8nRoute: ApiPublicWebhooksN8nRoute,
+  ApiPublicWebhooksTradingviewRoute: ApiPublicWebhooksTradingviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
