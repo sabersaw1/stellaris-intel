@@ -10,13 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnomaliesRouteImport } from './routes/anomalies'
 import { Route as CommandRouteImport } from './routes/command'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as RiskRouteImport } from './routes/risk'
+import { Route as WatchlistRouteImport } from './routes/watchlist'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnomaliesRoute = AnomaliesRouteImport.update({
+  id: '/anomalies',
+  path: '/anomalies',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommandRoute = CommandRouteImport.update({
@@ -34,39 +42,83 @@ const MarketsRoute = MarketsRouteImport.update({
   path: '/markets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WatchlistRoute = WatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/anomalies': typeof AnomaliesRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/risk': typeof RiskRoute
+  '/watchlist': typeof WatchlistRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/anomalies': typeof AnomaliesRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/risk': typeof RiskRoute
+  '/watchlist': typeof WatchlistRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/anomalies': typeof AnomaliesRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/risk': typeof RiskRoute
+  '/watchlist': typeof WatchlistRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/command' | '/discover' | '/markets'
+  fullPaths:
+    | '/'
+    | '/anomalies'
+    | '/command'
+    | '/discover'
+    | '/markets'
+    | '/risk'
+    | '/watchlist'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/command' | '/discover' | '/markets'
-  id: '__root__' | '/' | '/command' | '/discover' | '/markets'
+  to:
+    | '/'
+    | '/anomalies'
+    | '/command'
+    | '/discover'
+    | '/markets'
+    | '/risk'
+    | '/watchlist'
+  id:
+    | '__root__'
+    | '/'
+    | '/anomalies'
+    | '/command'
+    | '/discover'
+    | '/markets'
+    | '/risk'
+    | '/watchlist'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnomaliesRoute: typeof AnomaliesRoute
   CommandRoute: typeof CommandRoute
   DiscoverRoute: typeof DiscoverRoute
   MarketsRoute: typeof MarketsRoute
+  RiskRoute: typeof RiskRoute
+  WatchlistRoute: typeof WatchlistRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -76,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anomalies': {
+      id: '/anomalies'
+      path: '/anomalies'
+      fullPath: '/anomalies'
+      preLoaderRoute: typeof AnomaliesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/command': {
@@ -99,14 +158,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/watchlist': {
+      id: '/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof WatchlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnomaliesRoute: AnomaliesRoute,
   CommandRoute: CommandRoute,
   DiscoverRoute: DiscoverRoute,
   MarketsRoute: MarketsRoute,
+  RiskRoute: RiskRoute,
+  WatchlistRoute: WatchlistRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
