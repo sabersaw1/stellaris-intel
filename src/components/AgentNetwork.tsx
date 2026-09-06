@@ -44,7 +44,7 @@ export function AgentNetwork({ agents, busy }: { agents: AgentObservation[]; bus
         const a = byId(n.id);
         const status = busy ? "PROCESSING" : (a?.status ?? "WAITING");
         return (
-          <div key={n.id} className="absolute w-28 -translate-x-1/2 -translate-y-1/2 text-center" style={{ left: `${n.x}%`, top: `${n.y}%` }}>
+          <div key={n.id} className="absolute w-24 -translate-x-1/2 -translate-y-1/2 text-center" style={{ left: `${n.x}%`, top: `${n.y}%` }}>
             <div
               className={cn(
                 "mx-auto flex h-9 w-9 items-center justify-center rounded-full border",
@@ -53,7 +53,7 @@ export function AgentNetwork({ agents, busy }: { agents: AgentObservation[]; bus
             >
               <span className="num text-[9px] text-foreground/80">{a?.agentNumber ?? "--"}</span>
             </div>
-            <p className="num mt-1 text-[9px] leading-tight tracking-[0.1em] text-foreground/80">{a?.name ?? "OFFLINE"}</p>
+            <p className="num mt-1 text-[8px] leading-tight tracking-[0.06em] text-foreground/80">{a?.name ?? "OFFLINE"}</p>
             <p
               className={cn(
                 "num text-[9px] tracking-[0.12em]",
