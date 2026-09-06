@@ -10,33 +10,180 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AgentsRouteImport } from './routes/agents'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AnomaliesRouteImport } from './routes/anomalies'
+import { Route as CommandRouteImport } from './routes/command'
+import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as RiskRouteImport } from './routes/risk'
+import { Route as SystemRouteImport } from './routes/system'
+import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AgentsRoute = AgentsRouteImport.update({
+  id: '/agents',
+  path: '/agents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnomaliesRoute = AnomaliesRouteImport.update({
+  id: '/anomalies',
+  path: '/anomalies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommandRoute = CommandRouteImport.update({
+  id: '/command',
+  path: '/command',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoverRoute = DiscoverRouteImport.update({
+  id: '/discover',
+  path: '/discover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketsRoute = MarketsRouteImport.update({
+  id: '/markets',
+  path: '/markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiskRoute = RiskRouteImport.update({
+  id: '/risk',
+  path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemRoute = SystemRouteImport.update({
+  id: '/system',
+  path: '/system',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrendsRoute = TrendsRouteImport.update({
+  id: '/trends',
+  path: '/trends',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WatchlistRoute = WatchlistRouteImport.update({
+  id: '/watchlist',
+  path: '/watchlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PairChainIdPairIdRoute = PairChainIdPairIdRouteImport.update({
+  id: '/pair/$chainId/$pairId',
+  path: '/pair/$chainId/$pairId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agents': typeof AgentsRoute
+  '/alerts': typeof AlertsRoute
+  '/anomalies': typeof AnomaliesRoute
+  '/command': typeof CommandRoute
+  '/discover': typeof DiscoverRoute
+  '/markets': typeof MarketsRoute
+  '/risk': typeof RiskRoute
+  '/system': typeof SystemRoute
+  '/trends': typeof TrendsRoute
+  '/watchlist': typeof WatchlistRoute
+  '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agents': typeof AgentsRoute
+  '/alerts': typeof AlertsRoute
+  '/anomalies': typeof AnomaliesRoute
+  '/command': typeof CommandRoute
+  '/discover': typeof DiscoverRoute
+  '/markets': typeof MarketsRoute
+  '/risk': typeof RiskRoute
+  '/system': typeof SystemRoute
+  '/trends': typeof TrendsRoute
+  '/watchlist': typeof WatchlistRoute
+  '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agents': typeof AgentsRoute
+  '/alerts': typeof AlertsRoute
+  '/anomalies': typeof AnomaliesRoute
+  '/command': typeof CommandRoute
+  '/discover': typeof DiscoverRoute
+  '/markets': typeof MarketsRoute
+  '/risk': typeof RiskRoute
+  '/system': typeof SystemRoute
+  '/trends': typeof TrendsRoute
+  '/watchlist': typeof WatchlistRoute
+  '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/agents'
+    | '/alerts'
+    | '/anomalies'
+    | '/command'
+    | '/discover'
+    | '/markets'
+    | '/risk'
+    | '/system'
+    | '/trends'
+    | '/watchlist'
+    | '/pair/$chainId/$pairId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/agents'
+    | '/alerts'
+    | '/anomalies'
+    | '/command'
+    | '/discover'
+    | '/markets'
+    | '/risk'
+    | '/system'
+    | '/trends'
+    | '/watchlist'
+    | '/pair/$chainId/$pairId'
+  id:
+    | '__root__'
+    | '/'
+    | '/agents'
+    | '/alerts'
+    | '/anomalies'
+    | '/command'
+    | '/discover'
+    | '/markets'
+    | '/risk'
+    | '/system'
+    | '/trends'
+    | '/watchlist'
+    | '/pair/$chainId/$pairId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgentsRoute: typeof AgentsRoute
+  AlertsRoute: typeof AlertsRoute
+  AnomaliesRoute: typeof AnomaliesRoute
+  CommandRoute: typeof CommandRoute
+  DiscoverRoute: typeof DiscoverRoute
+  MarketsRoute: typeof MarketsRoute
+  RiskRoute: typeof RiskRoute
+  SystemRoute: typeof SystemRoute
+  TrendsRoute: typeof TrendsRoute
+  WatchlistRoute: typeof WatchlistRoute
+  PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +195,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agents': {
+      id: '/agents'
+      path: '/agents'
+      fullPath: '/agents'
+      preLoaderRoute: typeof AgentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anomalies': {
+      id: '/anomalies'
+      path: '/anomalies'
+      fullPath: '/anomalies'
+      preLoaderRoute: typeof AnomaliesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/command': {
+      id: '/command'
+      path: '/command'
+      fullPath: '/command'
+      preLoaderRoute: typeof CommandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discover': {
+      id: '/discover'
+      path: '/discover'
+      fullPath: '/discover'
+      preLoaderRoute: typeof DiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/markets': {
+      id: '/markets'
+      path: '/markets'
+      fullPath: '/markets'
+      preLoaderRoute: typeof MarketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/risk': {
+      id: '/risk'
+      path: '/risk'
+      fullPath: '/risk'
+      preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system': {
+      id: '/system'
+      path: '/system'
+      fullPath: '/system'
+      preLoaderRoute: typeof SystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trends': {
+      id: '/trends'
+      path: '/trends'
+      fullPath: '/trends'
+      preLoaderRoute: typeof TrendsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/watchlist': {
+      id: '/watchlist'
+      path: '/watchlist'
+      fullPath: '/watchlist'
+      preLoaderRoute: typeof WatchlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pair/$chainId/$pairId': {
+      id: '/pair/$chainId/$pairId'
+      path: '/pair/$chainId/$pairId'
+      fullPath: '/pair/$chainId/$pairId'
+      preLoaderRoute: typeof PairChainIdPairIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgentsRoute: AgentsRoute,
+  AlertsRoute: AlertsRoute,
+  AnomaliesRoute: AnomaliesRoute,
+  CommandRoute: CommandRoute,
+  DiscoverRoute: DiscoverRoute,
+  MarketsRoute: MarketsRoute,
+  RiskRoute: RiskRoute,
+  SystemRoute: SystemRoute,
+  TrendsRoute: TrendsRoute,
+  WatchlistRoute: WatchlistRoute,
+  PairChainIdPairIdRoute: PairChainIdPairIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
