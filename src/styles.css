@@ -261,3 +261,18 @@
     animation: none !important;
   }
 }
+
+/* USER CUSTOMIZATION — applied from the workspace preferences store. */
+:root[data-density="compact"] { --dmi-density: 0.85; }
+:root[data-density="spacious"] { --dmi-density: 1.15; }
+:root[data-density="compact"] .panel { padding: 0.6rem; }
+:root[data-density="spacious"] .panel { padding: 1.15rem; }
+
+:root[data-motion="reduced"] .anim-sweep,
+:root[data-motion="reduced"] [class*="anim-"] { animation-duration: 6s !important; }
+:root[data-motion="off"] .anim-sweep,
+:root[data-motion="off"] [class*="anim-"] { animation: none !important; }
+
+:root[data-accent="violet"] { --cyan: var(--violet); }
+:root[data-accent="electric"] { --cyan: oklch(0.78 0.19 250); }
+:root[data-accent="amber"] { --cyan: oklch(0.82 0.16 80); }

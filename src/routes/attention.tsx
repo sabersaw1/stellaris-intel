@@ -16,6 +16,8 @@ import { clockOf } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/attention")({
+  // Browser-local stores drive this page, so it renders on the client only.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Attention Engine — Market Intelligence OS" },

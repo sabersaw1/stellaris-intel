@@ -14,16 +14,33 @@ import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AnomaliesRouteImport } from './routes/anomalies'
 import { Route as AttentionRouteImport } from './routes/attention'
+import { Route as AuditRouteImport } from './routes/audit'
+import { Route as CalibrationRouteImport } from './routes/calibration'
 import { Route as CommandRouteImport } from './routes/command'
+import { Route as ContradictionsRouteImport } from './routes/contradictions'
 import { Route as DiscoverRouteImport } from './routes/discover'
+import { Route as HypothesesRouteImport } from './routes/hypotheses'
+import { Route as IncidentsRouteImport } from './routes/incidents'
+import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as NeuralRouteImport } from './routes/neural'
+import { Route as PerformanceRouteImport } from './routes/performance'
+import { Route as PostmortemsRouteImport } from './routes/postmortems'
+import { Route as QuestionsRouteImport } from './routes/questions'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as RoomRouteImport } from './routes/room'
+import { Route as StreamRouteImport } from './routes/stream'
 import { Route as SystemRouteImport } from './routes/system'
+import { Route as TimemachineRouteImport } from './routes/timemachine'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
+import { Route as WorkflowsRouteImport } from './routes/workflows'
+import { Route as WorkspacesRouteImport } from './routes/workspaces'
 import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
+import { Route as ApiPublicWebhooksN8nRouteImport } from './routes/api/public/webhooks/n8n'
+import { Route as ApiPublicWebhooksTradingviewRouteImport } from './routes/api/public/webhooks/tradingview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -50,9 +67,24 @@ const AttentionRoute = AttentionRouteImport.update({
   path: '/attention',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalibrationRoute = CalibrationRouteImport.update({
+  id: '/calibration',
+  path: '/calibration',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommandRoute = CommandRouteImport.update({
   id: '/command',
   path: '/command',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContradictionsRoute = ContradictionsRouteImport.update({
+  id: '/contradictions',
+  path: '/contradictions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DiscoverRoute = DiscoverRouteImport.update({
@@ -60,9 +92,49 @@ const DiscoverRoute = DiscoverRouteImport.update({
   path: '/discover',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HypothesesRoute = HypothesesRouteImport.update({
+  id: '/hypotheses',
+  path: '/hypotheses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IncidentsRoute = IncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntegrationsRoute = IntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketsRoute = MarketsRouteImport.update({
   id: '/markets',
   path: '/markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoryRoute = MemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NeuralRoute = NeuralRouteImport.update({
+  id: '/neural',
+  path: '/neural',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerformanceRoute = PerformanceRouteImport.update({
+  id: '/performance',
+  path: '/performance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostmortemsRoute = PostmortemsRouteImport.update({
+  id: '/postmortems',
+  path: '/postmortems',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestionsRoute = QuestionsRouteImport.update({
+  id: '/questions',
+  path: '/questions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResearchRoute = ResearchRouteImport.update({
@@ -80,9 +152,19 @@ const RoomRoute = RoomRouteImport.update({
   path: '/room',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StreamRoute = StreamRouteImport.update({
+  id: '/stream',
+  path: '/stream',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SystemRoute = SystemRouteImport.update({
   id: '/system',
   path: '/system',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TimemachineRoute = TimemachineRouteImport.update({
+  id: '/timemachine',
+  path: '/timemachine',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrendsRoute = TrendsRouteImport.update({
@@ -95,11 +177,32 @@ const WatchlistRoute = WatchlistRouteImport.update({
   path: '/watchlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkflowsRoute = WorkflowsRouteImport.update({
+  id: '/workflows',
+  path: '/workflows',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkspacesRoute = WorkspacesRouteImport.update({
+  id: '/workspaces',
+  path: '/workspaces',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PairChainIdPairIdRoute = PairChainIdPairIdRouteImport.update({
   id: '/pair/$chainId/$pairId',
   path: '/pair/$chainId/$pairId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWebhooksN8nRoute = ApiPublicWebhooksN8nRouteImport.update({
+  id: '/api/public/webhooks/n8n',
+  path: '/api/public/webhooks/n8n',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicWebhooksTradingviewRoute =
+  ApiPublicWebhooksTradingviewRouteImport.update({
+    id: '/api/public/webhooks/tradingview',
+    path: '/api/public/webhooks/tradingview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,16 +210,33 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
   '/attention': typeof AttentionRoute
+  '/audit': typeof AuditRoute
+  '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
+  '/hypotheses': typeof HypothesesRoute
+  '/incidents': typeof IncidentsRoute
+  '/integrations': typeof IntegrationsRoute
   '/markets': typeof MarketsRoute
+  '/memory': typeof MemoryRoute
+  '/neural': typeof NeuralRoute
+  '/performance': typeof PerformanceRoute
+  '/postmortems': typeof PostmortemsRoute
+  '/questions': typeof QuestionsRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
+  '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
+  '/timemachine': typeof TimemachineRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
+  '/workflows': typeof WorkflowsRoute
+  '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
+  '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -124,16 +244,33 @@ export interface FileRoutesByTo {
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
   '/attention': typeof AttentionRoute
+  '/audit': typeof AuditRoute
+  '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
+  '/hypotheses': typeof HypothesesRoute
+  '/incidents': typeof IncidentsRoute
+  '/integrations': typeof IntegrationsRoute
   '/markets': typeof MarketsRoute
+  '/memory': typeof MemoryRoute
+  '/neural': typeof NeuralRoute
+  '/performance': typeof PerformanceRoute
+  '/postmortems': typeof PostmortemsRoute
+  '/questions': typeof QuestionsRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
+  '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
+  '/timemachine': typeof TimemachineRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
+  '/workflows': typeof WorkflowsRoute
+  '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
+  '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -142,16 +279,33 @@ export interface FileRoutesById {
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
   '/attention': typeof AttentionRoute
+  '/audit': typeof AuditRoute
+  '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
+  '/hypotheses': typeof HypothesesRoute
+  '/incidents': typeof IncidentsRoute
+  '/integrations': typeof IntegrationsRoute
   '/markets': typeof MarketsRoute
+  '/memory': typeof MemoryRoute
+  '/neural': typeof NeuralRoute
+  '/performance': typeof PerformanceRoute
+  '/postmortems': typeof PostmortemsRoute
+  '/questions': typeof QuestionsRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
+  '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
+  '/timemachine': typeof TimemachineRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
+  '/workflows': typeof WorkflowsRoute
+  '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
+  '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,16 +315,33 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/anomalies'
     | '/attention'
+    | '/audit'
+    | '/calibration'
     | '/command'
+    | '/contradictions'
     | '/discover'
+    | '/hypotheses'
+    | '/incidents'
+    | '/integrations'
     | '/markets'
+    | '/memory'
+    | '/neural'
+    | '/performance'
+    | '/postmortems'
+    | '/questions'
     | '/research'
     | '/risk'
     | '/room'
+    | '/stream'
     | '/system'
+    | '/timemachine'
     | '/trends'
     | '/watchlist'
+    | '/workflows'
+    | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/webhooks/n8n'
+    | '/api/public/webhooks/tradingview'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -178,16 +349,33 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/anomalies'
     | '/attention'
+    | '/audit'
+    | '/calibration'
     | '/command'
+    | '/contradictions'
     | '/discover'
+    | '/hypotheses'
+    | '/incidents'
+    | '/integrations'
     | '/markets'
+    | '/memory'
+    | '/neural'
+    | '/performance'
+    | '/postmortems'
+    | '/questions'
     | '/research'
     | '/risk'
     | '/room'
+    | '/stream'
     | '/system'
+    | '/timemachine'
     | '/trends'
     | '/watchlist'
+    | '/workflows'
+    | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/webhooks/n8n'
+    | '/api/public/webhooks/tradingview'
   id:
     | '__root__'
     | '/'
@@ -195,16 +383,33 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/anomalies'
     | '/attention'
+    | '/audit'
+    | '/calibration'
     | '/command'
+    | '/contradictions'
     | '/discover'
+    | '/hypotheses'
+    | '/incidents'
+    | '/integrations'
     | '/markets'
+    | '/memory'
+    | '/neural'
+    | '/performance'
+    | '/postmortems'
+    | '/questions'
     | '/research'
     | '/risk'
     | '/room'
+    | '/stream'
     | '/system'
+    | '/timemachine'
     | '/trends'
     | '/watchlist'
+    | '/workflows'
+    | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/webhooks/n8n'
+    | '/api/public/webhooks/tradingview'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -213,16 +418,33 @@ export interface RootRouteChildren {
   AlertsRoute: typeof AlertsRoute
   AnomaliesRoute: typeof AnomaliesRoute
   AttentionRoute: typeof AttentionRoute
+  AuditRoute: typeof AuditRoute
+  CalibrationRoute: typeof CalibrationRoute
   CommandRoute: typeof CommandRoute
+  ContradictionsRoute: typeof ContradictionsRoute
   DiscoverRoute: typeof DiscoverRoute
+  HypothesesRoute: typeof HypothesesRoute
+  IncidentsRoute: typeof IncidentsRoute
+  IntegrationsRoute: typeof IntegrationsRoute
   MarketsRoute: typeof MarketsRoute
+  MemoryRoute: typeof MemoryRoute
+  NeuralRoute: typeof NeuralRoute
+  PerformanceRoute: typeof PerformanceRoute
+  PostmortemsRoute: typeof PostmortemsRoute
+  QuestionsRoute: typeof QuestionsRoute
   ResearchRoute: typeof ResearchRoute
   RiskRoute: typeof RiskRoute
   RoomRoute: typeof RoomRoute
+  StreamRoute: typeof StreamRoute
   SystemRoute: typeof SystemRoute
+  TimemachineRoute: typeof TimemachineRoute
   TrendsRoute: typeof TrendsRoute
   WatchlistRoute: typeof WatchlistRoute
+  WorkflowsRoute: typeof WorkflowsRoute
+  WorkspacesRoute: typeof WorkspacesRoute
   PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
+  ApiPublicWebhooksN8nRoute: typeof ApiPublicWebhooksN8nRoute
+  ApiPublicWebhooksTradingviewRoute: typeof ApiPublicWebhooksTradingviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -262,11 +484,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AttentionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calibration': {
+      id: '/calibration'
+      path: '/calibration'
+      fullPath: '/calibration'
+      preLoaderRoute: typeof CalibrationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/command': {
       id: '/command'
       path: '/command'
       fullPath: '/command'
       preLoaderRoute: typeof CommandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contradictions': {
+      id: '/contradictions'
+      path: '/contradictions'
+      fullPath: '/contradictions'
+      preLoaderRoute: typeof ContradictionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/discover': {
@@ -276,11 +519,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DiscoverRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hypotheses': {
+      id: '/hypotheses'
+      path: '/hypotheses'
+      fullPath: '/hypotheses'
+      preLoaderRoute: typeof HypothesesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/incidents': {
+      id: '/incidents'
+      path: '/incidents'
+      fullPath: '/incidents'
+      preLoaderRoute: typeof IncidentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/integrations': {
+      id: '/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof IntegrationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/markets': {
       id: '/markets'
       path: '/markets'
       fullPath: '/markets'
       preLoaderRoute: typeof MarketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memory': {
+      id: '/memory'
+      path: '/memory'
+      fullPath: '/memory'
+      preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/neural': {
+      id: '/neural'
+      path: '/neural'
+      fullPath: '/neural'
+      preLoaderRoute: typeof NeuralRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/performance': {
+      id: '/performance'
+      path: '/performance'
+      fullPath: '/performance'
+      preLoaderRoute: typeof PerformanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/postmortems': {
+      id: '/postmortems'
+      path: '/postmortems'
+      fullPath: '/postmortems'
+      preLoaderRoute: typeof PostmortemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questions': {
+      id: '/questions'
+      path: '/questions'
+      fullPath: '/questions'
+      preLoaderRoute: typeof QuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/research': {
@@ -304,11 +603,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoomRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/stream': {
+      id: '/stream'
+      path: '/stream'
+      fullPath: '/stream'
+      preLoaderRoute: typeof StreamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/system': {
       id: '/system'
       path: '/system'
       fullPath: '/system'
       preLoaderRoute: typeof SystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/timemachine': {
+      id: '/timemachine'
+      path: '/timemachine'
+      fullPath: '/timemachine'
+      preLoaderRoute: typeof TimemachineRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trends': {
@@ -325,11 +638,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WatchlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workflows': {
+      id: '/workflows'
+      path: '/workflows'
+      fullPath: '/workflows'
+      preLoaderRoute: typeof WorkflowsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workspaces': {
+      id: '/workspaces'
+      path: '/workspaces'
+      fullPath: '/workspaces'
+      preLoaderRoute: typeof WorkspacesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pair/$chainId/$pairId': {
       id: '/pair/$chainId/$pairId'
       path: '/pair/$chainId/$pairId'
       fullPath: '/pair/$chainId/$pairId'
       preLoaderRoute: typeof PairChainIdPairIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/n8n': {
+      id: '/api/public/webhooks/n8n'
+      path: '/api/public/webhooks/n8n'
+      fullPath: '/api/public/webhooks/n8n'
+      preLoaderRoute: typeof ApiPublicWebhooksN8nRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/tradingview': {
+      id: '/api/public/webhooks/tradingview'
+      path: '/api/public/webhooks/tradingview'
+      fullPath: '/api/public/webhooks/tradingview'
+      preLoaderRoute: typeof ApiPublicWebhooksTradingviewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -341,16 +682,33 @@ const rootRouteChildren: RootRouteChildren = {
   AlertsRoute: AlertsRoute,
   AnomaliesRoute: AnomaliesRoute,
   AttentionRoute: AttentionRoute,
+  AuditRoute: AuditRoute,
+  CalibrationRoute: CalibrationRoute,
   CommandRoute: CommandRoute,
+  ContradictionsRoute: ContradictionsRoute,
   DiscoverRoute: DiscoverRoute,
+  HypothesesRoute: HypothesesRoute,
+  IncidentsRoute: IncidentsRoute,
+  IntegrationsRoute: IntegrationsRoute,
   MarketsRoute: MarketsRoute,
+  MemoryRoute: MemoryRoute,
+  NeuralRoute: NeuralRoute,
+  PerformanceRoute: PerformanceRoute,
+  PostmortemsRoute: PostmortemsRoute,
+  QuestionsRoute: QuestionsRoute,
   ResearchRoute: ResearchRoute,
   RiskRoute: RiskRoute,
   RoomRoute: RoomRoute,
+  StreamRoute: StreamRoute,
   SystemRoute: SystemRoute,
+  TimemachineRoute: TimemachineRoute,
   TrendsRoute: TrendsRoute,
   WatchlistRoute: WatchlistRoute,
+  WorkflowsRoute: WorkflowsRoute,
+  WorkspacesRoute: WorkspacesRoute,
   PairChainIdPairIdRoute: PairChainIdPairIdRoute,
+  ApiPublicWebhooksN8nRoute: ApiPublicWebhooksN8nRoute,
+  ApiPublicWebhooksTradingviewRoute: ApiPublicWebhooksTradingviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

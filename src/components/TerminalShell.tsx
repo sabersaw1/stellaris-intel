@@ -3,20 +3,34 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   Activity,
+  AlertTriangle,
+  Award,
   Bell,
   Bot,
+  ClipboardList,
   Command,
   Compass,
+  Database,
   Gauge,
+  GitCompare,
+  HelpCircle,
+  History,
   Keyboard,
+  LayoutDashboard,
+  Lightbulb,
   LineChart,
+  Network,
+  Plug,
   Radar,
   Brain,
   FlaskConical,
+  ScrollText,
+  Target,
   Users,
   ServerCog,
   Star,
   TrendingUp,
+  Workflow,
   X,
 } from "lucide-react";
 
@@ -27,6 +41,8 @@ import { Tag } from "@/components/kit";
 import { clockOf } from "@/lib/format";
 import { marketQuery } from "@/hooks/useMarket";
 import { acknowledgeAlerts, getAlerts, subscribeStore } from "@/lib/local-store";
+import { getPrefs, subscribePrefs } from "@/lib/workspaces";
+import { CommandPalette } from "@/components/CommandPalette";
 
 const NAV = [
   { to: "/command", label: "COMMAND CENTER", icon: Command, keys: "G D" },
@@ -34,6 +50,16 @@ const NAV = [
   { to: "/attention", label: "ATTENTION", icon: Brain, keys: "G T" },
   { to: "/research", label: "RESEARCH", icon: FlaskConical, keys: "G J" },
   { to: "/room", label: "AGENT ROOM", icon: Users, keys: "G O" },
+  { to: "/questions", label: "QUESTIONS", icon: HelpCircle, keys: "G Q" },
+  { to: "/hypotheses", label: "HYPOTHESES", icon: Lightbulb, keys: "G H" },
+  { to: "/contradictions", label: "CONTRADICTIONS", icon: GitCompare, keys: "G C" },
+  { to: "/memory", label: "MEMORY", icon: Database, keys: "G E" },
+  { to: "/timemachine", label: "TIME MACHINE", icon: History, keys: "G X" },
+  { to: "/postmortems", label: "POST-MORTEMS", icon: ClipboardList, keys: "G P" },
+  { to: "/calibration", label: "CALIBRATION", icon: Target, keys: "G B" },
+  { to: "/performance", label: "PERFORMANCE", icon: Award, keys: "G F" },
+  { to: "/neural", label: "NEURAL LINK", icon: Network, keys: "G N" },
+  { to: "/stream", label: "STREAM", icon: Activity, keys: "G I" },
   { to: "/markets", label: "MARKETS", icon: LineChart, keys: "G M" },
   { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
   { to: "/risk", label: "RISK", icon: Gauge, keys: "G R" },
@@ -41,7 +67,12 @@ const NAV = [
   { to: "/agents", label: "AGENTS", icon: Bot, keys: "" },
   { to: "/alerts", label: "ALERTS", icon: Bell, keys: "G A" },
   { to: "/trends", label: "TRENDS", icon: TrendingUp, keys: "" },
-  { to: "/system", label: "SYSTEM", icon: ServerCog, keys: "" },
+  { to: "/workspaces", label: "WORKSPACES", icon: LayoutDashboard, keys: "G K" },
+  { to: "/integrations", label: "INTEGRATIONS", icon: Plug, keys: "G G" },
+  { to: "/workflows", label: "WORKFLOWS", icon: Workflow, keys: "G Y" },
+  { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "G V" },
+  { to: "/audit", label: "AUDIT LOG", icon: ScrollText, keys: "G U" },
+  { to: "/system", label: "SYSTEM", icon: ServerCog, keys: "G S" },
 ] as const;
 
 export function TerminalShell({ children }: { children: ReactNode }) {
@@ -55,6 +86,19 @@ export function TerminalShell({ children }: { children: ReactNode }) {
     const sync = () => setAlertCount(getAlerts().filter((a) => !a.acknowledged).length);
     sync();
     return subscribeStore(sync);
+  }, []);
+
+  // USER CUSTOMIZATION — density, motion and accent are applied to the document root.
+  useEffect(() => {
+    const apply = () => {
+      const p = getPrefs();
+      const root = document.documentElement;
+      root.dataset["density"] = p.density.toLowerCase();
+      root.dataset["motion"] = p.animation.toLowerCase();
+      root.dataset["accent"] = p.accent.toLowerCase();
+    };
+    apply();
+    return subscribePrefs(apply);
   }, []);
 
   const pairs = market.data?.data ?? [];
@@ -101,7 +145,32 @@ export function TerminalShell({ children }: { children: ReactNode }) {
       }
       if (!pendingG) return;
       pendingG = false;
-      const map: Record<string, string> = { d: "/command", w: "/watchlist", a: "/alerts", r: "/risk", m: "/markets", s: "/system", t: "/attention", j: "/research", o: "/room" };
+      const map: Record<string, string> = {
+        d: "/command",
+        w: "/watchlist",
+        a: "/alerts",
+        r: "/risk",
+        m: "/markets",
+        s: "/system",
+        t: "/attention",
+        j: "/research",
+        o: "/room",
+        q: "/questions",
+        h: "/hypotheses",
+        c: "/contradictions",
+        e: "/memory",
+        x: "/timemachine",
+        p: "/postmortems",
+        b: "/calibration",
+        f: "/performance",
+        n: "/neural",
+        i: "/stream",
+        k: "/workspaces",
+        g: "/integrations",
+        y: "/workflows",
+        v: "/incidents",
+        u: "/audit",
+      };
       const to = map[e.key.toLowerCase()];
       if (to) void navigate({ to });
     };
@@ -116,6 +185,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <CosmicBackground />
       <DataStreamLayer pairs={pairs} />
+      <CommandPalette />
 
       {/* TOP BAR */}
       <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur-xl">
@@ -218,13 +288,28 @@ export function TerminalShell({ children }: { children: ReactNode }) {
             </div>
             <ul className="space-y-2">
               {[
+                ["CTRL/⌘ K", "Command palette and universal search"],
                 ["/", "Open discovery search"],
                 ["G D", "Command center"],
-                ["G M", "Markets"],
-                ["G W", "Watchlist"],
-                ["G A", "Alerts"],
-                ["G R", "Risk"],
-                ["G S", "System health"],
+                ["G T", "Attention"],
+                ["G J", "Research"],
+                ["G O", "Agent room"],
+                ["G Q", "Open questions"],
+                ["G H", "Hypotheses"],
+                ["G C", "Contradictions"],
+                ["G E", "Memory"],
+                ["G X", "Time machine"],
+                ["G P", "Post-mortems"],
+                ["G B", "Calibration"],
+                ["G F", "Agent performance"],
+                ["G N", "Neural link"],
+                ["G I", "Intelligence stream"],
+                ["G K", "Workspaces"],
+                ["G G", "Integrations"],
+                ["G Y", "Workflow studio"],
+                ["G V", "Incidents"],
+                ["G U", "Audit log"],
+                ["G M / W / A / R / S", "Markets · watchlist · alerts · risk · system"],
                 ["?", "Toggle this overlay"],
                 ["ESC", "Close panel / blur input"],
               ].map(([k, d]) => (
