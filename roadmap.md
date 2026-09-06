@@ -1,31 +1,29 @@
 # Market Intelligence OS — build roadmap
 
-Foundation already shipped: DEX Screener ingestion (cache/dedup/retry/backoff/budget), normalization,
-risk + confidence + anomaly engines, 8 agents, filter builder, market map, watchlist, alerts,
-notes, local history, system health, keyboard shortcuts.
+## Phase 1 — reasoning layer (done)
+- [x] Attention engine, research job manager, agent room, hypotheses, what-changed / why panels
 
-## Phase 1 — reasoning layer (in progress)
-- [x] Attention Engine: scored, classified attention queue from real observations + local history
-- [x] Research Job Manager: job records, statuses, priorities, budgets, agent assignment
-- [x] Agent Room: agent statements, contradictions, minority opinion, consensus
-- [x] Hypotheses + "what would change our mind" derived from real factors
-- [x] What Changed / Why panels from stored observation deltas
+## Phase 2 — memory + history (done)
+- [x] Memory system with provenance, recall and similar-case matching (`/memory`)
+- [x] Historical time machine with LIVE / HISTORICAL separation (`/timemachine`)
+- [x] Change engine v2 with NOT AVAILABLE states
+- [x] Post-mortems (`/postmortems`), confidence calibration (`/calibration`), agent performance (`/performance`)
+- [x] Curiosity engine / open questions (`/questions`), hypothesis store (`/hypotheses`), contradiction store (`/contradictions`)
 
-## Phase 2 — memory + history
-- [ ] Memory system (past cases, similarity matching over stored history)
-- [ ] Expectation vs reality, mind-change engine, post-mortems
-- [ ] Confidence calibration, agent performance center (needs persisted outcomes)
-- [ ] Time machine / brain replay over stored observations
+## Phase 3 — workspace + control (done)
+- [x] Command palette + universal search (CTRL/⌘ K)
+- [x] Custom workspaces, widgets, preferences (`/workspaces`)
+- [x] Neural link + live telemetry (`/neural`), intelligence stream (`/stream`)
+- [x] Resource governor, research budgets, priority scheduling
 
-## Phase 3 — workspace + control
-- [ ] Command palette + universal search
-- [ ] Custom dashboards / workspaces, live system HUD
-- [ ] Resource manager, priority scheduler, research budgets
+## Phase 4 — integrations + automation (done)
+- [x] Integrations command center, accounts, permissions, dependency map, connection graph, system doctor (`/integrations`)
+- [x] Workflow studio with validation, dry run, execution records, versioning, templates (`/workflows`)
+- [x] Webhook receivers with HMAC verification (`/api/public/webhooks/tradingview`, `/api/public/webhooks/n8n`)
+- [x] Event bus, incidents (`/incidents`), audit log (`/audit`)
 
-## Phase 4 — integrations
-- [ ] Integration command center, connection tester, health, credential vault
-- [ ] Workflow studio (visual), validator, dry run, library, versioning
-- [ ] Webhook center, event bus, data router, provenance
-
-Blocked until a backend is connected: cross-device persistence, calibration statistics,
-outcome tracking, third-party credentials, workflow execution.
+## Marked dependencies (built, waiting on external connection)
+- WAITING FOR SUPABASE — durable cross-device memory, stored webhook payloads, calibration history beyond this browser
+- WAITING FOR CREDENTIAL — FOMO intelligence probe, TradingView + n8n webhook secrets, outbound n8n URL
+- INSUFFICIENT OUTCOME DATA — calibration and agent performance percentages until 20 resolved cases exist
+- UNAVAILABLE — host CPU/memory and websocket metrics cannot be measured from the browser
