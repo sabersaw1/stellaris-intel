@@ -17,6 +17,7 @@ import { Route as AttentionRouteImport } from './routes/attention'
 import { Route as CommandRouteImport } from './routes/command'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as TrendsRouteImport } from './routes/trends'
@@ -63,6 +64,11 @@ const MarketsRoute = MarketsRouteImport.update({
   path: '/markets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResearchRoute = ResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RiskRoute = RiskRouteImport.update({
   id: '/risk',
   path: '/risk',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
     | '/command'
     | '/discover'
     | '/markets'
+    | '/research'
     | '/risk'
     | '/system'
     | '/trends'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/command'
     | '/discover'
     | '/markets'
+    | '/research'
     | '/risk'
     | '/system'
     | '/trends'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/command'
     | '/discover'
     | '/markets'
+    | '/research'
     | '/risk'
     | '/system'
     | '/trends'
@@ -192,6 +204,7 @@ export interface RootRouteChildren {
   CommandRoute: typeof CommandRoute
   DiscoverRoute: typeof DiscoverRoute
   MarketsRoute: typeof MarketsRoute
+  ResearchRoute: typeof ResearchRoute
   RiskRoute: typeof RiskRoute
   SystemRoute: typeof SystemRoute
   TrendsRoute: typeof TrendsRoute
@@ -257,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/research': {
+      id: '/research'
+      path: '/research'
+      fullPath: '/research'
+      preLoaderRoute: typeof ResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/risk': {
       id: '/risk'
       path: '/risk'
@@ -304,6 +324,7 @@ const rootRouteChildren: RootRouteChildren = {
   CommandRoute: CommandRoute,
   DiscoverRoute: DiscoverRoute,
   MarketsRoute: MarketsRoute,
+  ResearchRoute: ResearchRoute,
   RiskRoute: RiskRoute,
   SystemRoute: SystemRoute,
   TrendsRoute: TrendsRoute,
