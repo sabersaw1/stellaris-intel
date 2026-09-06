@@ -52,11 +52,15 @@ export function useGlobalBrain() {
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
-    const bump = () => setTick((t) => t + 1);
+    let mounted = true;
+    // Store notifications can fire while another component is still mounting;
+    // defer the update so React never receives state for an unmounted component.
+    const bump = () => queueMicrotask(() => mounted && setTick((t) => t + 1));
     const a = subscribeJobs(bump);
     const b = subscribeMemory(bump);
     const c = subscribeEvents(bump);
     return () => {
+      mounted = false;
       a();
       b();
       c();
@@ -186,6 +190,13 @@ export function useGlobalBrain() {
 /** Subscribe a component to any local store change. */
 export function useStoreTick(subscribe: (fn: () => void) => () => void): number {
   const [tick, setTick] = useState(0);
-  useEffect(() => subscribe(() => setTick((t) => t + 1)), [subscribe]);
+  useEffect(() => {
+    let mounted = true;
+    const unsubscribe = subscribe(() => queueMicrotask(() => mounted && setTick((t) => t + 1)));
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
+  }, [subscribe]);
   return tick;
 }
