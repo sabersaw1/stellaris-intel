@@ -33,7 +33,7 @@ export const Route = createFileRoute("/attention")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: AttentionPage;
+  component: AttentionPage,
 });
 
 function AttentionPage() {
@@ -166,13 +166,14 @@ function AttentionPage() {
         </div>
       )}
 
-      <SourceLine
-        source="dexscreener"
-        observedAt={envelope?.observedAt ?? null}
-        cached={envelope?.cached}
-        stale={envelope?.stale}
-        note={`${assessments.length} observations scored`}
-      />
+      <div className="mt-4">
+        <SourceLine
+          observedAt={envelope?.observedAt ?? null}
+          engineVersion={`${ATTENTION_ENGINE_VERSION} · ${assessments.length} observations scored`}
+          cached={envelope?.cached}
+          stale={envelope?.stale}
+        />
+      </div>
     </TerminalShell>
   );
 }
