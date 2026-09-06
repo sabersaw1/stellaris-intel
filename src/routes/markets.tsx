@@ -18,7 +18,7 @@ export const Route = createFileRoute("/markets")({
       { property: "og:description", content: "Advanced query builder and market map over live DEX observations." },
     ],
   }),
-  component: Markets;
+  component: Markets,
 });
 
 function Markets() {
