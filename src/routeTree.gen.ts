@@ -13,10 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgentsRouteImport } from './routes/agents'
 import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as AnomaliesRouteImport } from './routes/anomalies'
+import { Route as AttentionRouteImport } from './routes/attention'
 import { Route as CommandRouteImport } from './routes/command'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
+import { Route as RoomRouteImport } from './routes/room'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as TrendsRouteImport } from './routes/trends'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
@@ -42,6 +45,11 @@ const AnomaliesRoute = AnomaliesRouteImport.update({
   path: '/anomalies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AttentionRoute = AttentionRouteImport.update({
+  id: '/attention',
+  path: '/attention',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommandRoute = CommandRouteImport.update({
   id: '/command',
   path: '/command',
@@ -57,9 +65,19 @@ const MarketsRoute = MarketsRouteImport.update({
   path: '/markets',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResearchRoute = ResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RiskRoute = RiskRouteImport.update({
   id: '/risk',
   path: '/risk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoomRoute = RoomRouteImport.update({
+  id: '/room',
+  path: '/room',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SystemRoute = SystemRouteImport.update({
@@ -88,10 +106,13 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AgentsRoute
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
+  '/attention': typeof AttentionRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
+  '/room': typeof RoomRoute
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
@@ -102,10 +123,13 @@ export interface FileRoutesByTo {
   '/agents': typeof AgentsRoute
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
+  '/attention': typeof AttentionRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
+  '/room': typeof RoomRoute
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
@@ -117,10 +141,13 @@ export interface FileRoutesById {
   '/agents': typeof AgentsRoute
   '/alerts': typeof AlertsRoute
   '/anomalies': typeof AnomaliesRoute
+  '/attention': typeof AttentionRoute
   '/command': typeof CommandRoute
   '/discover': typeof DiscoverRoute
   '/markets': typeof MarketsRoute
+  '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
+  '/room': typeof RoomRoute
   '/system': typeof SystemRoute
   '/trends': typeof TrendsRoute
   '/watchlist': typeof WatchlistRoute
@@ -133,10 +160,13 @@ export interface FileRouteTypes {
     | '/agents'
     | '/alerts'
     | '/anomalies'
+    | '/attention'
     | '/command'
     | '/discover'
     | '/markets'
+    | '/research'
     | '/risk'
+    | '/room'
     | '/system'
     | '/trends'
     | '/watchlist'
@@ -147,10 +177,13 @@ export interface FileRouteTypes {
     | '/agents'
     | '/alerts'
     | '/anomalies'
+    | '/attention'
     | '/command'
     | '/discover'
     | '/markets'
+    | '/research'
     | '/risk'
+    | '/room'
     | '/system'
     | '/trends'
     | '/watchlist'
@@ -161,10 +194,13 @@ export interface FileRouteTypes {
     | '/agents'
     | '/alerts'
     | '/anomalies'
+    | '/attention'
     | '/command'
     | '/discover'
     | '/markets'
+    | '/research'
     | '/risk'
+    | '/room'
     | '/system'
     | '/trends'
     | '/watchlist'
@@ -176,10 +212,13 @@ export interface RootRouteChildren {
   AgentsRoute: typeof AgentsRoute
   AlertsRoute: typeof AlertsRoute
   AnomaliesRoute: typeof AnomaliesRoute
+  AttentionRoute: typeof AttentionRoute
   CommandRoute: typeof CommandRoute
   DiscoverRoute: typeof DiscoverRoute
   MarketsRoute: typeof MarketsRoute
+  ResearchRoute: typeof ResearchRoute
   RiskRoute: typeof RiskRoute
+  RoomRoute: typeof RoomRoute
   SystemRoute: typeof SystemRoute
   TrendsRoute: typeof TrendsRoute
   WatchlistRoute: typeof WatchlistRoute
@@ -216,6 +255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AnomaliesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/attention': {
+      id: '/attention'
+      path: '/attention'
+      fullPath: '/attention'
+      preLoaderRoute: typeof AttentionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/command': {
       id: '/command'
       path: '/command'
@@ -237,11 +283,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/research': {
+      id: '/research'
+      path: '/research'
+      fullPath: '/research'
+      preLoaderRoute: typeof ResearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/risk': {
       id: '/risk'
       path: '/risk'
       fullPath: '/risk'
       preLoaderRoute: typeof RiskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/room': {
+      id: '/room'
+      path: '/room'
+      fullPath: '/room'
+      preLoaderRoute: typeof RoomRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/system': {
@@ -280,10 +340,13 @@ const rootRouteChildren: RootRouteChildren = {
   AgentsRoute: AgentsRoute,
   AlertsRoute: AlertsRoute,
   AnomaliesRoute: AnomaliesRoute,
+  AttentionRoute: AttentionRoute,
   CommandRoute: CommandRoute,
   DiscoverRoute: DiscoverRoute,
   MarketsRoute: MarketsRoute,
+  ResearchRoute: ResearchRoute,
   RiskRoute: RiskRoute,
+  RoomRoute: RoomRoute,
   SystemRoute: SystemRoute,
   TrendsRoute: TrendsRoute,
   WatchlistRoute: WatchlistRoute,
