@@ -11,6 +11,9 @@ import {
   Keyboard,
   LineChart,
   Radar,
+  Brain,
+  FlaskConical,
+  Users,
   ServerCog,
   Star,
   TrendingUp,
@@ -28,6 +31,9 @@ import { acknowledgeAlerts, getAlerts, subscribeStore } from "@/lib/local-store"
 const NAV = [
   { to: "/command", label: "COMMAND CENTER", icon: Command, keys: "G D" },
   { to: "/discover", label: "DISCOVER", icon: Compass, keys: "/" },
+  { to: "/attention", label: "ATTENTION", icon: Brain, keys: "G T" },
+  { to: "/research", label: "RESEARCH", icon: FlaskConical, keys: "G J" },
+  { to: "/room", label: "AGENT ROOM", icon: Users, keys: "G O" },
   { to: "/markets", label: "MARKETS", icon: LineChart, keys: "G M" },
   { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
   { to: "/risk", label: "RISK", icon: Gauge, keys: "G R" },
@@ -95,7 +101,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
       }
       if (!pendingG) return;
       pendingG = false;
-      const map: Record<string, string> = { d: "/command", w: "/watchlist", a: "/alerts", r: "/risk", m: "/markets", s: "/system" };
+      const map: Record<string, string> = { d: "/command", w: "/watchlist", a: "/alerts", r: "/risk", m: "/markets", s: "/system", t: "/attention", j: "/research", o: "/room" };
       const to = map[e.key.toLowerCase()];
       if (to) void navigate({ to });
     };
