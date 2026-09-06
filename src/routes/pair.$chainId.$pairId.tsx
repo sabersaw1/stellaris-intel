@@ -307,7 +307,7 @@ function PairIntel() {
 
           <Panel title="CONFIDENCE" right={<Tag kind="CALCULATED" />}>
             <ConfidenceBadge score={a.confidence.score} band={a.confidence.band} />
-            <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <Metric label="COMPLETENESS" value={`${a.confidence.completeness}%`} kind="CALCULATED" />
               <Metric label="OBSERVATION AGE" value={`${a.confidence.freshnessSeconds}s`} kind="CALCULATED" />
             </div>
