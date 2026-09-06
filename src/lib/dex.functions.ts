@@ -138,19 +138,30 @@ export type ProfileEntry = {
   links?: { type?: string; label?: string; url?: string }[];
 };
 
-const listEndpoint = (path: string, ttlMs: number) =>
-  createServerFn({ method: "GET" }).handler(async (): Promise<Envelope<ProfileEntry[]>> => {
-    const { dexFetch } = await import("./dexscreener.server");
-    const r = await dexFetch<ProfileEntry[]>(path, { ttlMs });
-    return wrap(r, Array.isArray(r.data) ? r.data.slice(0, 60) : []);
-  });
+async function fetchList(path: string, ttlMs: number): Promise<Envelope<ProfileEntry[]>> {
+  const { dexFetch } = await import("./dexscreener.server");
+  const r = await dexFetch<ProfileEntry[]>(path, { ttlMs });
+  return wrap(r, Array.isArray(r.data) ? r.data.slice(0, 60) : []);
+}
 
-export const latestProfiles = listEndpoint("/token-profiles/latest/v1", 120_000);
-export const recentProfileUpdates = listEndpoint("/token-profiles/recent-updates/v1", 120_000);
-export const communityTakeovers = listEndpoint("/community-takeovers/latest/v1", 180_000);
-export const latestAds = listEndpoint("/ads/latest/v1", 300_000);
-export const latestBoosts = listEndpoint("/token-boosts/latest/v1", 120_000);
-export const topBoosts = listEndpoint("/token-boosts/top/v1", 180_000);
+export const latestProfiles = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Envelope<ProfileEntry[]>> => fetchList("/token-profiles/latest/v1", 120_000),
+);
+export const recentProfileUpdates = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Envelope<ProfileEntry[]>> => fetchList("/token-profiles/recent-updates/v1", 120_000),
+);
+export const communityTakeovers = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Envelope<ProfileEntry[]>> => fetchList("/community-takeovers/latest/v1", 180_000),
+);
+export const latestAds = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Envelope<ProfileEntry[]>> => fetchList("/ads/latest/v1", 300_000),
+);
+export const latestBoosts = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Envelope<ProfileEntry[]>> => fetchList("/token-boosts/latest/v1", 120_000),
+);
+export const topBoosts = createServerFn({ method: "GET" }).handler(
+  async (): Promise<Envelope<ProfileEntry[]>> => fetchList("/token-boosts/top/v1", 180_000),
+);
 
 export const tokenOrders = createServerFn({ method: "GET" })
   .inputValidator((i: unknown) => z.object({ chainId: z.string(), tokenAddress: z.string() }).parse(i))
