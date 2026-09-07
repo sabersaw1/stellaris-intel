@@ -62,6 +62,7 @@ function Watchlist() {
   if (!items.length) {
     return (
       <TerminalShell>
+        <p className="num mb-2 text-[9px] tracking-[0.16em] text-unknown">RECORD OF TRUTH · {memoryState}</p>
         <SectionTitle sub="Saved pairs are monitored on every ingestion cycle.">WATCHLIST</SectionTitle>
         <Panel>
           <EmptyState
