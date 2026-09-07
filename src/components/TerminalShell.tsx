@@ -37,6 +37,8 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { useLiveWiring } from "@/hooks/useLive";
+import { LiveBar } from "@/components/stellaris/LiveBar";
 import { CosmicBackground } from "@/components/cosmos/CosmicBackground";
 import { DataStreamLayer } from "@/components/cosmos/DataStreamLayer";
 import { Tag } from "@/components/kit";
@@ -91,6 +93,9 @@ const ADVANCED = [
 
 export function TerminalShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
+  // One shared Realtime connection per tab; database writes refresh the
+  // affected queries the moment they happen.
+  useLiveWiring();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const market = useQuery(marketQuery);
   const [help, setHelp] = useState(false);
@@ -297,7 +302,10 @@ export function TerminalShell({ children }: { children: ReactNode }) {
           </div>
         </nav>
 
-        <main className="min-w-0 flex-1 pb-24 lg:pb-6">{children}</main>
+        <main className="min-w-0 flex-1 pb-24 lg:pb-6">
+          <LiveBar />
+          {children}
+        </main>
       </div>
 
       {/* MOBILE NAV */}
