@@ -6,6 +6,7 @@ import { EmptyState, Panel, SectionTitle, SeverityBadge, Tag } from "@/component
 import { acknowledgeAlerts, clearAlerts, getAlerts, subscribeStore, type AlertEvent } from "@/lib/local-store";
 import { clockOf, secondsSince } from "@/lib/format";
 import { useMarketIntelligence } from "@/hooks/useMarket";
+import { useStoredAlerts } from "@/hooks/useMemory";
 
 export const Route = createFileRoute("/alerts")({
   // Browser-local stores drive this page, so it renders on the client only.
@@ -23,19 +24,41 @@ export const Route = createFileRoute("/alerts")({
 
 function Alerts() {
   useMarketIntelligence(); // keeps the ingestion + alert cycle running on this page
-  const [alerts, setAlerts] = useState<AlertEvent[]>([]);
+  const [local, setLocal] = useState<AlertEvent[]>([]);
+  const stored = useStoredAlerts();
 
   useEffect(() => {
-    const sync = () => setAlerts(getAlerts());
+    const sync = () => setLocal(getAlerts());
     sync();
     return subscribeStore(sync);
   }, []);
+
+  // Stored events are the record; the browser copy only covers a database outage.
+  const persisted = stored.data?.configured ? stored.data.items : null;
+  const alerts: AlertEvent[] = persisted
+    ? persisted.map((a) => ({
+        id: a.id,
+        t: a.t,
+        key: a.key,
+        symbol: a.symbol,
+        chainId: a.chainId,
+        dexId: a.dexId,
+        kind: a.kind,
+        severity: a.severity as AlertEvent["severity"],
+        message: a.message,
+        confidence: a.confidence,
+        acknowledged: a.acknowledged,
+      }))
+    : local;
 
   return (
     <TerminalShell>
       <SectionTitle sub="Each alert is generated from a real observation. Duplicate signals for the same pair and kind are suppressed for 5 minutes.">
         ALERTS
       </SectionTitle>
+      <p className="num mb-2 text-[9px] tracking-[0.16em] text-unknown">
+        RECORD OF TRUTH · {!stored.data ? "READING DATABASE" : persisted ? "SUPABASE (YOUR PROJECT)" : "BROWSER ONLY — DATABASE UNAVAILABLE"}
+      </p>
 
       <Panel
         right={
