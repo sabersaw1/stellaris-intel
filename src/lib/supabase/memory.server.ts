@@ -306,7 +306,7 @@ export async function saveInvestigation(db: Db, inv: Investigation): Promise<{ e
     evidence_quality: inv.assessment.confidence.score,
     source_agreement: inv.sourceAgreement,
     data_quality: inv.dataDegraded ? "DEGRADED" : "OK",
-    model_version: inv.assessment.modelVersion ?? null,
+    model_version: inv.assessment.risk.engineVersion ?? null,
     updated_at: new Date().toISOString(),
   };
 
@@ -326,7 +326,7 @@ export async function saveInvestigation(db: Db, inv: Investigation): Promise<{ e
     layer.items.map((item) => ({
       market_id: marketId,
       layer: layer.id,
-      grade: item.grade === "SUSPECTED" ? "SUSPECTED" : item.grade,
+      grade: item.grade,
       source: "stellaris-derived",
       label: `${layer.title} · ${item.label}`,
       value: item.value,
