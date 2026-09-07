@@ -79,6 +79,10 @@ function CalibrationPage() {
         CONFIDENCE CALIBRATION
       </SectionTitle>
 
+      <div className="mb-4">
+        <StoredCalibrationPanel />
+      </div>
+
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Panel title="RECORDED CASES" right={<Tag kind="CALCULATED" />}>
           <p className="num text-2xl">{overview.overall.cases}</p>

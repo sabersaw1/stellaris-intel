@@ -61,9 +61,20 @@ function MemoryPage() {
 
   return (
     <TerminalShell>
-      <SectionTitle sub="Everything the system has actually produced is stored here with its provenance. Records live in this browser until a database is connected — WAITING FOR SUPABASE for durable, cross-device memory.">
+      <SectionTitle sub="Everything the system has actually produced is stored here with its provenance. Durable memory — markets, observations, investigations, evidence, unknowns, conflicts, change events, notes and watchlist — lives in your Supabase project; the reasoning trail below is the current session's working record.">
         INTELLIGENCE MEMORY
       </SectionTitle>
+
+      <div className="mb-4 space-y-3">
+        <input
+          value={dbQuery}
+          onChange={(e) => setDbQuery(e.target.value)}
+          placeholder="SEARCH STORED MEMORY BY SYMBOL, NAME OR PAIR ADDRESS"
+          aria-label="Search stored memory"
+          className="num w-full rounded-sm border border-input bg-background/60 px-3 py-2 text-[11px] tracking-[0.1em] placeholder:text-unknown"
+        />
+        <StoredMemoryPanel q={dbQuery} />
+      </div>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Panel title="RECORDS STORED" right={<Tag kind="CALCULATED" />}>
