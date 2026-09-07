@@ -447,7 +447,7 @@ export async function listInvestigations(db: Db, limit = 100): Promise<StoredInv
 
 export async function recordOutcome(
   db: Db,
-  o: { chainId: string; pairAddress: string; assessedState: string; observedResult: string; windowHours: number; detail?: string },
+  o: { chainId: string; pairAddress: string; assessedState: string; observedResult: string; windowHours: number; detail?: string | undefined },
 ) {
   const marketId = await marketIdFor(db, o.chainId, o.pairAddress);
   if (!marketId) return { error: "market not found in memory" };
