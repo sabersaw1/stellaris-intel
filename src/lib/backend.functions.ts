@@ -354,3 +354,86 @@ export const liveMeta = createServerFn({ method: "GET" }).handler(async (): Prom
     checkedAt: Date.now(),
   };
 });
+
+/**
+ * LIVE PULSE — the event-driven half of the loop.
+ *
+ * Called by the interface whenever it receives a fresh market snapshot. It
+ * stores the new observations and detects changes immediately, so the database
+ * (and therefore every open surface, through Realtime) reflects new information
+ * in seconds instead of waiting for the five-minute maintenance cycle.
+ *
+ * Server-side throttle: if an observation was stored very recently, the call
+ * returns `skipped` without touching the source, so multiple open tabs cannot
+ * multiply API usage. Deep investigation persistence stays on the background
+ * cycle; this path is deliberately cheap.
+ */
+export const pulseIngest = createServerFn({ method: "POST" }).handler(
+  async (): Promise<{
+    configured: boolean;
+    skipped: boolean;
+    reason: string | null;
+    pairsObserved: number;
+    observationsStored: number;
+    changesDetected: number;
+    errors: string[];
+  }> => {
+    const { backendConfig, getAdmin } = await import("./supabase/admin.server");
+    const cfg = backendConfig();
+    if (!cfg.urlPresent || !cfg.serviceKeyPresent) {
+      return { configured: false, skipped: true, reason: "Supabase is not configured.", pairsObserved: 0, observationsStored: 0, changesDetected: 0, errors: [] };
+    }
+    const db = getAdmin();
+    if (!db) {
+      return { configured: false, skipped: true, reason: "Supabase client unavailable.", pairsObserved: 0, observationsStored: 0, changesDetected: 0, errors: [] };
+    }
+
+    const last = await db.from("market_observations").select("observed_at").order("observed_at", { ascending: false }).limit(1);
+    if (!last.error) {
+      const row = (last.data ?? [])[0] as { observed_at: string } | undefined;
+      const age = row ? Date.now() - new Date(row.observed_at).getTime() : Infinity;
+      if (age < 30_000) {
+        return {
+          configured: true,
+          skipped: true,
+          reason: `An observation was stored ${Math.round(age / 1000)}s ago; skipping to respect source rate limits.`,
+          pairsObserved: 0,
+          observationsStored: 0,
+          changesDetected: 0,
+          errors: [],
+        };
+      }
+    }
+
+    const { ingestObservations } = await import("./supabase/ingest.server");
+    const { dexFetch } = await import("./dexscreener.server");
+    const { normalizePairs } = await import("./normalize");
+
+    const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+    const results = await Promise.all(queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 15_000 })));
+    const seen = new Set<string>();
+    const pairs = [];
+    for (const r of results) {
+      for (const p of normalizePairs(r.data?.pairs, r.observedAt ?? Date.now())) {
+        if (!seen.has(p.key)) {
+          seen.add(p.key);
+          pairs.push(p);
+        }
+      }
+    }
+    if (!pairs.length) {
+      return { configured: true, skipped: true, reason: "The market source returned no usable pairs on this pass.", pairsObserved: 0, observationsStored: 0, changesDetected: 0, errors: [] };
+    }
+
+    const ingest = await ingestObservations(pairs);
+    return {
+      configured: true,
+      skipped: false,
+      reason: null,
+      pairsObserved: pairs.length,
+      observationsStored: ingest.observationsStored,
+      changesDetected: ingest.changesDetected,
+      errors: ingest.errors,
+    };
+  },
+);
