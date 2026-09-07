@@ -10,7 +10,9 @@
 import { useEffect, useState } from "react";
 
 import { useLiveMeta, useRealtimeStatus } from "@/hooks/useLive";
-import { useMarketIntelligence } from "@/hooks/useMarket";
+import { useQuery } from "@tanstack/react-query";
+
+import { marketQuery } from "@/hooks/useMarket";
 import { secondsSince } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +26,8 @@ function Cell({ label, value, tone }: { label: string; value: string; tone?: str
 }
 
 export function LiveBar() {
-  const market = useMarketIntelligence();
+  // Reads the shared snapshot query only — no re-assessment work in the header.
+  const market = useQuery(marketQuery);
   const rt = useRealtimeStatus();
   const meta = useLiveMeta();
   // Re-render on a one-second beat so the "age" figures stay honest without
@@ -45,10 +48,10 @@ export function LiveBar() {
           ? "text-violet"
           : "text-unknown";
 
-  const marketAge = market.query.dataUpdatedAt ? secondsSince(market.query.dataUpdatedAt) : "—";
-  const sourceTone = market.query.isError
+  const marketAge = market.dataUpdatedAt ? secondsSince(market.dataUpdatedAt) : "—";
+  const sourceTone = market.isError
     ? "text-signal-high"
-    : market.query.dataUpdatedAt && Date.now() - market.query.dataUpdatedAt > 120_000
+    : market.dataUpdatedAt && Date.now() - market.dataUpdatedAt > 120_000
       ? "text-signal-elevated"
       : "text-signal-low";
 
@@ -56,10 +59,10 @@ export function LiveBar() {
     <div className="mb-3 grid grid-cols-2 gap-3 rounded-sm border border-border/70 bg-background/50 px-3 py-2 sm:grid-cols-4 lg:grid-cols-7">
       <Cell
         label="MARKET DATA"
-        value={market.query.isError ? "SOURCE UNAVAILABLE" : market.query.isFetching ? "RECEIVING…" : marketAge}
+        value={market.isError ? "SOURCE UNAVAILABLE" : market.isFetching ? "RECEIVING…" : marketAge}
         tone={sourceTone}
       />
-      <Cell label="MARKETS OBSERVED" value={market.assessments.length ? String(market.assessments.length) : "—"} />
+      <Cell label="MARKETS OBSERVED" value={market.data?.data?.length ? String(market.data.data.length) : "—"} />
       <Cell label="LIVE DB CONNECTION" value={rt.state} tone={rtTone} />
       <Cell label="LAST DB EVENT" value={rt.lastEventAt ? secondsSince(rt.lastEventAt) : "NONE THIS SESSION"} tone={rt.lastEventAt ? "text-cyan" : "text-unknown"} />
       <Cell
