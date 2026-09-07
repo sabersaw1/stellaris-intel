@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { TerminalShell } from "@/components/TerminalShell";
+import { BackendPanel } from "@/components/stellaris/BackendPanel";
+
 import { DataState, Metric, Panel, SectionTitle, Tag } from "@/components/kit";
 import { healthQuery, useMarketIntelligence } from "@/hooks/useMarket";
 import { useStellaris } from "@/hooks/useStellaris";
