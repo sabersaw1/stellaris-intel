@@ -41,6 +41,7 @@ import { Route as WatchlistRouteImport } from './routes/watchlist'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
 import { Route as WorkspacesRouteImport } from './routes/workspaces'
 import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
+import { Route as ApiPublicCronTickRouteImport } from './routes/api/public/cron/tick'
 import { Route as ApiPublicWebhooksN8nRouteImport } from './routes/api/public/webhooks/n8n'
 import { Route as ApiPublicWebhooksTradingviewRouteImport } from './routes/api/public/webhooks/tradingview'
 
@@ -204,6 +205,11 @@ const PairChainIdPairIdRoute = PairChainIdPairIdRouteImport.update({
   path: '/pair/$chainId/$pairId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCronTickRoute = ApiPublicCronTickRouteImport.update({
+  id: '/api/public/cron/tick',
+  path: '/api/public/cron/tick',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksN8nRoute = ApiPublicWebhooksN8nRouteImport.update({
   id: '/api/public/webhooks/n8n',
   path: '/api/public/webhooks/n8n',
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/cron/tick': typeof ApiPublicCronTickRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/cron/tick': typeof ApiPublicCronTickRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -322,6 +330,7 @@ export interface FileRoutesById {
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
+  '/api/public/cron/tick': typeof ApiPublicCronTickRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -360,6 +369,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/cron/tick'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
   fileRoutesByTo: FileRoutesByTo
@@ -396,6 +406,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/cron/tick'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
   id:
@@ -432,6 +443,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/workspaces'
     | '/pair/$chainId/$pairId'
+    | '/api/public/cron/tick'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
   fileRoutesById: FileRoutesById
@@ -469,6 +481,7 @@ export interface RootRouteChildren {
   WorkflowsRoute: typeof WorkflowsRoute
   WorkspacesRoute: typeof WorkspacesRoute
   PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
+  ApiPublicCronTickRoute: typeof ApiPublicCronTickRoute
   ApiPublicWebhooksN8nRoute: typeof ApiPublicWebhooksN8nRoute
   ApiPublicWebhooksTradingviewRoute: typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -699,6 +712,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PairChainIdPairIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cron/tick': {
+      id: '/api/public/cron/tick'
+      path: '/api/public/cron/tick'
+      fullPath: '/api/public/cron/tick'
+      preLoaderRoute: typeof ApiPublicCronTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/n8n': {
       id: '/api/public/webhooks/n8n'
       path: '/api/public/webhooks/n8n'
@@ -749,6 +769,7 @@ const rootRouteChildren: RootRouteChildren = {
   WorkflowsRoute: WorkflowsRoute,
   WorkspacesRoute: WorkspacesRoute,
   PairChainIdPairIdRoute: PairChainIdPairIdRoute,
+  ApiPublicCronTickRoute: ApiPublicCronTickRoute,
   ApiPublicWebhooksN8nRoute: ApiPublicWebhooksN8nRoute,
   ApiPublicWebhooksTradingviewRoute: ApiPublicWebhooksTradingviewRoute,
 }
