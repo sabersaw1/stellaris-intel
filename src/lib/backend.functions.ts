@@ -193,10 +193,17 @@ export const storedCounts = createServerFn({ method: "GET" }).handler(async (): 
   const db = getAdmin();
   if (!db) return { configured: false, markets: null, observations: null, changes: null, lastJob: null };
 
+  const countOf = async (table: string): Promise<number | null> => {
+    const probe = await db.from(table).select("*").limit(1);
+    if (probe.error) return null;
+    const c = await db.from(table).select("*", { count: "exact", head: true });
+    return c.error ? null : (c.count ?? 0);
+  };
+
   const [m, o, c, j] = await Promise.all([
-    db.from("markets").select("*", { count: "exact", head: true }),
-    db.from("market_observations").select("*", { count: "exact", head: true }),
-    db.from("change_events").select("*", { count: "exact", head: true }),
+    countOf("markets"),
+    countOf("market_observations"),
+    countOf("change_events"),
     db.from("system_jobs").select("job, state, finished_at, detail").order("started_at", { ascending: false }).limit(1),
   ]);
 
@@ -206,9 +213,9 @@ export const storedCounts = createServerFn({ method: "GET" }).handler(async (): 
 
   return {
     configured: true,
-    markets: m.error ? null : (m.count ?? 0),
-    observations: o.error ? null : (o.count ?? 0),
-    changes: c.error ? null : (c.count ?? 0),
+    markets: m,
+    observations: o,
+    changes: c,
     lastJob: row ? { job: row.job, state: row.state, finishedAt: row.finished_at, detail: row.detail } : null,
   };
 });

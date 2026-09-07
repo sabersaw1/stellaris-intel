@@ -86,10 +86,17 @@ export async function checkSchema(): Promise<{
   let error: string | null = null;
 
   for (const table of CORE_TABLES) {
-    const { count, error: e } = await db.from(table).select("*", { count: "exact", head: true });
-    if (!e) reachable = true;
-    else if (!error) error = e.message;
-    tables.push({ table, present: !e, rows: e ? null : (count ?? 0), error: e?.message ?? null });
+    // A real row read is used because a head-only count can succeed even when
+    // the table is absent from the schema cache.
+    const probe = await db.from(table).select("*").limit(1);
+    if (!probe.error) {
+      reachable = true;
+      const c = await db.from(table).select("*", { count: "exact", head: true });
+      tables.push({ table, present: true, rows: c.error ? null : (c.count ?? 0), error: null });
+    } else {
+      if (!error) error = probe.error.message;
+      tables.push({ table, present: false, rows: null, error: probe.error.message });
+    }
   }
 
   return { reachable, latencyMs: Date.now() - started, error: reachable ? null : error, tables };
