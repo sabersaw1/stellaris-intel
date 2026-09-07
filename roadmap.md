@@ -22,3 +22,10 @@
 - [x] Truthful backend status panel on SYSTEM
 - [ ] User applies 0001 + 0002 in their Supabase SQL Editor
 - [ ] Phase B: move investigations, watchlist, unknowns, conflicts, hypotheses, outcomes, calibration reads/writes from browser store to Supabase
+
+## Live layer (done)
+- Event-driven ingestion: `pulseIngest` stores each fresh snapshot (server-side 30s throttle).
+- Supabase Realtime browser client (publishable key fetched at runtime) → per-table query invalidation.
+- Market snapshot polling 15s, pair 12s, health 30s; 5-min pg_cron is background maintenance only.
+- `LiveBar` truthful freshness/connection line on every surface.
+- Migration `db/migrations/0004_stellaris_realtime.sql` — user must apply (replica identity + publication + anon SELECT for Realtime).

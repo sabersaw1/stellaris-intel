@@ -30,8 +30,11 @@ import {
 export const marketQuery = queryOptions({
   queryKey: ["market", "snapshot"],
   queryFn: () => marketSnapshot(),
-  refetchInterval: 60_000,
-  staleTime: 45_000,
+  // DEX Screener allows ~300 requests/minute on the pair endpoints, so a 15s
+  // snapshot is well inside the limit and is the fastest honest cadence here.
+  refetchInterval: 15_000,
+  staleTime: 10_000,
+  refetchOnWindowFocus: true,
 });
 
 export const searchQuery = (q: string) =>
@@ -46,8 +49,8 @@ export const pairQuery = (chainId: string, pairId: string, historyPoints: number
   queryOptions({
     queryKey: ["pair", chainId, pairId],
     queryFn: () => pairIntelligence({ data: { chainId, pairId, historyPoints } }),
-    refetchInterval: 45_000,
-    staleTime: 20_000,
+    refetchInterval: 12_000,
+    staleTime: 8_000,
   });
 
 export const tokenPairsQuery = (chainId: string, tokenAddress: string) =>
@@ -102,7 +105,7 @@ export const metasQuery = queryOptions({
 export const healthQuery = queryOptions({
   queryKey: ["system", "health"],
   queryFn: () => systemHealth(),
-  refetchInterval: 60_000,
+  refetchInterval: 30_000,
 });
 
 /* --------------------------- derived helpers -------------------------- */

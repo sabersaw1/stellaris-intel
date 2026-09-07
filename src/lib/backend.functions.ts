@@ -274,3 +274,166 @@ export const storedCounts = createServerFn({ method: "GET" }).handler(async (): 
     lastJob: row ? { job: row.job, state: row.state, finishedAt: row.finished_at, detail: row.detail } : null,
   };
 });
+
+/**
+ * Public (safe) client configuration for Realtime.
+ *
+ * Only the project URL and the publishable/anon key are returned — both are
+ * designed to be public. The service role key and cron secret are never
+ * included and never reach the browser.
+ */
+export const publicBackendConfig = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ url: string | null; publishableKey: string | null }> => {
+    const url = process.env["STELLARIS_SUPABASE_URL"] ?? null;
+    const publishableKey = process.env["STELLARIS_SUPABASE_PUBLISHABLE_KEY"] ?? null;
+    return { url, publishableKey };
+  },
+);
+
+/** Truthful freshness metadata for the live status line. */
+export type LiveMeta = {
+  configured: boolean;
+  lastObservationAt: number | null;
+  lastChangeAt: number | null;
+  lastInvestigationAt: number | null;
+  lastJob: { job: string; state: string; startedAt: number | null; finishedAt: number | null; detail: string | null } | null;
+  sources: { id: string; state: string; lastOkAt: number | null; detail: string | null }[];
+  checkedAt: number;
+};
+
+export const liveMeta = createServerFn({ method: "GET" }).handler(async (): Promise<LiveMeta> => {
+  const { getAdmin } = await import("./supabase/admin.server");
+  const db = getAdmin();
+  const empty: LiveMeta = {
+    configured: false,
+    lastObservationAt: null,
+    lastChangeAt: null,
+    lastInvestigationAt: null,
+    lastJob: null,
+    sources: [],
+    checkedAt: Date.now(),
+  };
+  if (!db) return empty;
+
+  const ts = (v: unknown): number | null => (typeof v === "string" ? new Date(v).getTime() : null);
+  const newest = async (table: string, column: string): Promise<number | null> => {
+    const r = await db.from(table).select(column).order(column, { ascending: false }).limit(1);
+    if (r.error) return null;
+    const row = (r.data ?? [])[0] as Record<string, unknown> | undefined;
+    return row ? ts(row[column]) : null;
+  };
+
+  const [obs, chg, inv, job, health] = await Promise.all([
+    newest("market_observations", "observed_at"),
+    newest("change_events", "detected_at"),
+    newest("investigations", "updated_at"),
+    db.from("system_jobs").select("job, state, started_at, finished_at, detail").order("started_at", { ascending: false }).limit(1),
+    db.from("source_health").select("source, state, last_ok_at, detail").limit(20),
+  ]);
+
+  const jrow = (job.data ?? [])[0] as
+    | { job: string; state: string; started_at: string | null; finished_at: string | null; detail: string | null }
+    | undefined;
+
+  return {
+    configured: true,
+    lastObservationAt: obs,
+    lastChangeAt: chg,
+    lastInvestigationAt: inv,
+    lastJob: jrow
+      ? { job: jrow.job, state: jrow.state, startedAt: ts(jrow.started_at), finishedAt: ts(jrow.finished_at), detail: jrow.detail }
+      : null,
+    sources: health.error
+      ? []
+      : ((health.data ?? []) as { source: string; state: string; last_ok_at: string | null; detail: string | null }[]).map((s) => ({
+          id: s.source,
+          state: s.state,
+          lastOkAt: ts(s.last_ok_at),
+          detail: s.detail,
+        })),
+    checkedAt: Date.now(),
+  };
+});
+
+/**
+ * LIVE PULSE — the event-driven half of the loop.
+ *
+ * Called by the interface whenever it receives a fresh market snapshot. It
+ * stores the new observations and detects changes immediately, so the database
+ * (and therefore every open surface, through Realtime) reflects new information
+ * in seconds instead of waiting for the five-minute maintenance cycle.
+ *
+ * Server-side throttle: if an observation was stored very recently, the call
+ * returns `skipped` without touching the source, so multiple open tabs cannot
+ * multiply API usage. Deep investigation persistence stays on the background
+ * cycle; this path is deliberately cheap.
+ */
+export const pulseIngest = createServerFn({ method: "POST" }).handler(
+  async (): Promise<{
+    configured: boolean;
+    skipped: boolean;
+    reason: string | null;
+    pairsObserved: number;
+    observationsStored: number;
+    changesDetected: number;
+    errors: string[];
+  }> => {
+    const { backendConfig, getAdmin } = await import("./supabase/admin.server");
+    const cfg = backendConfig();
+    if (!cfg.urlPresent || !cfg.serviceKeyPresent) {
+      return { configured: false, skipped: true, reason: "Supabase is not configured.", pairsObserved: 0, observationsStored: 0, changesDetected: 0, errors: [] };
+    }
+    const db = getAdmin();
+    if (!db) {
+      return { configured: false, skipped: true, reason: "Supabase client unavailable.", pairsObserved: 0, observationsStored: 0, changesDetected: 0, errors: [] };
+    }
+
+    const last = await db.from("market_observations").select("observed_at").order("observed_at", { ascending: false }).limit(1);
+    if (!last.error) {
+      const row = (last.data ?? [])[0] as { observed_at: string } | undefined;
+      const age = row ? Date.now() - new Date(row.observed_at).getTime() : Infinity;
+      if (age < 30_000) {
+        return {
+          configured: true,
+          skipped: true,
+          reason: `An observation was stored ${Math.round(age / 1000)}s ago; skipping to respect source rate limits.`,
+          pairsObserved: 0,
+          observationsStored: 0,
+          changesDetected: 0,
+          errors: [],
+        };
+      }
+    }
+
+    const { ingestObservations } = await import("./supabase/ingest.server");
+    const { dexFetch } = await import("./dexscreener.server");
+    const { normalizePairs } = await import("./normalize");
+
+    const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+    const results = await Promise.all(queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 15_000 })));
+    const seen = new Set<string>();
+    const pairs = [];
+    for (const r of results) {
+      for (const p of normalizePairs(r.data?.pairs, r.observedAt ?? Date.now())) {
+        if (!seen.has(p.key)) {
+          seen.add(p.key);
+          pairs.push(p);
+        }
+      }
+    }
+    if (!pairs.length) {
+      return { configured: true, skipped: true, reason: "The market source returned no usable pairs on this pass.", pairsObserved: 0, observationsStored: 0, changesDetected: 0, errors: [] };
+    }
+
+    const ingest = await ingestObservations(pairs);
+    return {
+      configured: true,
+      skipped: false,
+      reason: null,
+      pairsObserved: pairs.length,
+      observationsStored: ingest.observations,
+      changesDetected: ingest.changes,
+      errors: ingest.errors,
+    };
+  },
+);
