@@ -32,6 +32,8 @@ import {
   TrendingUp,
   Workflow,
   X,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -44,35 +46,47 @@ import { acknowledgeAlerts, getAlerts, subscribeStore } from "@/lib/local-store"
 import { getPrefs, subscribePrefs } from "@/lib/workspaces";
 import { CommandPalette } from "@/components/CommandPalette";
 
+/** PRIMARY SURFACES — the only six entries in primary navigation. */
 const NAV = [
-  { to: "/command", label: "COMMAND CENTER", icon: Command, keys: "G D" },
+  { to: "/command", label: "COMMAND", icon: Command, keys: "G D" },
+  { to: "/scan", label: "RAPID SCAN", icon: Radar, keys: "G L" },
+  { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
+  { to: "/investigations", label: "INVESTIGATIONS", icon: FlaskConical, keys: "G Z" },
+  { to: "/memory", label: "MEMORY", icon: Database, keys: "G E" },
+  { to: "/system", label: "SYSTEM", icon: ServerCog, keys: "G S" },
+] as const;
+
+/**
+ * ADVANCED SURFACES — every previously built page is preserved and reachable
+ * here and from the contextual panels inside the six primary surfaces. None of
+ * this functionality was removed; it simply no longer occupies primary
+ * navigation.
+ */
+const ADVANCED = [
   { to: "/discover", label: "DISCOVER", icon: Compass, keys: "/" },
+  { to: "/markets", label: "MARKETS", icon: LineChart, keys: "G M" },
   { to: "/attention", label: "ATTENTION", icon: Brain, keys: "G T" },
-  { to: "/research", label: "RESEARCH", icon: FlaskConical, keys: "G J" },
+  { to: "/research", label: "RESEARCH QUEUE", icon: ClipboardList, keys: "G J" },
   { to: "/room", label: "AGENT ROOM", icon: Users, keys: "G O" },
   { to: "/questions", label: "QUESTIONS", icon: HelpCircle, keys: "G Q" },
   { to: "/hypotheses", label: "HYPOTHESES", icon: Lightbulb, keys: "G H" },
   { to: "/contradictions", label: "CONTRADICTIONS", icon: GitCompare, keys: "G C" },
-  { to: "/memory", label: "MEMORY", icon: Database, keys: "G E" },
   { to: "/timemachine", label: "TIME MACHINE", icon: History, keys: "G X" },
-  { to: "/postmortems", label: "POST-MORTEMS", icon: ClipboardList, keys: "G P" },
+  { to: "/postmortems", label: "POST-MORTEMS", icon: ScrollText, keys: "G P" },
   { to: "/calibration", label: "CALIBRATION", icon: Target, keys: "G B" },
   { to: "/performance", label: "PERFORMANCE", icon: Award, keys: "G F" },
-  { to: "/neural", label: "NEURAL LINK", icon: Network, keys: "G N" },
+  { to: "/neural", label: "STELLARIS BRAIN", icon: Network, keys: "G N" },
   { to: "/stream", label: "STREAM", icon: Activity, keys: "G I" },
-  { to: "/markets", label: "MARKETS", icon: LineChart, keys: "G M" },
-  { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
   { to: "/risk", label: "RISK", icon: Gauge, keys: "G R" },
   { to: "/anomalies", label: "ANOMALIES", icon: Radar, keys: "" },
   { to: "/agents", label: "AGENTS", icon: Bot, keys: "" },
-  { to: "/alerts", label: "ALERTS", icon: Bell, keys: "G A" },
+  { to: "/alerts", label: "NOTIFICATIONS", icon: Bell, keys: "G A" },
   { to: "/trends", label: "TRENDS", icon: TrendingUp, keys: "" },
   { to: "/workspaces", label: "WORKSPACES", icon: LayoutDashboard, keys: "G K" },
   { to: "/integrations", label: "INTEGRATIONS", icon: Plug, keys: "G G" },
   { to: "/workflows", label: "WORKFLOWS", icon: Workflow, keys: "G Y" },
   { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "G V" },
   { to: "/audit", label: "AUDIT LOG", icon: ScrollText, keys: "G U" },
-  { to: "/system", label: "SYSTEM", icon: ServerCog, keys: "G S" },
 ] as const;
 
 export function TerminalShell({ children }: { children: ReactNode }) {
@@ -80,6 +94,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const market = useQuery(marketQuery);
   const [help, setHelp] = useState(false);
+  const [advanced, setAdvanced] = useState(false);
   const [alertCount, setAlertCount] = useState(0);
 
   useEffect(() => {
@@ -152,6 +167,8 @@ export function TerminalShell({ children }: { children: ReactNode }) {
         r: "/risk",
         m: "/markets",
         s: "/system",
+        l: "/scan",
+        z: "/investigations",
         t: "/attention",
         j: "/research",
         o: "/room",
@@ -194,7 +211,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
             <span className="relative flex h-6 w-6 items-center justify-center rounded-full border border-cyan/50">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan" />
             </span>
-            <span className="display text-sm tracking-[0.18em] text-foreground">DEX MARKET INTELLIGENCE</span>
+            <span className="display text-sm tracking-[0.18em] text-foreground">STELLARIS INTEL</span>
           </Link>
 
           <div className="flex flex-1 flex-wrap items-center gap-x-5 gap-y-1">
@@ -245,6 +262,35 @@ export function TerminalShell({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+            <div className="mt-2 border-t border-border pt-2">
+              <button
+                onClick={() => setAdvanced((v) => !v)}
+                className="num flex w-full items-center justify-between gap-2 rounded-sm px-2.5 py-2 text-[10px] tracking-[0.14em] text-unknown hover:text-cyan"
+              >
+                ADVANCED SURFACES
+                {advanced ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+              </button>
+              {advanced &&
+                ADVANCED.map((n) => {
+                  const active = pathname.startsWith(n.to);
+                  return (
+                    <Link
+                      key={n.to}
+                      to={n.to}
+                      className={cn(
+                        "num flex items-center justify-between gap-2 rounded-sm px-2.5 py-1.5 text-[10px] tracking-[0.1em] transition-colors",
+                        active ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
+                      )}
+                    >
+                      <span className="flex items-center gap-2">
+                        <n.icon className={cn("h-3 w-3", active && "text-cyan")} />
+                        {n.label}
+                      </span>
+                      {n.keys && <span className="text-[9px] text-unknown">{n.keys}</span>}
+                    </Link>
+                  );
+                })}
+            </div>
             <div className="mt-2 border-t border-border px-2.5 pt-2">
               <Tag kind="VISUAL" label="ENVIRONMENT ACTIVE" />
             </div>
@@ -290,7 +336,9 @@ export function TerminalShell({ children }: { children: ReactNode }) {
               {[
                 ["CTRL/⌘ K", "Command palette and universal search"],
                 ["/", "Open discovery search"],
-                ["G D", "Command center"],
+                ["G D", "Command"],
+                ["G L", "Rapid Scan"],
+                ["G Z", "Investigations"],
                 ["G T", "Attention"],
                 ["G J", "Research"],
                 ["G O", "Agent room"],

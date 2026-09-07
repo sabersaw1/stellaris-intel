@@ -22,6 +22,7 @@ import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as HypothesesRouteImport } from './routes/hypotheses'
 import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
+import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as MarketsRouteImport } from './routes/markets'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as NeuralRouteImport } from './routes/neural'
@@ -31,6 +32,7 @@ import { Route as QuestionsRouteImport } from './routes/questions'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as RoomRouteImport } from './routes/room'
+import { Route as ScanRouteImport } from './routes/scan'
 import { Route as StreamRouteImport } from './routes/stream'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as TimemachineRouteImport } from './routes/timemachine'
@@ -107,6 +109,11 @@ const IntegrationsRoute = IntegrationsRouteImport.update({
   path: '/integrations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvestigationsRoute = InvestigationsRouteImport.update({
+  id: '/investigations',
+  path: '/investigations',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketsRoute = MarketsRouteImport.update({
   id: '/markets',
   path: '/markets',
@@ -150,6 +157,11 @@ const RiskRoute = RiskRouteImport.update({
 const RoomRoute = RoomRouteImport.update({
   id: '/room',
   path: '/room',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StreamRoute = StreamRouteImport.update({
@@ -218,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/hypotheses': typeof HypothesesRoute
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
+  '/investigations': typeof InvestigationsRoute
   '/markets': typeof MarketsRoute
   '/memory': typeof MemoryRoute
   '/neural': typeof NeuralRoute
@@ -227,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
+  '/scan': typeof ScanRoute
   '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
   '/timemachine': typeof TimemachineRoute
@@ -252,6 +266,7 @@ export interface FileRoutesByTo {
   '/hypotheses': typeof HypothesesRoute
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
+  '/investigations': typeof InvestigationsRoute
   '/markets': typeof MarketsRoute
   '/memory': typeof MemoryRoute
   '/neural': typeof NeuralRoute
@@ -261,6 +276,7 @@ export interface FileRoutesByTo {
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
+  '/scan': typeof ScanRoute
   '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
   '/timemachine': typeof TimemachineRoute
@@ -287,6 +303,7 @@ export interface FileRoutesById {
   '/hypotheses': typeof HypothesesRoute
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
+  '/investigations': typeof InvestigationsRoute
   '/markets': typeof MarketsRoute
   '/memory': typeof MemoryRoute
   '/neural': typeof NeuralRoute
@@ -296,6 +313,7 @@ export interface FileRoutesById {
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
+  '/scan': typeof ScanRoute
   '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
   '/timemachine': typeof TimemachineRoute
@@ -323,6 +341,7 @@ export interface FileRouteTypes {
     | '/hypotheses'
     | '/incidents'
     | '/integrations'
+    | '/investigations'
     | '/markets'
     | '/memory'
     | '/neural'
@@ -332,6 +351,7 @@ export interface FileRouteTypes {
     | '/research'
     | '/risk'
     | '/room'
+    | '/scan'
     | '/stream'
     | '/system'
     | '/timemachine'
@@ -357,6 +377,7 @@ export interface FileRouteTypes {
     | '/hypotheses'
     | '/incidents'
     | '/integrations'
+    | '/investigations'
     | '/markets'
     | '/memory'
     | '/neural'
@@ -366,6 +387,7 @@ export interface FileRouteTypes {
     | '/research'
     | '/risk'
     | '/room'
+    | '/scan'
     | '/stream'
     | '/system'
     | '/timemachine'
@@ -391,6 +413,7 @@ export interface FileRouteTypes {
     | '/hypotheses'
     | '/incidents'
     | '/integrations'
+    | '/investigations'
     | '/markets'
     | '/memory'
     | '/neural'
@@ -400,6 +423,7 @@ export interface FileRouteTypes {
     | '/research'
     | '/risk'
     | '/room'
+    | '/scan'
     | '/stream'
     | '/system'
     | '/timemachine'
@@ -426,6 +450,7 @@ export interface RootRouteChildren {
   HypothesesRoute: typeof HypothesesRoute
   IncidentsRoute: typeof IncidentsRoute
   IntegrationsRoute: typeof IntegrationsRoute
+  InvestigationsRoute: typeof InvestigationsRoute
   MarketsRoute: typeof MarketsRoute
   MemoryRoute: typeof MemoryRoute
   NeuralRoute: typeof NeuralRoute
@@ -435,6 +460,7 @@ export interface RootRouteChildren {
   ResearchRoute: typeof ResearchRoute
   RiskRoute: typeof RiskRoute
   RoomRoute: typeof RoomRoute
+  ScanRoute: typeof ScanRoute
   StreamRoute: typeof StreamRoute
   SystemRoute: typeof SystemRoute
   TimemachineRoute: typeof TimemachineRoute
@@ -540,6 +566,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IntegrationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/investigations': {
+      id: '/investigations'
+      path: '/investigations'
+      fullPath: '/investigations'
+      preLoaderRoute: typeof InvestigationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/markets': {
       id: '/markets'
       path: '/markets'
@@ -601,6 +634,13 @@ declare module '@tanstack/react-router' {
       path: '/room'
       fullPath: '/room'
       preLoaderRoute: typeof RoomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stream': {
@@ -690,6 +730,7 @@ const rootRouteChildren: RootRouteChildren = {
   HypothesesRoute: HypothesesRoute,
   IncidentsRoute: IncidentsRoute,
   IntegrationsRoute: IntegrationsRoute,
+  InvestigationsRoute: InvestigationsRoute,
   MarketsRoute: MarketsRoute,
   MemoryRoute: MemoryRoute,
   NeuralRoute: NeuralRoute,
@@ -699,6 +740,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResearchRoute: ResearchRoute,
   RiskRoute: RiskRoute,
   RoomRoute: RoomRoute,
+  ScanRoute: ScanRoute,
   StreamRoute: StreamRoute,
   SystemRoute: SystemRoute,
   TimemachineRoute: TimemachineRoute,
