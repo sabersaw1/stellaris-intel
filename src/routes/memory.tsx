@@ -7,6 +7,7 @@ import { Btn, FreshnessBadge, KV, ProvenanceChain, StatePill, Table, Td, toneFor
 import { useGlobalBrain, useStoreTick } from "@/hooks/useBrain";
 import { clearMemory, getMemory, memoryByKind, recallTarget, similarCases, subscribeMemory, MEMORY_ENGINE_VERSION, type MemoryKind } from "@/lib/memory";
 import { clockOf } from "@/lib/format";
+import { StoredMemoryPanel } from "@/components/stellaris/MemoryPanels";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/memory")({
@@ -47,6 +48,7 @@ function MemoryPage() {
   const tick = useStoreTick(subscribeMemory);
   const [kind, setKind] = useState<MemoryKind | "ALL">("ALL");
   const [selected, setSelected] = useState<string | null>(null);
+  const [dbQuery, setDbQuery] = useState("");
 
   const records = useMemo(() => getMemory(), [tick, brain.cycle]);
   const counts = useMemo(() => memoryByKind(), [tick, brain.cycle]);

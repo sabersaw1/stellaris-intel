@@ -16,6 +16,7 @@ import {
   type CalibrationSlice,
 } from "@/lib/calibration";
 import { clockOf } from "@/lib/format";
+import { StoredCalibrationPanel } from "@/components/stellaris/MemoryPanels";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/calibration")({

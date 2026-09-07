@@ -5,6 +5,7 @@ import { TerminalShell } from "@/components/TerminalShell";
 import { DataState, EmptyState, Panel, SectionTitle, Tag } from "@/components/kit";
 import { InvestigationPanel, StateBadge } from "@/components/stellaris/InvestigationPanel";
 import { useStellaris } from "@/hooks/useStellaris";
+import { StoredInvestigationsPanel } from "@/components/stellaris/MemoryPanels";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/investigations")({
@@ -54,6 +55,10 @@ function Investigations() {
       <SectionTitle sub="Each investigation keeps its own evidence, unknowns, conflicts, challenger review and next question. Nothing is concluded beyond what the connected sources support.">
         INVESTIGATIONS
       </SectionTitle>
+
+      <div className="mb-4">
+        <StoredInvestigationsPanel />
+      </div>
 
       {s.query.isLoading ? (
         <DataState state="WAITING FOR DATA" detail="Requesting the current market snapshot before opening any investigation." />
