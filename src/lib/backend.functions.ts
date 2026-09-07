@@ -110,6 +110,7 @@ export type TickResult = {
   marketsStored: number;
   observationsStored: number;
   changesDetected: number;
+  investigationsStored: number;
   errors: string[];
   durationMs: number;
   note: string;
@@ -149,6 +150,7 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
       marketsStored: 0,
       observationsStored: 0,
       changesDetected: 0,
+      investigationsStored: 0,
       errors: [],
       durationMs: Date.now() - started,
       note: "Observations were collected but NOT stored: this project's Supabase credentials are not configured.",
@@ -156,12 +158,64 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
   }
 
   const ingest = await ingestObservations(pairs);
+
+  // ASSESS -> CHALLENGE -> REMEMBER: derive investigations from the observations
+  // just stored and persist them, so memory does not depend on a browser tab.
+  let investigationsStored = 0;
+  if (!ingest.errors.length) {
+    const { getAdmin } = await import("./supabase/admin.server");
+    const memory = await import("./supabase/memory.server");
+    const { assessPair, buildPeerSet } = await import("./analysis");
+    const { buildInvestigation, prioritise } = await import("./stellaris");
+    const db = getAdmin();
+    if (db) {
+      const peers = buildPeerSet(pairs);
+      const watchedKeys = new Set((await memory.listWatchlist(db)).map((w) => w.key));
+      const assessments = pairs.map((p) => assessPair(p, peers, 0));
+      const ranked = prioritise(
+        assessments.map((a) =>
+          buildInvestigation(a, {
+            peerCount: peers.count,
+            sourceOk: true,
+            stale: false,
+            history: [],
+            watched: watchedKeys.has(a.pair.key.toLowerCase()) || watchedKeys.has(a.pair.key),
+          }),
+        ),
+      ).slice(0, 40);
+      for (const inv of ranked) {
+        const series = await memory.observationSeries(db, inv.chainId, inv.pairAddress, 200);
+        const withHistory = buildInvestigation(inv.assessment, {
+          peerCount: peers.count,
+          sourceOk: true,
+          stale: false,
+          history: series.map((s) => ({
+            t: s.t,
+            priceUsd: s.priceUsd,
+            liquidityUsd: s.liquidityUsd,
+            volume24h: s.volume24h,
+            txns24h: null,
+            fdv: s.fdv,
+            marketCap: null,
+            riskScore: null,
+            confidence: null,
+            anomalyCount: 0,
+          })),
+          watched: inv.watched,
+        });
+        const saved = await memory.saveInvestigation(db, withHistory);
+        if (saved.error) ingest.errors.push(`investigation: ${saved.error}`);
+        else investigationsStored += 1;
+      }
+    }
+  }
+
   await recordSystemJob({
     job: "intelligence.tick",
     state: ingest.errors.length ? "FAILED" : "DONE",
     startedAt: started,
     processed: ingest.observations,
-    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s)`,
+    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s)`,
     error: ingest.errors[0] ?? null,
   });
 
@@ -172,6 +226,7 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     marketsStored: ingest.markets,
     observationsStored: ingest.observations,
     changesDetected: ingest.changes,
+    investigationsStored,
     errors: ingest.errors,
     durationMs: Date.now() - started,
     note: ingest.errors.length
