@@ -8,6 +8,32 @@
  */
 
 import type { Anomaly, PairObservation } from "./dex-types";
+import {
+  memAcknowledgeAlerts,
+  memClearAlerts,
+  memDeletePreset,
+  memEmitAlert,
+  memSavePreset,
+  memSetNote,
+  memSetWatch,
+  memSetWatchGroup,
+} from "./memory.functions";
+
+/**
+ * SUPABASE IS THE SOURCE OF TRUTH.
+ *
+ * Everything below still writes to localStorage so the interface stays instant
+ * and keeps working when the database is unreachable, but each write is mirrored
+ * into the operator's Supabase project through a server function. Reads for the
+ * persistent surfaces come from Supabase (see `src/hooks/useMemory.ts`); this
+ * file is the fast local cache, not the record.
+ */
+function mirror(run: () => Promise<unknown>) {
+  if (typeof window === "undefined") return;
+  void run().catch(() => {
+    /* memory unavailable — the UI reports Supabase status on the SYSTEM surface */
+  });
+}
 
 const K = {
   history: "dmi.history.v1",
@@ -123,10 +149,25 @@ export function toggleWatch(p: PairObservation, group = "Default") {
     ? list.filter((w) => w.key !== p.key)
     : [...list, { key: p.key, chainId: p.chainId, pairAddress: p.pairAddress, symbol: p.baseSymbol, group, addedAt: Date.now() }];
   write(K.watch, next);
-  return next.some((w) => w.key === p.key);
+  const nowWatched = next.some((w) => w.key === p.key);
+  mirror(() =>
+    memSetWatch({
+      data: {
+        chainId: p.chainId,
+        pairAddress: p.pairAddress,
+        symbol: p.baseSymbol,
+        dexId: p.dexId,
+        watched: nowWatched,
+        group,
+      },
+    }),
+  );
+  return nowWatched;
 }
 
 export function setWatchGroup(key: string, group: string) {
+  const item = getWatchlist().find((w) => w.key === key);
+  if (item) mirror(() => memSetWatchGroup({ data: { chainId: item.chainId, pairAddress: item.pairAddress, group } }));
   write(
     K.watch,
     getWatchlist().map((w) => (w.key === key ? { ...w, group } : w)),
@@ -162,10 +203,26 @@ export function emitAlert(e: Omit<AlertEvent, "id" | "t" | "acknowledged">) {
   if (dupe) return false;
   const event: AlertEvent = { ...e, id: `${e.key}:${e.kind}:${Date.now()}`, t: Date.now(), acknowledged: false };
   write(K.alerts, [event, ...list].slice(0, 300));
+  mirror(() =>
+    memEmitAlert({
+      data: {
+        key: e.key,
+        chainId: e.chainId,
+        pairAddress: e.key.includes(":") ? e.key.split(":").slice(1).join(":") : undefined,
+        symbol: e.symbol,
+        dexId: e.dexId,
+        kind: e.kind,
+        severity: e.severity,
+        message: e.message,
+        confidence: e.confidence,
+      },
+    }),
+  );
   return true;
 }
 
 export function acknowledgeAlerts() {
+  mirror(() => memAcknowledgeAlerts());
   write(
     K.alerts,
     getAlerts().map((a) => ({ ...a, acknowledged: true })),
@@ -173,6 +230,7 @@ export function acknowledgeAlerts() {
 }
 
 export function clearAlerts() {
+  mirror(() => memClearAlerts());
   write(K.alerts, []);
 }
 
@@ -183,6 +241,8 @@ export function getNote(key: string): string {
 }
 
 export function setNote(key: string, text: string) {
+  const [chainId, ...rest] = key.split(":");
+  if (chainId && rest.length) mirror(() => memSetNote({ data: { chainId, pairAddress: rest.join(":"), body: text } }));
   const all = read<Record<string, string>>(K.notes, {});
   all[key] = text;
   write(K.notes, all);
@@ -197,10 +257,13 @@ export function getPresets(): FilterPreset[] {
 }
 
 export function savePreset(name: string, json: string) {
+  mirror(() => memSavePreset({ data: { name, json } }));
   write(K.presets, [{ id: `p${Date.now()}`, name, json, savedAt: Date.now() }, ...getPresets()].slice(0, 40));
 }
 
 export function deletePreset(id: string) {
+  // Locally saved presets carry a local id; Supabase rows carry a uuid.
+  if (id.includes("-")) mirror(() => memDeletePreset({ data: { id } }));
   write(
     K.presets,
     getPresets().filter((p) => p.id !== id),
