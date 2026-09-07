@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { TerminalShell } from "@/components/TerminalShell";
+import { BackendPanel } from "@/components/stellaris/BackendPanel";
+
 import { DataState, Metric, Panel, SectionTitle, Tag } from "@/components/kit";
 import { healthQuery, useMarketIntelligence } from "@/hooks/useMarket";
 import { useStellaris } from "@/hooks/useStellaris";
@@ -40,6 +42,10 @@ function SystemPage() {
   return (
     <TerminalShell>
       <SectionTitle sub="Nothing is reported as healthy unless the corresponding service was actually checked by this report.">SYSTEM</SectionTitle>
+      <div className="mb-4">
+        <BackendPanel />
+      </div>
+
 
       <div className="mb-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
         <Panel title="EVIDENCE SOURCE REGISTER" right={<Tag kind="LIVE" />}>
