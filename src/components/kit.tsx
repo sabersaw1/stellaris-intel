@@ -44,19 +44,22 @@ export function SectionTitle({ children, sub }: { children: ReactNode; sub?: str
 
 /* ------------------------------ data tags ----------------------------- */
 
-export type Provenance = "LIVE" | "CALCULATED" | "AGENT" | "VISUAL";
+export type Provenance = "LIVE" | "CALCULATED" | "AGENT" | "VISUAL" | "STORED";
 
 const provenanceStyles: Record<Provenance, string> = {
   LIVE: "border-cyan/40 text-cyan",
   CALCULATED: "border-electric/40 text-electric",
   AGENT: "border-violet/45 text-violet",
   VISUAL: "border-border text-muted-foreground",
+  // read from the operator's Supabase project
+  STORED: "border-signal-low/50 text-signal-low",
 };
 
 const provenanceIcon: Record<Provenance, typeof Database> = {
   LIVE: Database,
   CALCULATED: Activity,
   AGENT: Bot,
+  STORED: Database,
   VISUAL: Sparkles,
 };
 
