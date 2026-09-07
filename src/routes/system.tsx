@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { TerminalShell } from "@/components/TerminalShell";
 import { DataState, Metric, Panel, SectionTitle, Tag } from "@/components/kit";
 import { healthQuery, useMarketIntelligence } from "@/hooks/useMarket";
+import { useStellaris } from "@/hooks/useStellaris";
+import { Link } from "@tanstack/react-router";
 import { clockOf, count } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { AGENT_SUITE_VERSION, RISK_ENGINE_VERSION } from "@/lib/dex-types";
@@ -11,9 +13,9 @@ import { AGENT_SUITE_VERSION, RISK_ENGINE_VERSION } from "@/lib/dex-types";
 export const Route = createFileRoute("/system")({
   head: () => ({
     meta: [
-      { title: "System Health — DEX Market Intelligence" },
+      { title: "System — Stellaris Intel" },
       { name: "description", content: "Live service checks, request accounting, cache hit rate, stale records and engine versions for the intelligence pipeline." },
-      { property: "og:title", content: "System Health — DEX Market Intelligence" },
+      { property: "og:title", content: "System — Stellaris Intel" },
       { property: "og:description", content: "Checked service status, API accounting and pipeline stage visibility." },
     ],
   }),
@@ -32,11 +34,66 @@ const toneFor = (s: string) =>
 function SystemPage() {
   const health = useQuery(healthQuery);
   const { assessments, historyCounts } = useMarketIntelligence();
+  const stellaris = useStellaris();
   const storedPoints = Object.values(historyCounts).reduce((s, n) => s + n, 0);
 
   return (
     <TerminalShell>
       <SectionTitle sub="Nothing is reported as healthy unless the corresponding service was actually checked by this report.">SYSTEM</SectionTitle>
+
+      <div className="mb-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <Panel title="EVIDENCE SOURCE REGISTER" right={<Tag kind="LIVE" />}>
+          <ul className="grid gap-2 sm:grid-cols-2">
+            {stellaris.sources.map((src) => (
+              <li key={src.id} className="rounded-md border border-border/60 p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="num text-[11px] tracking-[0.12em] text-foreground">{src.label}</span>
+                  <span
+                    className={cn(
+                      "num rounded-sm border px-1.5 py-0.5 text-[9px] tracking-[0.12em]",
+                      src.state === "CONNECTED" || src.state === "AVAILABLE"
+                        ? "border-signal-low/50 text-signal-low"
+                        : src.state === "DEGRADED"
+                          ? "border-signal-mid/50 text-signal-mid"
+                          : "border-border text-unknown",
+                    )}
+                  >
+                    {src.state}
+                  </span>
+                </div>
+                <p className="mt-1 text-[10px] leading-snug text-muted-foreground">{src.provides}</p>
+                <p className="text-[10px] leading-snug text-unknown">{src.detail}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="num mt-3 text-[9px] leading-relaxed tracking-[0.1em] text-unknown">
+            NO CREDENTIAL, KEY OR TOKEN IS DISPLAYED ANYWHERE IN THIS APPLICATION. A SOURCE MARKED NOT CONFIGURED CONTRIBUTES NO EVIDENCE AND ITS
+            RESEARCH LAYER STAYS UNKNOWN.
+          </p>
+        </Panel>
+
+        <Panel title="ADVANCED SYSTEM PANELS">
+          <ul className="space-y-1">
+            {[
+              ["/integrations", "INTEGRATIONS AND CREDENTIAL STATE"],
+              ["/workflows", "WORKFLOW STUDIO"],
+              ["/incidents", "INCIDENTS"],
+              ["/audit", "AUDIT LOG"],
+              ["/performance", "AGENT PERFORMANCE"],
+              ["/calibration", "SIGNAL CALIBRATION"],
+              ["/workspaces", "WORKSPACES, DENSITY AND MOTION"],
+              ["/neural", "STELLARIS BRAIN VISUALISATION"],
+              ["/stream", "INTELLIGENCE STREAM"],
+            ].map(([to, label]) => (
+              <li key={to}>
+                <Link to={to!} className="num block text-[10px] leading-snug tracking-[0.1em] text-muted-foreground hover:text-cyan">
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      </div>
 
       {health.isLoading ? (
         <DataState state="WAITING FOR DATA" detail="Running live service checks." />

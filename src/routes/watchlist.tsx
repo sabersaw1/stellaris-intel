@@ -5,6 +5,8 @@ import { Trash2 } from "lucide-react";
 import { TerminalShell } from "@/components/TerminalShell";
 import { ConfidenceBadge, DataState, EmptyState, Panel, RiskBadge, SectionTitle, Tag } from "@/components/kit";
 import { useMarketIntelligence } from "@/hooks/useMarket";
+import { useStellaris } from "@/hooks/useStellaris";
+import { StateBadge } from "@/components/stellaris/InvestigationPanel";
 import { getWatchlist, setWatchGroup, subscribeStore, toggleWatch, type WatchItem } from "@/lib/local-store";
 import { secondsSince, usd } from "@/lib/format";
 
@@ -13,9 +15,9 @@ export const Route = createFileRoute("/watchlist")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Watchlist — DEX Market Intelligence" },
+      { title: "Watchlist — Stellaris Intel" },
       { name: "description", content: "Monitor saved pairs with observed price, liquidity, volume, risk, confidence and anomaly counts." },
-      { property: "og:title", content: "Watchlist — DEX Market Intelligence" },
+      { property: "og:title", content: "Watchlist — Stellaris Intel" },
       { property: "og:description", content: "Grouped monitoring of saved DEX pairs with risk and confidence context." },
     ],
   }),
@@ -24,6 +26,7 @@ export const Route = createFileRoute("/watchlist")({
 
 function Watchlist() {
   const { assessments } = useMarketIntelligence();
+  const stellaris = useStellaris();
   const [items, setItems] = useState<WatchItem[]>([]);
 
   useEffect(() => {
@@ -59,7 +62,7 @@ function Watchlist() {
 
   return (
     <TerminalShell>
-      <SectionTitle sub="Saved pairs, grouped. Values shown come from the most recent observation batch that contained the pair.">
+      <SectionTitle sub="Your priority universe. A watched market receives elevated research priority, is checked for meaningful change on every observation cycle, and keeps its investigation record.">
         WATCHLIST
       </SectionTitle>
 
@@ -97,6 +100,7 @@ function Watchlist() {
                       </div>
                     </div>
                     {a ? (
+                      <>
                       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
                         <span className="num">LIQ {usd(a.pair.liquidityUsd)}</span>
                         <span className="num">VOL {usd(a.pair.volume.h24)}</span>
@@ -105,6 +109,26 @@ function Watchlist() {
                         <ConfidenceBadge score={a.confidence.score} band={a.confidence.band} />
                         <span className="num text-unknown">UPDATED {secondsSince(a.pair.observedAt)}</span>
                       </div>
+                      {(() => {
+                        const inv = stellaris.investigations.find((i) => i.key === w.key);
+                        if (!inv) return null;
+                        return (
+                          <div className="mt-2 space-y-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <StateBadge state={inv.state} />
+                              <span className="num text-[9px] tracking-[0.12em] text-unknown">
+                                RESEARCH PRIORITY {inv.priority === null ? "INSUFFICIENT DATA" : `${inv.priority}/100`} · ELEVATED BY WATCHLIST · OBSERVATIONS {inv.historyPoints}
+                              </span>
+                            </div>
+                            {inv.changed && <p className="text-[10px] leading-snug text-signal-mid">CHANGE — {inv.changed}</p>}
+                            <p className="text-[10px] leading-snug text-cyan">NEXT — {inv.investigatingNext}</p>
+                            <Link to="/investigations" className="num text-[9px] tracking-[0.14em] text-muted-foreground hover:text-cyan">
+                              OPEN INVESTIGATION
+                            </Link>
+                          </div>
+                        );
+                      })()}
+                      </>
                     ) : (
                       <div className="mt-2">
                         <DataState
