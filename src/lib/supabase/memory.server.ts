@@ -208,7 +208,7 @@ export async function insertAlert(
   e: {
     key: string;
     chainId: string;
-    pairAddress?: string;
+    pairAddress?: string | undefined;
     symbol: string;
     dexId: string;
     kind: string;
