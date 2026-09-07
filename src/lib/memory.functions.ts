@@ -38,10 +38,10 @@ export const memSetWatch = createServerFn({ method: "POST" })
     (input: {
       chainId: string;
       pairAddress: string;
-      symbol?: string;
-      dexId?: string;
+      symbol?: string | undefined;
+      dexId?: string | undefined;
       watched: boolean;
-      group?: string;
+      group?: string | undefined;
     }) => input,
   )
   .handler(async ({ data }): Promise<Unconfigured | Ok<{ watched: boolean; error: string | null }>> => {
@@ -75,7 +75,7 @@ export const memGetNote = createServerFn({ method: "GET" })
   });
 
 export const memSetNote = createServerFn({ method: "POST" })
-  .inputValidator((input: { chainId: string; pairAddress: string; symbol?: string; body: string }) => input)
+  .inputValidator((input: { chainId: string; pairAddress: string; symbol?: string | undefined; body: string }) => input)
   .handler(async ({ data }) => {
     const { admin, mem } = await db();
     if (!admin) return { configured: false as const };
@@ -108,7 +108,7 @@ export const memEmitAlert = createServerFn({ method: "POST" })
     (input: {
       key: string;
       chainId: string;
-      pairAddress?: string;
+      pairAddress?: string | undefined;
       symbol: string;
       dexId: string;
       kind: string;
@@ -188,7 +188,7 @@ export const memRecordOutcome = createServerFn({ method: "POST" })
       assessedState: string;
       observedResult: "CONFIRMED" | "NOT CONFIRMED" | "INCONCLUSIVE";
       windowHours: number;
-      detail?: string;
+      detail?: string | undefined;
     }) => input,
   )
   .handler(async ({ data }) => {
