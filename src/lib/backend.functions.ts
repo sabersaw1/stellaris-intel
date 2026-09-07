@@ -274,3 +274,83 @@ export const storedCounts = createServerFn({ method: "GET" }).handler(async (): 
     lastJob: row ? { job: row.job, state: row.state, finishedAt: row.finished_at, detail: row.detail } : null,
   };
 });
+
+/**
+ * Public (safe) client configuration for Realtime.
+ *
+ * Only the project URL and the publishable/anon key are returned — both are
+ * designed to be public. The service role key and cron secret are never
+ * included and never reach the browser.
+ */
+export const publicBackendConfig = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ url: string | null; publishableKey: string | null }> => {
+    const url = process.env["STELLARIS_SUPABASE_URL"] ?? null;
+    const publishableKey = process.env["STELLARIS_SUPABASE_PUBLISHABLE_KEY"] ?? null;
+    return { url, publishableKey };
+  },
+);
+
+/** Truthful freshness metadata for the live status line. */
+export type LiveMeta = {
+  configured: boolean;
+  lastObservationAt: number | null;
+  lastChangeAt: number | null;
+  lastInvestigationAt: number | null;
+  lastJob: { job: string; state: string; startedAt: number | null; finishedAt: number | null; detail: string | null } | null;
+  sources: { id: string; state: string; lastOkAt: number | null; detail: string | null }[];
+  checkedAt: number;
+};
+
+export const liveMeta = createServerFn({ method: "GET" }).handler(async (): Promise<LiveMeta> => {
+  const { getAdmin } = await import("./supabase/admin.server");
+  const db = getAdmin();
+  const empty: LiveMeta = {
+    configured: false,
+    lastObservationAt: null,
+    lastChangeAt: null,
+    lastInvestigationAt: null,
+    lastJob: null,
+    sources: [],
+    checkedAt: Date.now(),
+  };
+  if (!db) return empty;
+
+  const ts = (v: unknown): number | null => (typeof v === "string" ? new Date(v).getTime() : null);
+  const newest = async (table: string, column: string): Promise<number | null> => {
+    const r = await db.from(table).select(column).order(column, { ascending: false }).limit(1);
+    if (r.error) return null;
+    const row = (r.data ?? [])[0] as Record<string, unknown> | undefined;
+    return row ? ts(row[column]) : null;
+  };
+
+  const [obs, chg, inv, job, health] = await Promise.all([
+    newest("market_observations", "observed_at"),
+    newest("change_events", "detected_at"),
+    newest("investigations", "updated_at"),
+    db.from("system_jobs").select("job, state, started_at, finished_at, detail").order("started_at", { ascending: false }).limit(1),
+    db.from("source_health").select("source, state, last_ok_at, detail").limit(20),
+  ]);
+
+  const jrow = (job.data ?? [])[0] as
+    | { job: string; state: string; started_at: string | null; finished_at: string | null; detail: string | null }
+    | undefined;
+
+  return {
+    configured: true,
+    lastObservationAt: obs,
+    lastChangeAt: chg,
+    lastInvestigationAt: inv,
+    lastJob: jrow
+      ? { job: jrow.job, state: jrow.state, startedAt: ts(jrow.started_at), finishedAt: ts(jrow.finished_at), detail: jrow.detail }
+      : null,
+    sources: health.error
+      ? []
+      : ((health.data ?? []) as { source: string; state: string; last_ok_at: string | null; detail: string | null }[]).map((s) => ({
+          id: s.source,
+          state: s.state,
+          lastOkAt: ts(s.last_ok_at),
+          detail: s.detail,
+        })),
+    checkedAt: Date.now(),
+  };
+});
