@@ -10,9 +10,10 @@
  */
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { liveMeta, publicBackendConfig } from "@/lib/backend.functions";
+import { liveMeta, publicBackendConfig, pulseIngest } from "@/lib/backend.functions";
+import { marketQuery } from "@/hooks/useMarket";
 import {
   onRealtimeChange,
   realtimeSnapshot,
@@ -69,6 +70,23 @@ export function useLiveWiring(): RealtimeSnapshot {
       }),
     [qc],
   );
+
+  // EVENT-DRIVEN INGESTION: each fresh market snapshot is stored right away, so
+  // the database — and every open surface, through Realtime — reflects new
+  // information within seconds. The server throttles this, so extra tabs do not
+  // multiply source requests, and the background cycle keeps running with no
+  // browser open at all.
+  const snapshot = useQuery(marketQuery);
+  const pulsedFor = useRef(0);
+  useEffect(() => {
+    const stamp = snapshot.dataUpdatedAt;
+    if (!stamp || stamp === pulsedFor.current || snapshot.isError) return;
+    pulsedFor.current = stamp;
+    void pulseIngest().catch(() => {
+      // A failed store must never disturb the interface; the status line and
+      // SYSTEM surface report database state on their own.
+    });
+  }, [snapshot.dataUpdatedAt, snapshot.isError]);
 
   return snap;
 }
