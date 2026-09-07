@@ -12,3 +12,13 @@
 - FOMO — contract/security research layer (currently UNKNOWN).
 - PUBLIC SOCIAL RESEARCH — social layer beyond profile presence and paid boosts.
 - Background worker — continuous research currently runs only while the terminal is open.
+
+## Phase A — own Supabase backend (done, awaiting migration run)
+- [x] Service-role server client (`src/lib/supabase/admin.server.ts`), secrets read inside functions only
+- [x] Schema + schedule SQL in `db/migrations/0001_stellaris_core.sql`, `0002_stellaris_schedule.sql`
+- [x] DEX Screener -> Supabase ingestion with dedup + change detection (`ingest.server.ts`)
+- [x] Signed scheduled endpoint `/api/public/cron/tick` (HMAC or bearer, 401 verified)
+- [x] GMGN + FOMO adapters built, NOT CONFIGURED until keys provided
+- [x] Truthful backend status panel on SYSTEM
+- [ ] User applies 0001 + 0002 in their Supabase SQL Editor
+- [ ] Phase B: move investigations, watchlist, unknowns, conflicts, hypotheses, outcomes, calibration reads/writes from browser store to Supabase
