@@ -431,8 +431,8 @@ export const pulseIngest = createServerFn({ method: "POST" }).handler(
       skipped: false,
       reason: null,
       pairsObserved: pairs.length,
-      observationsStored: ingest.observationsStored,
-      changesDetected: ingest.changesDetected,
+      observationsStored: ingest.observations,
+      changesDetected: ingest.changes,
       errors: ingest.errors,
     };
   },
