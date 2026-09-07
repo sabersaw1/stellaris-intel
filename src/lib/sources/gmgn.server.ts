@@ -7,11 +7,13 @@
  * exists here by design.
  */
 
-import type { EvidenceGrade, EvidenceLayer } from "../stellaris";
+/** Evidence layers an adapter may contribute to. */
+export type AdapterLayer = "MARKET" | "HOLDERS" | "DEVELOPER" | "CONTRACT" | "SOCIAL" | "HISTORICAL";
+export type AdapterGrade = "VERIFIED" | "OBSERVED" | "INFERRED" | "SUSPECTED" | "UNKNOWN" | "CONFLICTING" | "INSUFFICIENT DATA";
 
 export type AdapterEvidence = {
-  layer: EvidenceLayer;
-  grade: EvidenceGrade;
+  layer: AdapterLayer;
+  grade: AdapterGrade;
   source: string;
   label: string;
   value: string | null;
@@ -74,7 +76,7 @@ export async function fetchGmgnEvidence(_input: {
     const body = (await res.json()) as { data?: Record<string, unknown> };
     const d = body.data ?? {};
     const evidence: AdapterEvidence[] = [];
-    const push = (layer: EvidenceLayer, label: string, field: string) => {
+    const push = (layer: AdapterLayer, label: string, field: string) => {
       const v = d[field];
       if (v === undefined || v === null) return;
       evidence.push({
