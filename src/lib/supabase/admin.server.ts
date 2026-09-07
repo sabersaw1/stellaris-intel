@@ -94,6 +94,9 @@ export async function checkSchema(): Promise<{
       const c = await db.from(table).select("*", { count: "exact", head: true });
       tables.push({ table, present: true, rows: c.error ? null : (c.count ?? 0), error: null });
     } else {
+      // A schema-cache miss still proves the API answered: the project is
+      // reachable, the migration simply has not been applied yet.
+      if (/schema cache|does not exist|PGRST205/i.test(probe.error.message)) reachable = true;
       if (!error) error = probe.error.message;
       tables.push({ table, present: false, rows: null, error: probe.error.message });
     }
