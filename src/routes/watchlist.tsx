@@ -8,6 +8,8 @@ import { useMarketIntelligence } from "@/hooks/useMarket";
 import { useStellaris } from "@/hooks/useStellaris";
 import { StateBadge } from "@/components/stellaris/InvestigationPanel";
 import { getWatchlist, setWatchGroup, subscribeStore, toggleWatch, type WatchItem } from "@/lib/local-store";
+import { useStoredWatchlist } from "@/hooks/useMemory";
+import { StoredChangesPanel } from "@/components/stellaris/MemoryPanels";
 import { secondsSince, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/watchlist")({
@@ -27,13 +29,29 @@ export const Route = createFileRoute("/watchlist")({
 function Watchlist() {
   const { assessments } = useMarketIntelligence();
   const stellaris = useStellaris();
-  const [items, setItems] = useState<WatchItem[]>([]);
+  const [local, setLocal] = useState<WatchItem[]>([]);
+  const stored = useStoredWatchlist();
 
   useEffect(() => {
-    const sync = () => setItems(getWatchlist());
+    const sync = () => setLocal(getWatchlist());
     sync();
     return subscribeStore(sync);
   }, []);
+
+  // The database is the record. The browser copy is only used while the
+  // database is unreachable, and the page says which one it is showing.
+  const persisted = stored.data?.configured ? stored.data.items : null;
+  const items: WatchItem[] = persisted
+    ? persisted.map((w) => ({
+        key: w.key,
+        chainId: w.chainId,
+        pairAddress: w.pairAddress,
+        symbol: w.symbol,
+        group: w.group,
+        addedAt: w.addedAt,
+      }))
+    : local;
+  const memoryState = !stored.data ? "READING DATABASE" : persisted ? "SUPABASE (YOUR PROJECT)" : "BROWSER ONLY — DATABASE UNAVAILABLE";
 
   const byGroup = useMemo(() => {
     const map = new Map<string, WatchItem[]>();
@@ -44,6 +62,7 @@ function Watchlist() {
   if (!items.length) {
     return (
       <TerminalShell>
+        <p className="num mb-2 text-[9px] tracking-[0.16em] text-unknown">RECORD OF TRUTH · {memoryState}</p>
         <SectionTitle sub="Saved pairs are monitored on every ingestion cycle.">WATCHLIST</SectionTitle>
         <Panel>
           <EmptyState
@@ -62,6 +81,7 @@ function Watchlist() {
 
   return (
     <TerminalShell>
+      <p className="num mb-2 text-[9px] tracking-[0.16em] text-unknown">RECORD OF TRUTH · {memoryState}</p>
       <SectionTitle sub="Your priority universe. A watched market receives elevated research priority, is checked for meaningful change on every observation cycle, and keeps its investigation record.">
         WATCHLIST
       </SectionTitle>
@@ -143,6 +163,10 @@ function Watchlist() {
             </ul>
           </Panel>
         ))}
+      </div>
+
+      <div className="mt-4">
+        <StoredChangesPanel />
       </div>
     </TerminalShell>
   );

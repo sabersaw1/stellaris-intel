@@ -16,6 +16,7 @@ import {
   type CalibrationSlice,
 } from "@/lib/calibration";
 import { clockOf } from "@/lib/format";
+import { StoredCalibrationPanel } from "@/components/stellaris/MemoryPanels";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/calibration")({
@@ -77,6 +78,10 @@ function CalibrationPage() {
       <SectionTitle sub="Calibration compares what the system said with what it later recorded. Nothing is scored as accurate or inaccurate until enough resolved cases exist, and agreeing with the majority is never treated as being right.">
         CONFIDENCE CALIBRATION
       </SectionTitle>
+
+      <div className="mb-4">
+        <StoredCalibrationPanel />
+      </div>
 
       <div className="mb-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Panel title="RECORDED CASES" right={<Tag kind="CALCULATED" />}>

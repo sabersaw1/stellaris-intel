@@ -386,16 +386,25 @@ export const STATE_TONE: Record<ResearchState, string> = {
 
 export function buildInvestigation(
   a: Assessment,
-  opts: { peerCount: number; sourceOk: boolean; stale: boolean; similarCases?: number } = {
+  opts: {
+    peerCount: number;
+    sourceOk: boolean;
+    stale: boolean;
+    similarCases?: number;
+    /** Stored observation series from Supabase; used when running server-side. */
+    history?: ObservationPoint[];
+    /** Watchlist membership from Supabase; used when running server-side. */
+    watched?: boolean;
+  } = {
     peerCount: 0,
     sourceOk: true,
     stale: false,
   },
 ): Investigation {
-  const history = getHistory(a.pair.key);
+  const history = opts.history ?? getHistory(a.pair.key);
   const attention = scoreAttention(a, history);
   const job = jobFor(a.pair.key);
-  const watched = getWatchlist().some((w) => w.key === a.pair.key);
+  const watched = opts.watched ?? getWatchlist().some((w) => w.key === a.pair.key);
   const contradictions = contradictionsOf(a);
   const state = deriveState(a, job, contradictions.length, watched, history.length);
 

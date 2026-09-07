@@ -22,6 +22,7 @@ import { AgentNetwork } from "@/components/AgentNetwork";
 import { pairQuery, useHistory } from "@/hooks/useMarket";
 import { ageFrom, clockOf, count, price, ratio, usd } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { useStoredNotes } from "@/hooks/useMemory";
 import { getNote, historyCounts, isWatched, recordObservation, setNote, toggleWatch } from "@/lib/local-store";
 
 const RANGES = [
@@ -56,6 +57,19 @@ function PairIntel() {
   const [, force] = useState(0);
 
   useEffect(() => setNoteText(getNote(key)), [key]);
+
+  // A note written on another device lives in the database, so adopt the
+  // stored copy when this browser has nothing for that market.
+  const storedNotes = useStoredNotes();
+  useEffect(() => {
+    const d = storedNotes.data;
+    if (!d?.configured) return;
+    const remote = d.items.find((n) => n.key === key);
+    if (remote?.body && !getNote(key)) {
+      setNoteText(remote.body);
+      setNote(key, remote.body);
+    }
+  }, [storedNotes.data, key]);
 
   useEffect(() => {
     if (a) recordObservation(a.pair, { riskScore: a.risk.score, confidence: a.confidence.score, anomalies: a.anomalies });
