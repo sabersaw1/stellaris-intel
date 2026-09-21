@@ -40,7 +40,8 @@ export const searchPairs = createServerFn({ method: "GET" })
 export const marketSnapshot = createServerFn({ method: "GET" }).handler(
   async (): Promise<Envelope<PairObservation[]>> => {
     const { dexFetch } = await import("./dexscreener.server");
-    const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+    const { universeSymbols } = await import("./research/universe");
+    const queries = universeSymbols(process.env["STELLARIS_ASSET_UNIVERSE"]);
     const results = await Promise.all(
       queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 45_000 })),
     );

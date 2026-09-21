@@ -127,7 +127,8 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
   const cfg = backendConfig();
   const configured = cfg.urlPresent && cfg.serviceKeyPresent;
 
-  const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+  const { universeSymbols } = await import("./research/universe");
+  const queries = universeSymbols(process.env["STELLARIS_ASSET_UNIVERSE"]);
   const results = await Promise.all(
     queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 20_000 })),
   );
@@ -409,7 +410,8 @@ export const pulseIngest = createServerFn({ method: "POST" }).handler(
     const { dexFetch } = await import("./dexscreener.server");
     const { normalizePairs } = await import("./normalize");
 
-    const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+    const { universeSymbols } = await import("./research/universe");
+  const queries = universeSymbols(process.env["STELLARIS_ASSET_UNIVERSE"]);
     const results = await Promise.all(queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 15_000 })));
     const seen = new Set<string>();
     const pairs = [];
