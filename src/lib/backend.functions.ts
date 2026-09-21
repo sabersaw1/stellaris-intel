@@ -211,6 +211,31 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     }
   }
 
+  // RESEARCH CYCLE: features -> regime -> prediction -> outcome resolution ->
+  // calibration -> signal -> independent risk check -> paper simulation. It runs
+  // after ingestion so it always works from the freshest stored observations,
+  // and it never depends on a browser being open.
+  let research: { predictionsStored: number; predictionsResolved: number; signalsStored: number; errors: string[] } = {
+    predictionsStored: 0,
+    predictionsResolved: 0,
+    signalsStored: 0,
+    errors: [],
+  };
+  if (!ingest.errors.length) {
+    const { getAdmin } = await import("./supabase/admin.server");
+    const { runResearchCycle } = await import("./research/engine.server");
+    const db = getAdmin();
+    if (db) {
+      const r = await runResearchCycle(db);
+      research = {
+        predictionsStored: r.predictionsStored,
+        predictionsResolved: r.predictionsResolved,
+        signalsStored: r.signalsStored,
+        errors: r.errors,
+      };
+    }
+  }
+
   await recordSystemJob({
     job: "intelligence.tick",
     state: ingest.errors.length ? "FAILED" : "DONE",
