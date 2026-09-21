@@ -65,14 +65,24 @@ create table if not exists public.research_predictions (
   direction_outcome  text,                    -- CORRECT | INCORRECT | FLAT_CORRECT | UNRESOLVABLE
   prediction_error   numeric,                 -- |probability - realized(0/1)|
   brier_score        numeric,
-  resolution_detail  text
+  resolution_detail  text,
+  -- Dedup bucket. date_trunc(text, timestamp) is IMMUTABLE only without a time
+  -- zone, so the timestamptz is first pinned to UTC. A stored generated column
+  -- keeps the unique index a plain column index (valid in PostgreSQL).
+  predicted_minute   timestamp generated always as
+                       (date_trunc('minute', predicted_at at time zone 'UTC')) stored
 );
+-- Older installs created before predicted_minute existed.
+alter table public.research_predictions
+  add column if not exists predicted_minute timestamp generated always as
+    (date_trunc('minute', predicted_at at time zone 'UTC')) stored;
 create index if not exists research_predictions_open_idx on public.research_predictions (resolve_at) where resolved_at is null;
 create index if not exists research_predictions_market_idx on public.research_predictions (market_id, predicted_at desc);
 create index if not exists research_predictions_resolved_idx on public.research_predictions (resolved_at desc);
 -- Dedup: one prediction per market, strategy version and horizon per minute.
+drop index if exists public.research_predictions_dedup_idx;
 create unique index if not exists research_predictions_dedup_idx
-  on public.research_predictions (market_id, strategy_version, horizon_minutes, date_trunc('minute', predicted_at));
+  on public.research_predictions (market_id, strategy_version, horizon_minutes, predicted_minute);
 
 -- ------------------------------------------------------------------- signals
 create table if not exists public.signals (
