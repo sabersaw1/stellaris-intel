@@ -139,7 +139,8 @@ export function Btn({
 
 export function Table({ head, children }: { head: string[]; children: ReactNode }) {
   return (
-    <div className="overflow-x-auto">
+    {/* min-w-0 keeps the scroller inside its column instead of widening the page. */}
+    <div className="min-w-0 max-w-full overflow-x-auto">
       <table className="w-full min-w-[640px] border-collapse text-left">
         <thead>
           <tr className="border-b border-border">
