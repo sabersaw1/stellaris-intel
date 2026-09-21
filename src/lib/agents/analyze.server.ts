@@ -65,9 +65,12 @@ export async function analyzeTokenForAgent(tokenId: string, persist: boolean): P
     .order("pair_created_at", { ascending: true })
     .limit(1);
 
+  /* "*" so the verification columns added by migration 0008 (verified,
+     reported_by, verification_source) are used when present, without the read
+     failing on a database where 0008 has not been applied yet. */
   const walletRows = await client
     .from("wallet_events")
-    .select("kind, value_usd, tx_hash, source, observed_at, wallet_id")
+    .select("*")
     .eq("token_id", tokenId)
     .order("observed_at", { ascending: false })
     .limit(50);
@@ -87,8 +90,9 @@ export async function analyzeTokenForAgent(tokenId: string, persist: boolean): P
       wallet: (w["wallet_id"] as string | null) ?? null,
       action: w["kind"] === "BUY" ? "BUY" : w["kind"] === "SELL" ? "SELL" : "UNKNOWN",
       observedAt: ts(w["observed_at"]),
-      source: (w["source"] as string | null) ?? "unknown",
-      verified: false,
+      source: (w["reported_by"] as string | null) ?? (w["source"] as string | null) ?? "unknown",
+      /* Only an independent on-chain confirmation may set this true. */
+      verified: w["verified"] === true,
       amountUsd: num(w["value_usd"]),
       txSignature: (w["tx_hash"] as string | null) ?? null,
     })),

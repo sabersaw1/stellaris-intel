@@ -61,3 +61,36 @@ Blocked on values only you can provide
 - X connector or X_BEARER_TOKEN — social evidence.
 - FOMO_API_KEY — trader/wallet intelligence.
 - STELLARIS_AGENT_TOKEN — opens the machine API for your local LLM.
+
+## RECONCILIATION PASS — completed without credentials or SQL
+
+Verified: 4 test files / 69 tests pass, typecheck clean, production build OK,
+no console or page errors on any screen, no sideways scrolling on a 390px phone
+across all 18 primary and advanced screens.
+
+Finished in this pass:
+- Narrative engine (`src/lib/meme/narrative.ts`) — explicit theme grouping,
+  minimum three tokens, acceleration only when two social windows exist.
+- Entity graph (`src/lib/meme/graph.ts`) — X account -> trader -> wallet ->
+  token -> pair -> narrative, observed edges only, source on every edge, no
+  duplicate edges.
+- FOMO evidence normalisation (`src/lib/meme/fomo-normalize.ts`) — reported
+  trades are never marked verified, missing fields stay null and are named,
+  duplicates and unplaceable reports are discarded.
+- Explain directory (`src/lib/explain.ts`) + `/help` screen — every metric with
+  meaning, calculation, source, freshness, limitations and what it does NOT mean.
+- Wallet provenance now flows into dossiers: `verified` comes from the stored
+  on-chain verification flag, `reported_by` from the reporting source.
+- Keyboard shortcuts de-duplicated (meme/engine/providers/connections/help now
+  G 1-5); stale "Realtime" comment corrected — live refresh is polling only.
+- Mobile/desktop layout containment fixes in shared components (metric tiles,
+  label/value rows, table scroller, command layout grids).
+
+Still requires the user, and only the user:
+1. Apply `db/migrations/0007_stellaris_meme_core.sql` then
+   `0008_stellaris_dossiers.sql` in Supabase. Until then the meme screens
+   truthfully report SCHEMA MISSING.
+2. Optional data connections, each of which unlocks specific evidence:
+   PumpPortal or Bitquery (Pump.fun launches), Solana RPC URL (on-chain
+   verification), X API credentials (social), `FOMO_API_KEY` (trader activity),
+   `STELLARIS_AGENT_TOKEN` (machine/Jarvis API access).

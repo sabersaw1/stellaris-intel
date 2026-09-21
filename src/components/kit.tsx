@@ -96,9 +96,12 @@ export function Metric({
   const unavailable = typeof value === "string" && /UNAVAILABLE|INSUFFICIENT|WAITING/.test(value);
   return (
     <div className="min-w-0">
-      <div className="flex items-center gap-1.5">
-        <span className="label-xs">{label}</span>
-        <Tag kind={kind} />
+      {/* The label may wrap; the provenance tag never shrinks. */}
+      <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+        <span className="label-xs min-w-0 break-words">{label}</span>
+        <span className="shrink-0">
+          <Tag kind={kind} />
+        </span>
       </div>
       <div
         className={cn(
