@@ -40,7 +40,7 @@ describe("feature engine", () => {
   it("marks features unavailable when the source cannot provide the inputs", () => {
     const f = computeFeatures(series(Array.from({ length: 40 }, (_, i) => 100 + i)));
     const unavailable = f.features.filter((x) => !x.available).map((x) => x.key);
-    for (const key of ["atr", "vwap", "funding_rate", "open_interest", "order_book_imbalance"]) {
+    for (const key of ["atr", "vwap", "funding", "open_interest", "orderbook_imbalance"]) {
       expect(unavailable).toContain(key);
     }
   });
