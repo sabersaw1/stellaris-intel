@@ -83,6 +83,20 @@ let starting = false;
  */
 export async function startRealtime(config: { url: string | null; publishableKey: string | null }): Promise<void> {
   if (typeof window === "undefined" || channel || starting) return;
+
+  // PRIVACY DECISION: research and market tables are private (no anonymous or
+  // authenticated read access). Browser Realtime therefore cannot receive their
+  // change events, and attempting it would only show a misleading state. The
+  // interface refreshes through fast server-side revalidation instead.
+  if (!REALTIME_ENABLED) {
+    publish({
+      state: "NOT CONFIGURED",
+      detail:
+        "Direct database streaming is intentionally off: research tables are private, so the browser has no read access. Live data comes from fast server-side revalidation (10-15s).",
+    });
+    return;
+  }
+
   if (!config.url || !config.publishableKey) {
     publish({
       state: "NOT CONFIGURED",
@@ -90,6 +104,7 @@ export async function startRealtime(config: { url: string | null; publishableKey
     });
     return;
   }
+
 
   starting = true;
   publish({ state: "CONNECTING", detail: "Opening a live connection to your Supabase project." });
