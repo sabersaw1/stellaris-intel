@@ -18,3 +18,11 @@
 - GMGN / FOMO credentials (adapters built, NOT CONFIGURED).
 - Derivatives venue for funding / open interest / liquidations (currently UNAVAILABLE).
 - AI research assistant surface over stored data (architecture available through engine read functions).
+
+## New direction (meme-coin refocus, requested 2026-09-21)
+- Research universe becomes MEME COINS ONLY; mainstream majors filtered out of user-facing surfaces.
+- Providers: Pump.fun (discovery), DEX Screener (market), Solana on-chain, X (real OAuth), FOMO (only if a supported auth path exists), news/web research, AI abstraction.
+- New entities: tokens, traders, wallets, x_accounts, social/narrative events, dossiers, alerts, audit log, provider connections, user trade journal, agent permissions.
+- Event-driven engine with dedup; cheap rules first, AI only on meaningful events.
+- Agent-ready JSON API for future local Jarvis; execution stays disabled.
+- Connections + provider health + help system + command bar + radar + market map + timeline + daily brief.
