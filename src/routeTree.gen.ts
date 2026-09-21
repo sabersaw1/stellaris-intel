@@ -28,6 +28,7 @@ import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as NeuralRouteImport } from './routes/neural'
 import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as PostmortemsRouteImport } from './routes/postmortems'
+import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as QuestionsRouteImport } from './routes/questions'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
@@ -140,6 +141,11 @@ const PostmortemsRoute = PostmortemsRouteImport.update({
   path: '/postmortems',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProvidersRoute = ProvidersRouteImport.update({
+  id: '/providers',
+  path: '/providers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuestionsRoute = QuestionsRouteImport.update({
   id: '/questions',
   path: '/questions',
@@ -242,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/neural': typeof NeuralRoute
   '/performance': typeof PerformanceRoute
   '/postmortems': typeof PostmortemsRoute
+  '/providers': typeof ProvidersRoute
   '/questions': typeof QuestionsRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/neural': typeof NeuralRoute
   '/performance': typeof PerformanceRoute
   '/postmortems': typeof PostmortemsRoute
+  '/providers': typeof ProvidersRoute
   '/questions': typeof QuestionsRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
@@ -317,6 +325,7 @@ export interface FileRoutesById {
   '/neural': typeof NeuralRoute
   '/performance': typeof PerformanceRoute
   '/postmortems': typeof PostmortemsRoute
+  '/providers': typeof ProvidersRoute
   '/questions': typeof QuestionsRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
@@ -356,6 +365,7 @@ export interface FileRouteTypes {
     | '/neural'
     | '/performance'
     | '/postmortems'
+    | '/providers'
     | '/questions'
     | '/research'
     | '/risk'
@@ -393,6 +403,7 @@ export interface FileRouteTypes {
     | '/neural'
     | '/performance'
     | '/postmortems'
+    | '/providers'
     | '/questions'
     | '/research'
     | '/risk'
@@ -430,6 +441,7 @@ export interface FileRouteTypes {
     | '/neural'
     | '/performance'
     | '/postmortems'
+    | '/providers'
     | '/questions'
     | '/research'
     | '/risk'
@@ -468,6 +480,7 @@ export interface RootRouteChildren {
   NeuralRoute: typeof NeuralRoute
   PerformanceRoute: typeof PerformanceRoute
   PostmortemsRoute: typeof PostmortemsRoute
+  ProvidersRoute: typeof ProvidersRoute
   QuestionsRoute: typeof QuestionsRoute
   ResearchRoute: typeof ResearchRoute
   RiskRoute: typeof RiskRoute
@@ -621,6 +634,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostmortemsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/providers': {
+      id: '/providers'
+      path: '/providers'
+      fullPath: '/providers'
+      preLoaderRoute: typeof ProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/questions': {
       id: '/questions'
       path: '/questions'
@@ -756,6 +776,7 @@ const rootRouteChildren: RootRouteChildren = {
   NeuralRoute: NeuralRoute,
   PerformanceRoute: PerformanceRoute,
   PostmortemsRoute: PostmortemsRoute,
+  ProvidersRoute: ProvidersRoute,
   QuestionsRoute: QuestionsRoute,
   ResearchRoute: ResearchRoute,
   RiskRoute: RiskRoute,
