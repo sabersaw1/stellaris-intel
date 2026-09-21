@@ -131,22 +131,22 @@ describe("backtesting", () => {
   const prices = series(Array.from({ length: 120 }, (_, i) => 100 + Math.sin(i / 5) * 3 + i * 0.05));
 
   it("charges fees and slippage and labels the sample", () => {
-    const r = backtest(STRATEGIES[0]!, prices, { label: "IN SAMPLE" });
-    expect(r.label).toBe("IN SAMPLE");
-    expect(r.feesPaid).toBeGreaterThanOrEqual(0);
+    const r = backtest(prices, STRATEGIES[0]!);
+    expect(r.kind).toBe("IN SAMPLE");
+    expect(r.fees).toBeGreaterThanOrEqual(0);
     expect(r.trades.length).toBeGreaterThanOrEqual(0);
   });
 
   it("never uses information after the decision point", () => {
-    const full = backtest(STRATEGIES[0]!, prices, { label: "IN SAMPLE" });
-    const truncated = backtest(STRATEGIES[0]!, prices.slice(0, 80), { label: "IN SAMPLE" });
+    const full = backtest(prices, STRATEGIES[0]!);
+    const truncated = backtest(prices.slice(0, 80), STRATEGIES[0]!);
     const shared = truncated.trades.length;
     expect(full.trades.slice(0, Math.max(0, shared - 1))).toEqual(truncated.trades.slice(0, Math.max(0, shared - 1)));
   });
 
   it("walks forward across multiple windows", () => {
-    const runs = walkForward(STRATEGIES[0]!, prices, { windows: 3 });
+    const runs = walkForward(prices, STRATEGIES[0]!, 3);
     expect(runs.length).toBeGreaterThan(0);
-    for (const r of runs) expect(r.label).toBe("WALK FORWARD");
+    for (const r of runs) expect(r.result.kind).toBe("WALK FORWARD");
   });
 });
