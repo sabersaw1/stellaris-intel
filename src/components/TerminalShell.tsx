@@ -75,9 +75,9 @@ const ADVANCED = [
   { to: "/contradictions", label: "CONTRADICTIONS", icon: GitCompare, keys: "G C" },
   { to: "/timemachine", label: "TIME MACHINE", icon: History, keys: "G X" },
   { to: "/postmortems", label: "POST-MORTEMS", icon: ScrollText, keys: "G P" },
-  { to: "/meme", label: "MEME INTELLIGENCE", icon: Activity, keys: "G M" },
-  { to: "/engine", label: "RESEARCH ENGINE", icon: Target, keys: "G E" },
-  { to: "/providers", label: "PROVIDERS", icon: Plug, keys: "G D" },
+  { to: "/meme", label: "MEME INTELLIGENCE", icon: Activity, keys: "G 1" },
+  { to: "/engine", label: "RESEARCH ENGINE", icon: Target, keys: "G 2" },
+  { to: "/providers", label: "PROVIDERS", icon: Plug, keys: "G 3" },
   { to: "/calibration", label: "CALIBRATION", icon: Target, keys: "G B" },
   { to: "/performance", label: "PERFORMANCE", icon: Award, keys: "G F" },
   { to: "/neural", label: "STELLARIS BRAIN", icon: Network, keys: "G N" },
@@ -92,13 +92,15 @@ const ADVANCED = [
   { to: "/workflows", label: "WORKFLOWS", icon: Workflow, keys: "G Y" },
   { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "G V" },
   { to: "/audit", label: "AUDIT LOG", icon: ScrollText, keys: "G U" },
-  { to: "/connections", label: "CONNECTIONS", icon: Plug, keys: "" },
+  { to: "/connections", label: "CONNECTIONS", icon: Plug, keys: "G 4" },
+  { to: "/help", label: "HELP & DEFINITIONS", icon: HelpCircle, keys: "G 5" },
 ] as const;
 
 export function TerminalShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
-  // One shared Realtime connection per tab; database writes refresh the
-  // affected queries the moment they happen.
+  // Live refresh uses short-interval polling/revalidation only. Private
+  // research tables are never exposed to the browser, so there is no direct
+  // database Realtime subscription.
   useLiveWiring();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const market = useQuery(marketQuery);
@@ -196,6 +198,11 @@ export function TerminalShell({ children }: { children: ReactNode }) {
         y: "/workflows",
         v: "/incidents",
         u: "/audit",
+        "1": "/meme",
+        "2": "/engine",
+        "3": "/providers",
+        "4": "/connections",
+        "5": "/help",
       };
       const to = map[e.key.toLowerCase()];
       if (to) void navigate({ to });
@@ -370,6 +377,8 @@ export function TerminalShell({ children }: { children: ReactNode }) {
                 ["G V", "Incidents"],
                 ["G U", "Audit log"],
                 ["G M / W / A / R / S", "Markets · watchlist · alerts · risk · system"],
+                ["G 1 / 2 / 3", "Meme intelligence · research engine · providers"],
+                ["G 4 / 5", "Connections · help and definitions"],
                 ["?", "Toggle this overlay"],
                 ["ESC", "Close panel / blur input"],
               ].map(([k, d]) => (

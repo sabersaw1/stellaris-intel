@@ -21,6 +21,7 @@ import { Route as ConnectionsRouteImport } from './routes/connections'
 import { Route as ContradictionsRouteImport } from './routes/contradictions'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as EngineRouteImport } from './routes/engine'
+import { Route as HelpRouteImport } from './routes/help'
 import { Route as HypothesesRouteImport } from './routes/hypotheses'
 import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
@@ -111,6 +112,11 @@ const DiscoverRoute = DiscoverRouteImport.update({
 const EngineRoute = EngineRouteImport.update({
   id: '/engine',
   path: '/engine',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HelpRoute = HelpRouteImport.update({
+  id: '/help',
+  path: '/help',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HypothesesRoute = HypothesesRouteImport.update({
@@ -286,6 +292,7 @@ export interface FileRoutesByFullPath {
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
+  '/help': typeof HelpRoute
   '/hypotheses': typeof HypothesesRoute
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
@@ -331,6 +338,7 @@ export interface FileRoutesByTo {
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
+  '/help': typeof HelpRoute
   '/hypotheses': typeof HypothesesRoute
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
@@ -377,6 +385,7 @@ export interface FileRoutesById {
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
+  '/help': typeof HelpRoute
   '/hypotheses': typeof HypothesesRoute
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
@@ -424,6 +433,7 @@ export interface FileRouteTypes {
     | '/contradictions'
     | '/discover'
     | '/engine'
+    | '/help'
     | '/hypotheses'
     | '/incidents'
     | '/integrations'
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/contradictions'
     | '/discover'
     | '/engine'
+    | '/help'
     | '/hypotheses'
     | '/incidents'
     | '/integrations'
@@ -514,6 +525,7 @@ export interface FileRouteTypes {
     | '/contradictions'
     | '/discover'
     | '/engine'
+    | '/help'
     | '/hypotheses'
     | '/incidents'
     | '/integrations'
@@ -560,6 +572,7 @@ export interface RootRouteChildren {
   ContradictionsRoute: typeof ContradictionsRoute
   DiscoverRoute: typeof DiscoverRoute
   EngineRoute: typeof EngineRoute
+  HelpRoute: typeof HelpRoute
   HypothesesRoute: typeof HypothesesRoute
   IncidentsRoute: typeof IncidentsRoute
   IntegrationsRoute: typeof IntegrationsRoute
@@ -677,6 +690,13 @@ declare module '@tanstack/react-router' {
       path: '/engine'
       fullPath: '/engine'
       preLoaderRoute: typeof EngineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/help': {
+      id: '/help'
+      path: '/help'
+      fullPath: '/help'
+      preLoaderRoute: typeof HelpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/hypotheses': {
@@ -912,6 +932,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContradictionsRoute: ContradictionsRoute,
   DiscoverRoute: DiscoverRoute,
   EngineRoute: EngineRoute,
+  HelpRoute: HelpRoute,
   HypothesesRoute: HypothesesRoute,
   IncidentsRoute: IncidentsRoute,
   IntegrationsRoute: IntegrationsRoute,
