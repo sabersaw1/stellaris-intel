@@ -242,13 +242,31 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     }
   }
 
+  // MEME COLLECTION: discover -> classify (meme only) -> store -> detect change
+  // -> events. Runs on its own tables and never blocks the tick on failure.
+  let meme = { memes: 0, snapshots: 0, events: 0, alerts: 0, errors: [] as string[], notes: [] as string[] };
+  try {
+    const { runCollectionCycle } = await import("./stellaris/pipeline.server");
+    const c = await runCollectionCycle();
+    meme = {
+      memes: c.memes,
+      snapshots: c.snapshotsStored,
+      events: c.eventsStored,
+      alerts: c.alertsRaised,
+      errors: c.errors,
+      notes: c.notes,
+    };
+  } catch (e) {
+    meme.errors.push(e instanceof Error ? e.message : "meme collection failed");
+  }
+
   await recordSystemJob({
     job: "intelligence.tick",
     state: ingest.errors.length ? "FAILED" : "DONE",
     startedAt: started,
     processed: ingest.observations,
-    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s), ${research.predictionsStored} prediction(s), ${research.predictionsResolved} resolved, ${research.signalsStored} signal(s)`,
-    error: ingest.errors[0] ?? null,
+    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s), ${research.predictionsStored} prediction(s), ${research.predictionsResolved} resolved, ${research.signalsStored} signal(s), ${meme.memes} meme token(s), ${meme.snapshots} meme snapshot(s), ${meme.events} meme event(s)`,
+    error: ingest.errors[0] ?? meme.errors[0] ?? null,
   });
 
   return {
@@ -262,11 +280,13 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     predictionsStored: research.predictionsStored,
     predictionsResolved: research.predictionsResolved,
     signalsStored: research.signalsStored,
-    errors: [...ingest.errors, ...research.errors],
+    errors: [...ingest.errors, ...research.errors, ...meme.errors],
     durationMs: Date.now() - started,
     note: ingest.errors.length
       ? "Ingestion reported errors — check that migration 0001 has been applied."
-      : "Observations stored in your Supabase project.",
+      : meme.errors.length
+        ? "Core observations stored; the meme collection cycle reported errors (migration 0007 may be missing)."
+        : `Observations stored in your Supabase project. Meme cycle: ${meme.memes} token(s), ${meme.events} event(s).`,
   };
 });
 
