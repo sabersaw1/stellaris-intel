@@ -50,9 +50,10 @@ export function toneFor(state: string): keyof typeof PILL_TONE {
 export function KV({ label, value, mono = true }: { label: string; value: ReactNode; mono?: boolean }) {
   const unavailable = typeof value === "string" && /UNAVAILABLE|INSUFFICIENT|WAITING|NOT AVAILABLE|UNSUPPORTED|NOT SCORED/.test(value);
   return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-border/50 py-1.5 last:border-0">
+    <div className="flex min-w-0 items-baseline justify-between gap-3 border-b border-border/50 py-1.5 last:border-0">
       <span className="label-xs shrink-0">{label}</span>
-      <span className={cn("min-w-0 truncate text-right text-xs", mono && "num", unavailable ? "text-unknown" : "text-foreground")} title={typeof value === "string" ? value : undefined}>
+      {/* w-0 flex-1 lets a long value truncate instead of widening the panel. */}
+      <span className={cn("w-0 min-w-0 flex-1 truncate text-right text-xs", mono && "num", unavailable ? "text-unknown" : "text-foreground")} title={typeof value === "string" ? value : undefined}>
         {value}
       </span>
     </div>
