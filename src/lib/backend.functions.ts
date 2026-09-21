@@ -111,6 +111,9 @@ export type TickResult = {
   observationsStored: number;
   changesDetected: number;
   investigationsStored: number;
+  predictionsStored: number;
+  predictionsResolved: number;
+  signalsStored: number;
   errors: string[];
   durationMs: number;
   note: string;
@@ -152,6 +155,9 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
       observationsStored: 0,
       changesDetected: 0,
       investigationsStored: 0,
+      predictionsStored: 0,
+      predictionsResolved: 0,
+      signalsStored: 0,
       errors: [],
       durationMs: Date.now() - started,
       note: "Observations were collected but NOT stored: this project's Supabase credentials are not configured.",
@@ -241,7 +247,7 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     state: ingest.errors.length ? "FAILED" : "DONE",
     startedAt: started,
     processed: ingest.observations,
-    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s)`,
+    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s), ${research.predictionsStored} prediction(s), ${research.predictionsResolved} resolved, ${research.signalsStored} signal(s)`,
     error: ingest.errors[0] ?? null,
   });
 
@@ -253,7 +259,10 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     observationsStored: ingest.observations,
     changesDetected: ingest.changes,
     investigationsStored,
-    errors: ingest.errors,
+    predictionsStored: research.predictionsStored,
+    predictionsResolved: research.predictionsResolved,
+    signalsStored: research.signalsStored,
+    errors: [...ingest.errors, ...research.errors],
     durationMs: Date.now() - started,
     note: ingest.errors.length
       ? "Ingestion reported errors — check that migration 0001 has been applied."
