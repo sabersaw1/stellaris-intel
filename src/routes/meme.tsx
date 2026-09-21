@@ -168,7 +168,7 @@ function MemePage() {
             No tokens stored yet. Run a collection cycle, or wait for the background cycle.
           </p>
         ) : (
-          <Table head={["TOKEN", "CHAIN", "ORIGIN", "VERDICT", "PRICE", "LIQUIDITY", "24H VOLUME", "OBSERVED"]}>
+          <Table head={["TOKEN", "CHAIN", "ORIGIN", "VERDICT", "PRICE", "LIQUIDITY", "24H VOLUME", "OBSERVED", ""]}>
             {rows.map((t) => (
               <tr key={t.id} className="border-t border-border/30">
                 <Td>{t.symbol || t.address.slice(0, 8)}</Td>
@@ -181,10 +181,32 @@ function MemePage() {
                 <Td>{t.liquidityUsd === null ? "UNAVAILABLE" : usd(t.liquidityUsd)}</Td>
                 <Td>{t.volume24hUsd === null ? "UNAVAILABLE" : usd(t.volume24hUsd)}</Td>
                 <Td>{t.observedAt ? secondsSince(Date.parse(t.observedAt)) : "NO OBSERVATION"}</Td>
+                <Td>
+                  <Btn onClick={() => analyze.mutate({ data: { tokenId: t.id, persist: true } })} disabled={analyze.isPending}>
+                    RESEARCH
+                  </Btn>
+                </Td>
               </tr>
             ))}
           </Table>
         )}
+      </Panel>
+
+      <Panel className="mt-3" title="DECISION SUPPORT">
+        <p className="mb-2 text-xs text-muted-foreground">
+          Each analytical role judges only the evidence it is competent to judge, and roles are allowed to disagree. No
+          buy or sell instruction is ever produced, and real trading is hard-disabled.
+        </p>
+        {analyze.isPending && <p className="text-xs text-cyan">Running the research pass…</p>}
+        {!analyze.data && !analyze.isPending && (
+          <p className="text-xs text-muted-foreground">Choose RESEARCH on a token to see its evidence breakdown.</p>
+        )}
+        {analyze.data && analyze.data.ok === false && (
+          <p className="text-xs text-unknown">
+            {analyze.data.state}: {analyze.data.detail ?? "no detail recorded"}
+          </p>
+        )}
+        {analyze.data && analyze.data.ok === true && <Dossier d={analyze.data.dossier} />}
       </Panel>
 
       <div className="mt-3 grid gap-3 lg:grid-cols-2">
