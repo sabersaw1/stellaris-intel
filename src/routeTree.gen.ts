@@ -25,6 +25,7 @@ import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
 import { Route as MarketsRouteImport } from './routes/markets'
+import { Route as MemeRouteImport } from './routes/meme'
 import { Route as MemoryRouteImport } from './routes/memory'
 import { Route as NeuralRouteImport } from './routes/neural'
 import { Route as PerformanceRouteImport } from './routes/performance'
@@ -125,6 +126,11 @@ const InvestigationsRoute = InvestigationsRouteImport.update({
 const MarketsRoute = MarketsRouteImport.update({
   id: '/markets',
   path: '/markets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemeRoute = MemeRouteImport.update({
+  id: '/meme',
+  path: '/meme',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MemoryRoute = MemoryRouteImport.update({
@@ -251,6 +257,7 @@ export interface FileRoutesByFullPath {
   '/integrations': typeof IntegrationsRoute
   '/investigations': typeof InvestigationsRoute
   '/markets': typeof MarketsRoute
+  '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
   '/neural': typeof NeuralRoute
   '/performance': typeof PerformanceRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/integrations': typeof IntegrationsRoute
   '/investigations': typeof InvestigationsRoute
   '/markets': typeof MarketsRoute
+  '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
   '/neural': typeof NeuralRoute
   '/performance': typeof PerformanceRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/integrations': typeof IntegrationsRoute
   '/investigations': typeof InvestigationsRoute
   '/markets': typeof MarketsRoute
+  '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
   '/neural': typeof NeuralRoute
   '/performance': typeof PerformanceRoute
@@ -371,6 +380,7 @@ export interface FileRouteTypes {
     | '/integrations'
     | '/investigations'
     | '/markets'
+    | '/meme'
     | '/memory'
     | '/neural'
     | '/performance'
@@ -410,6 +420,7 @@ export interface FileRouteTypes {
     | '/integrations'
     | '/investigations'
     | '/markets'
+    | '/meme'
     | '/memory'
     | '/neural'
     | '/performance'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/integrations'
     | '/investigations'
     | '/markets'
+    | '/meme'
     | '/memory'
     | '/neural'
     | '/performance'
@@ -489,6 +501,7 @@ export interface RootRouteChildren {
   IntegrationsRoute: typeof IntegrationsRoute
   InvestigationsRoute: typeof InvestigationsRoute
   MarketsRoute: typeof MarketsRoute
+  MemeRoute: typeof MemeRoute
   MemoryRoute: typeof MemoryRoute
   NeuralRoute: typeof NeuralRoute
   PerformanceRoute: typeof PerformanceRoute
@@ -624,6 +637,13 @@ declare module '@tanstack/react-router' {
       path: '/markets'
       fullPath: '/markets'
       preLoaderRoute: typeof MarketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meme': {
+      id: '/meme'
+      path: '/meme'
+      fullPath: '/meme'
+      preLoaderRoute: typeof MemeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/memory': {
@@ -793,6 +813,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntegrationsRoute: IntegrationsRoute,
   InvestigationsRoute: InvestigationsRoute,
   MarketsRoute: MarketsRoute,
+  MemeRoute: MemeRoute,
   MemoryRoute: MemoryRoute,
   NeuralRoute: NeuralRoute,
   PerformanceRoute: PerformanceRoute,
