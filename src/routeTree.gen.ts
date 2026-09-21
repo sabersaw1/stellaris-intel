@@ -17,6 +17,7 @@ import { Route as AttentionRouteImport } from './routes/attention'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as CalibrationRouteImport } from './routes/calibration'
 import { Route as CommandRouteImport } from './routes/command'
+import { Route as ConnectionsRouteImport } from './routes/connections'
 import { Route as ContradictionsRouteImport } from './routes/contradictions'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as EngineRouteImport } from './routes/engine'
@@ -90,6 +91,11 @@ const CalibrationRoute = CalibrationRouteImport.update({
 const CommandRoute = CommandRouteImport.update({
   id: '/command',
   path: '/command',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConnectionsRoute = ConnectionsRouteImport.update({
+  id: '/connections',
+  path: '/connections',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContradictionsRoute = ContradictionsRouteImport.update({
@@ -276,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuditRoute
   '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/connections': typeof ConnectionsRoute
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
@@ -320,6 +327,7 @@ export interface FileRoutesByTo {
   '/audit': typeof AuditRoute
   '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/connections': typeof ConnectionsRoute
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
@@ -365,6 +373,7 @@ export interface FileRoutesById {
   '/audit': typeof AuditRoute
   '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/connections': typeof ConnectionsRoute
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
@@ -411,6 +420,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/calibration'
     | '/command'
+    | '/connections'
     | '/contradictions'
     | '/discover'
     | '/engine'
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/calibration'
     | '/command'
+    | '/connections'
     | '/contradictions'
     | '/discover'
     | '/engine'
@@ -499,6 +510,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/calibration'
     | '/command'
+    | '/connections'
     | '/contradictions'
     | '/discover'
     | '/engine'
@@ -544,6 +556,7 @@ export interface RootRouteChildren {
   AuditRoute: typeof AuditRoute
   CalibrationRoute: typeof CalibrationRoute
   CommandRoute: typeof CommandRoute
+  ConnectionsRoute: typeof ConnectionsRoute
   ContradictionsRoute: typeof ContradictionsRoute
   DiscoverRoute: typeof DiscoverRoute
   EngineRoute: typeof EngineRoute
@@ -636,6 +649,13 @@ declare module '@tanstack/react-router' {
       path: '/command'
       fullPath: '/command'
       preLoaderRoute: typeof CommandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/connections': {
+      id: '/connections'
+      path: '/connections'
+      fullPath: '/connections'
+      preLoaderRoute: typeof ConnectionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contradictions': {
@@ -888,6 +908,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRoute: AuditRoute,
   CalibrationRoute: CalibrationRoute,
   CommandRoute: CommandRoute,
+  ConnectionsRoute: ConnectionsRoute,
   ContradictionsRoute: ContradictionsRoute,
   DiscoverRoute: DiscoverRoute,
   EngineRoute: EngineRoute,
