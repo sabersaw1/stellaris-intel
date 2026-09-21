@@ -38,9 +38,10 @@ function ProvidersPage() {
   return (
     <TerminalShell>
       <SectionTitle
-        title="DATA PROVIDERS"
         sub="Each provider below states its purpose, the exact credential it needs, where that credential comes from, whether it costs money, and whether it is currently connected. Optional providers contribute no data and incur no cost while they read NOT CONFIGURED."
-      />
+      >
+        DATA PROVIDERS
+      </SectionTitle>
 
       <div className="grid gap-3 lg:grid-cols-2">
         {items.map((p) => (
@@ -51,12 +52,12 @@ function ProvidersPage() {
           >
             <p className="mb-3 text-xs leading-relaxed text-muted-foreground">{p.purpose}</p>
             <div className="grid gap-1">
-              <KV k="REQUIRED" v={p.required ? "YES — the system cannot work without it" : "OPTIONAL"} />
-              <KV k="CREDENTIAL" v={p.credential} />
-              <KV k="WHERE TO OBTAIN" v={p.whereToGet} />
-              <KV k="COST" v={p.pricing} />
-              <KV k="LAST SUCCESSFUL REQUEST" v={p.lastOkAt ? secondsSince(p.lastOkAt) : "NO SUCCESSFUL REQUEST RECORDED"} />
-              <KV k="ERROR" v={p.error ?? "NONE RECORDED"} />
+              <KV label="REQUIRED" value={p.required ? "YES — the system cannot work without it" : "OPTIONAL"} />
+              <KV label="CREDENTIAL" value={p.credential} />
+              <KV label="WHERE TO OBTAIN" value={p.whereToGet} />
+              <KV label="COST" value={p.pricing} />
+              <KV label="LAST SUCCESSFUL REQUEST" value={p.lastOkAt ? secondsSince(p.lastOkAt) : "NO SUCCESSFUL REQUEST RECORDED"} />
+              <KV label="ERROR" value={p.error ?? "NONE RECORDED"} />
             </div>
             <p className="mt-3 border-t border-border/50 pt-2 text-[11px] leading-relaxed text-unknown">{p.detail}</p>
           </Panel>
