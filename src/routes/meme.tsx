@@ -10,7 +10,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { TerminalShell } from "@/components/TerminalShell";
-import { Panel, SectionTitle, Tag } from "@/components/kit";
+import { Panel, SectionTitle } from "@/components/kit";
 import { Btn, KV, StatePill, Table, Td, toneFor } from "@/components/kit2";
 import {
   listMemeAlerts,
@@ -126,9 +126,11 @@ function MemePage() {
           </p>
           <div className="flex flex-wrap gap-1">
             {(s?.coverage ?? []).map((c) => (
-              <Tag key={c.capability} tone={c.available ? "ok" : "muted"}>
-                {c.capability.replace(/_/g, " ")} {c.available ? "✓" : "—"}
-              </Tag>
+              <StatePill
+                key={c.capability}
+                label={`${c.capability.replace(/_/g, " ")} ${c.available ? "AVAILABLE" : "BLOCKED"}`}
+                tone={c.available ? "ok" : "muted"}
+              />
             ))}
           </div>
         </Panel>
@@ -147,9 +149,12 @@ function MemePage() {
             {p.blockedReason && <p className="mt-2 text-xs text-unknown">{p.blockedReason}</p>}
             <div className="mt-2 flex flex-wrap gap-1">
               {p.capabilities.map((c) => (
-                <Tag key={c.capability} tone={c.state === "SUPPORTED" ? "ok" : c.state === "UNSUPPORTED" ? "muted" : "warn"}>
-                  {c.capability.replace(/_/g, " ")}
-                </Tag>
+                <StatePill
+                  key={c.capability}
+                  label={c.capability.replace(/_/g, " ")}
+                  tone={c.state === "SUPPORTED" ? "ok" : c.state === "UNSUPPORTED" ? "muted" : "warn"}
+                  title={c.note}
+                />
               ))}
             </div>
           </Panel>
@@ -170,7 +175,7 @@ function MemePage() {
                 <Td>{t.chainId}</Td>
                 <Td>{t.origin}</Td>
                 <Td>
-                  <Tag tone={t.verdict === "MEME" ? "ok" : "warn"}>{t.verdict}</Tag>
+                  <StatePill label={t.verdict} tone={t.verdict === "MEME" ? "ok" : "warn"} />
                 </Td>
                 <Td>{t.priceUsd === null ? "UNAVAILABLE" : usd(t.priceUsd)}</Td>
                 <Td>{t.liquidityUsd === null ? "UNAVAILABLE" : usd(t.liquidityUsd)}</Td>
@@ -193,7 +198,7 @@ function MemePage() {
               {(events.data?.rows ?? []).slice(0, 25).map((e, i) => (
                 <li key={`${String(e["received_at"])}-${i}`} className="border-l-2 border-border/50 pl-2">
                   <div className="flex items-center gap-2">
-                    <Tag tone="muted">{String(e["kind"]).replace(/_/g, " ")}</Tag>
+                    <StatePill label={String(e["kind"]).replace(/_/g, " ")} tone="info" />
                     <span className="text-muted-foreground">{String(e["source"])}</span>
                   </div>
                   <p className="mt-1">{String(e["summary"] ?? "")}</p>
@@ -216,7 +221,7 @@ function MemePage() {
               {(alerts.data?.rows ?? []).map((a) => (
                 <li key={String(a["id"])} className="border-l-2 border-destructive/60 pl-2">
                   <div className="flex items-center gap-2">
-                    <Tag tone="warn">{String(a["severity"])}</Tag>
+                    <StatePill label={String(a["severity"])} tone="bad" />
                     <span>{String(a["title"])}</span>
                   </div>
                   <ul className="mt-1 text-muted-foreground">
