@@ -111,6 +111,9 @@ export type TickResult = {
   observationsStored: number;
   changesDetected: number;
   investigationsStored: number;
+  predictionsStored: number;
+  predictionsResolved: number;
+  signalsStored: number;
   errors: string[];
   durationMs: number;
   note: string;
@@ -127,7 +130,8 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
   const cfg = backendConfig();
   const configured = cfg.urlPresent && cfg.serviceKeyPresent;
 
-  const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+  const { universeSymbols } = await import("./research/universe");
+  const queries = universeSymbols(process.env["STELLARIS_ASSET_UNIVERSE"]);
   const results = await Promise.all(
     queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 20_000 })),
   );
@@ -151,6 +155,9 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
       observationsStored: 0,
       changesDetected: 0,
       investigationsStored: 0,
+      predictionsStored: 0,
+      predictionsResolved: 0,
+      signalsStored: 0,
       errors: [],
       durationMs: Date.now() - started,
       note: "Observations were collected but NOT stored: this project's Supabase credentials are not configured.",
@@ -210,12 +217,37 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     }
   }
 
+  // RESEARCH CYCLE: features -> regime -> prediction -> outcome resolution ->
+  // calibration -> signal -> independent risk check -> paper simulation. It runs
+  // after ingestion so it always works from the freshest stored observations,
+  // and it never depends on a browser being open.
+  let research: { predictionsStored: number; predictionsResolved: number; signalsStored: number; errors: string[] } = {
+    predictionsStored: 0,
+    predictionsResolved: 0,
+    signalsStored: 0,
+    errors: [],
+  };
+  if (!ingest.errors.length) {
+    const { getAdmin } = await import("./supabase/admin.server");
+    const { runResearchCycle } = await import("./research/engine.server");
+    const db = getAdmin();
+    if (db) {
+      const r = await runResearchCycle(db);
+      research = {
+        predictionsStored: r.predictionsStored,
+        predictionsResolved: r.predictionsResolved,
+        signalsStored: r.signalsStored,
+        errors: r.errors,
+      };
+    }
+  }
+
   await recordSystemJob({
     job: "intelligence.tick",
     state: ingest.errors.length ? "FAILED" : "DONE",
     startedAt: started,
     processed: ingest.observations,
-    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s)`,
+    detail: `${ingest.markets} market(s), ${ingest.observations} new observation(s), ${ingest.changes} change event(s), ${investigationsStored} investigation(s), ${research.predictionsStored} prediction(s), ${research.predictionsResolved} resolved, ${research.signalsStored} signal(s)`,
     error: ingest.errors[0] ?? null,
   });
 
@@ -227,7 +259,10 @@ export const runIntelligenceTick = createServerFn({ method: "POST" }).handler(as
     observationsStored: ingest.observations,
     changesDetected: ingest.changes,
     investigationsStored,
-    errors: ingest.errors,
+    predictionsStored: research.predictionsStored,
+    predictionsResolved: research.predictionsResolved,
+    signalsStored: research.signalsStored,
+    errors: [...ingest.errors, ...research.errors],
     durationMs: Date.now() - started,
     note: ingest.errors.length
       ? "Ingestion reported errors — check that migration 0001 has been applied."
@@ -409,7 +444,8 @@ export const pulseIngest = createServerFn({ method: "POST" }).handler(
     const { dexFetch } = await import("./dexscreener.server");
     const { normalizePairs } = await import("./normalize");
 
-    const queries = ["SOL", "WETH", "USDC", "BNB", "BASE"];
+    const { universeSymbols } = await import("./research/universe");
+  const queries = universeSymbols(process.env["STELLARIS_ASSET_UNIVERSE"]);
     const results = await Promise.all(queries.map((q) => dexFetch<{ pairs?: unknown }>(`/latest/dex/search?q=${q}`, { ttlMs: 15_000 })));
     const seen = new Set<string>();
     const pairs = [];

@@ -13,6 +13,14 @@ import { createClient, type RealtimeChannel, type SupabaseClient } from "@supaba
 
 export type RealtimeState = "IDLE" | "CONNECTING" | "CONNECTED" | "NOT CONFIGURED" | "ERROR";
 
+/**
+ * Direct browser streaming is OFF by design: the research and market tables are
+ * private (service-role only), so no anonymous read grant exists to stream from.
+ * Row Level Security is never weakened to make the interface look live. If you
+ * later add authenticated, RLS-scoped read policies, set this to true.
+ */
+export const REALTIME_ENABLED = false;
+
 export type RealtimeSnapshot = {
   state: RealtimeState;
   detail: string;
@@ -83,6 +91,20 @@ let starting = false;
  */
 export async function startRealtime(config: { url: string | null; publishableKey: string | null }): Promise<void> {
   if (typeof window === "undefined" || channel || starting) return;
+
+  // PRIVACY DECISION: research and market tables are private (no anonymous or
+  // authenticated read access). Browser Realtime therefore cannot receive their
+  // change events, and attempting it would only show a misleading state. The
+  // interface refreshes through fast server-side revalidation instead.
+  if (!REALTIME_ENABLED) {
+    publish({
+      state: "NOT CONFIGURED",
+      detail:
+        "Direct database streaming is intentionally off: research tables are private, so the browser has no read access. Live data comes from fast server-side revalidation (10-15s).",
+    });
+    return;
+  }
+
   if (!config.url || !config.publishableKey) {
     publish({
       state: "NOT CONFIGURED",
@@ -90,6 +112,7 @@ export async function startRealtime(config: { url: string | null; publishableKey
     });
     return;
   }
+
 
   starting = true;
   publish({ state: "CONNECTING", detail: "Opening a live connection to your Supabase project." });
