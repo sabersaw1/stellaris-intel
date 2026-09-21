@@ -17,6 +17,7 @@ import { Route as AttentionRouteImport } from './routes/attention'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as CalibrationRouteImport } from './routes/calibration'
 import { Route as CommandRouteImport } from './routes/command'
+import { Route as ConnectionsRouteImport } from './routes/connections'
 import { Route as ContradictionsRouteImport } from './routes/contradictions'
 import { Route as DiscoverRouteImport } from './routes/discover'
 import { Route as EngineRouteImport } from './routes/engine'
@@ -45,6 +46,10 @@ import { Route as WorkflowsRouteImport } from './routes/workflows'
 import { Route as WorkspacesRouteImport } from './routes/workspaces'
 import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
 import { Route as ApiPublicCronTickRouteImport } from './routes/api/public/cron/tick'
+import { Route as ApiPublicIntelligenceEventsRouteImport } from './routes/api/public/intelligence/events'
+import { Route as ApiPublicIntelligenceStatusRouteImport } from './routes/api/public/intelligence/status'
+import { Route as ApiPublicResearchAnalyzeRouteImport } from './routes/api/public/research/analyze'
+import { Route as ApiPublicTradeProposeRouteImport } from './routes/api/public/trade/propose'
 import { Route as ApiPublicWebhooksN8nRouteImport } from './routes/api/public/webhooks/n8n'
 import { Route as ApiPublicWebhooksTradingviewRouteImport } from './routes/api/public/webhooks/tradingview'
 
@@ -86,6 +91,11 @@ const CalibrationRoute = CalibrationRouteImport.update({
 const CommandRoute = CommandRouteImport.update({
   id: '/command',
   path: '/command',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConnectionsRoute = ConnectionsRouteImport.update({
+  id: '/connections',
+  path: '/connections',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContradictionsRoute = ContradictionsRouteImport.update({
@@ -228,6 +238,29 @@ const ApiPublicCronTickRoute = ApiPublicCronTickRouteImport.update({
   path: '/api/public/cron/tick',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicIntelligenceEventsRoute =
+  ApiPublicIntelligenceEventsRouteImport.update({
+    id: '/api/public/intelligence/events',
+    path: '/api/public/intelligence/events',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicIntelligenceStatusRoute =
+  ApiPublicIntelligenceStatusRouteImport.update({
+    id: '/api/public/intelligence/status',
+    path: '/api/public/intelligence/status',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicResearchAnalyzeRoute =
+  ApiPublicResearchAnalyzeRouteImport.update({
+    id: '/api/public/research/analyze',
+    path: '/api/public/research/analyze',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicTradeProposeRoute = ApiPublicTradeProposeRouteImport.update({
+  id: '/api/public/trade/propose',
+  path: '/api/public/trade/propose',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicWebhooksN8nRoute = ApiPublicWebhooksN8nRouteImport.update({
   id: '/api/public/webhooks/n8n',
   path: '/api/public/webhooks/n8n',
@@ -249,6 +282,7 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuditRoute
   '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/connections': typeof ConnectionsRoute
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
@@ -277,6 +311,10 @@ export interface FileRoutesByFullPath {
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
   '/api/public/cron/tick': typeof ApiPublicCronTickRoute
+  '/api/public/intelligence/events': typeof ApiPublicIntelligenceEventsRoute
+  '/api/public/intelligence/status': typeof ApiPublicIntelligenceStatusRoute
+  '/api/public/research/analyze': typeof ApiPublicResearchAnalyzeRoute
+  '/api/public/trade/propose': typeof ApiPublicTradeProposeRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -289,6 +327,7 @@ export interface FileRoutesByTo {
   '/audit': typeof AuditRoute
   '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/connections': typeof ConnectionsRoute
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
@@ -317,6 +356,10 @@ export interface FileRoutesByTo {
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
   '/api/public/cron/tick': typeof ApiPublicCronTickRoute
+  '/api/public/intelligence/events': typeof ApiPublicIntelligenceEventsRoute
+  '/api/public/intelligence/status': typeof ApiPublicIntelligenceStatusRoute
+  '/api/public/research/analyze': typeof ApiPublicResearchAnalyzeRoute
+  '/api/public/trade/propose': typeof ApiPublicTradeProposeRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -330,6 +373,7 @@ export interface FileRoutesById {
   '/audit': typeof AuditRoute
   '/calibration': typeof CalibrationRoute
   '/command': typeof CommandRoute
+  '/connections': typeof ConnectionsRoute
   '/contradictions': typeof ContradictionsRoute
   '/discover': typeof DiscoverRoute
   '/engine': typeof EngineRoute
@@ -358,6 +402,10 @@ export interface FileRoutesById {
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
   '/api/public/cron/tick': typeof ApiPublicCronTickRoute
+  '/api/public/intelligence/events': typeof ApiPublicIntelligenceEventsRoute
+  '/api/public/intelligence/status': typeof ApiPublicIntelligenceStatusRoute
+  '/api/public/research/analyze': typeof ApiPublicResearchAnalyzeRoute
+  '/api/public/trade/propose': typeof ApiPublicTradeProposeRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -372,6 +420,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/calibration'
     | '/command'
+    | '/connections'
     | '/contradictions'
     | '/discover'
     | '/engine'
@@ -400,6 +449,10 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/pair/$chainId/$pairId'
     | '/api/public/cron/tick'
+    | '/api/public/intelligence/events'
+    | '/api/public/intelligence/status'
+    | '/api/public/research/analyze'
+    | '/api/public/trade/propose'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
   fileRoutesByTo: FileRoutesByTo
@@ -412,6 +465,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/calibration'
     | '/command'
+    | '/connections'
     | '/contradictions'
     | '/discover'
     | '/engine'
@@ -440,6 +494,10 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/pair/$chainId/$pairId'
     | '/api/public/cron/tick'
+    | '/api/public/intelligence/events'
+    | '/api/public/intelligence/status'
+    | '/api/public/research/analyze'
+    | '/api/public/trade/propose'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
   id:
@@ -452,6 +510,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/calibration'
     | '/command'
+    | '/connections'
     | '/contradictions'
     | '/discover'
     | '/engine'
@@ -480,6 +539,10 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/pair/$chainId/$pairId'
     | '/api/public/cron/tick'
+    | '/api/public/intelligence/events'
+    | '/api/public/intelligence/status'
+    | '/api/public/research/analyze'
+    | '/api/public/trade/propose'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
   fileRoutesById: FileRoutesById
@@ -493,6 +556,7 @@ export interface RootRouteChildren {
   AuditRoute: typeof AuditRoute
   CalibrationRoute: typeof CalibrationRoute
   CommandRoute: typeof CommandRoute
+  ConnectionsRoute: typeof ConnectionsRoute
   ContradictionsRoute: typeof ContradictionsRoute
   DiscoverRoute: typeof DiscoverRoute
   EngineRoute: typeof EngineRoute
@@ -521,6 +585,10 @@ export interface RootRouteChildren {
   WorkspacesRoute: typeof WorkspacesRoute
   PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
   ApiPublicCronTickRoute: typeof ApiPublicCronTickRoute
+  ApiPublicIntelligenceEventsRoute: typeof ApiPublicIntelligenceEventsRoute
+  ApiPublicIntelligenceStatusRoute: typeof ApiPublicIntelligenceStatusRoute
+  ApiPublicResearchAnalyzeRoute: typeof ApiPublicResearchAnalyzeRoute
+  ApiPublicTradeProposeRoute: typeof ApiPublicTradeProposeRoute
   ApiPublicWebhooksN8nRoute: typeof ApiPublicWebhooksN8nRoute
   ApiPublicWebhooksTradingviewRoute: typeof ApiPublicWebhooksTradingviewRoute
 }
@@ -581,6 +649,13 @@ declare module '@tanstack/react-router' {
       path: '/command'
       fullPath: '/command'
       preLoaderRoute: typeof CommandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/connections': {
+      id: '/connections'
+      path: '/connections'
+      fullPath: '/connections'
+      preLoaderRoute: typeof ConnectionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contradictions': {
@@ -779,6 +854,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCronTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/intelligence/events': {
+      id: '/api/public/intelligence/events'
+      path: '/api/public/intelligence/events'
+      fullPath: '/api/public/intelligence/events'
+      preLoaderRoute: typeof ApiPublicIntelligenceEventsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/intelligence/status': {
+      id: '/api/public/intelligence/status'
+      path: '/api/public/intelligence/status'
+      fullPath: '/api/public/intelligence/status'
+      preLoaderRoute: typeof ApiPublicIntelligenceStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/research/analyze': {
+      id: '/api/public/research/analyze'
+      path: '/api/public/research/analyze'
+      fullPath: '/api/public/research/analyze'
+      preLoaderRoute: typeof ApiPublicResearchAnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/trade/propose': {
+      id: '/api/public/trade/propose'
+      path: '/api/public/trade/propose'
+      fullPath: '/api/public/trade/propose'
+      preLoaderRoute: typeof ApiPublicTradeProposeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/webhooks/n8n': {
       id: '/api/public/webhooks/n8n'
       path: '/api/public/webhooks/n8n'
@@ -805,6 +908,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRoute: AuditRoute,
   CalibrationRoute: CalibrationRoute,
   CommandRoute: CommandRoute,
+  ConnectionsRoute: ConnectionsRoute,
   ContradictionsRoute: ContradictionsRoute,
   DiscoverRoute: DiscoverRoute,
   EngineRoute: EngineRoute,
@@ -833,6 +937,10 @@ const rootRouteChildren: RootRouteChildren = {
   WorkspacesRoute: WorkspacesRoute,
   PairChainIdPairIdRoute: PairChainIdPairIdRoute,
   ApiPublicCronTickRoute: ApiPublicCronTickRoute,
+  ApiPublicIntelligenceEventsRoute: ApiPublicIntelligenceEventsRoute,
+  ApiPublicIntelligenceStatusRoute: ApiPublicIntelligenceStatusRoute,
+  ApiPublicResearchAnalyzeRoute: ApiPublicResearchAnalyzeRoute,
+  ApiPublicTradeProposeRoute: ApiPublicTradeProposeRoute,
   ApiPublicWebhooksN8nRoute: ApiPublicWebhooksN8nRoute,
   ApiPublicWebhooksTradingviewRoute: ApiPublicWebhooksTradingviewRoute,
 }

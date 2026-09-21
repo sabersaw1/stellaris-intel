@@ -43,3 +43,21 @@
 - FOMO trader intelligence: needs `FOMO_API_KEY` from fomoapi.io (fomo.family ships no public API).
 - Holders / mint authority / on-chain transfers: needs `STELLARIS_SOLANA_RPC_URL`.
 - Migration 0007 must be applied in Supabase before meme data can be stored.
+
+## Audit pass — analyst roles, agent API, connections screen
+
+Done
+- Independent analyst roles (market, on-chain, trader, social, token risk, historical) that may disagree; unavailable evidence stays unavailable. 53 tests pass.
+- Explainable funnel from discovery to human decision, plus permission levels with real execution hard-disabled.
+- One shared research path (`src/lib/agents/analyze.server.ts`) used by the UI and the machine API; dossiers persist to `dossiers` when requested.
+- Bearer-protected machine API: /api/public/intelligence/status, /api/public/intelligence/events, /api/public/research/analyze, /api/public/trade/propose (proposals only, never executed).
+- New CONNECTIONS screen: per-source state, what it supplies / does not supply, credential needed, last success, last error, capability coverage.
+- db/migrations/0008_stellaris_dossiers.sql (private, service-role only, idempotent).
+
+Blocked on values only you can provide
+- Apply db/migrations/0007 and 0008 in Supabase — meme tables are still missing, so meme collection stores nothing.
+- PUMPPORTAL_API_KEY or BITQUERY_API_TOKEN — Pump.fun launch discovery.
+- STELLARIS_SOLANA_RPC_URL — holders, mint authority, transfers.
+- X connector or X_BEARER_TOKEN — social evidence.
+- FOMO_API_KEY — trader/wallet intelligence.
+- STELLARIS_AGENT_TOKEN — opens the machine API for your local LLM.
