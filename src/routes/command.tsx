@@ -60,7 +60,7 @@ function CommandCenter() {
         COMMAND
       </SectionTitle>
 
-      <div className="mb-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="mb-4 grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
         <Panel title="STELLARIS INTEL — LIVE SYSTEM STATE" right={<Tag kind="LIVE" />}>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <Metric label="STATUS" value={envelope?.ok ? (envelope.stale ? "DATA DEGRADED" : "LIVE") : "DATA UNAVAILABLE"} emphasis />
