@@ -214,9 +214,9 @@ export function TerminalShell({ children }: { children: ReactNode }) {
     };
   }, [navigate]);
 
+  // overflow-x-hidden: no screen may scroll sideways on a phone; wide tables get
+  // their own horizontal scroller instead.
   return (
-    {/* overflow-x-hidden: no screen may scroll sideways on a phone; wide tables
-        get their own horizontal scroller instead. */}
     <div className="min-h-screen overflow-x-hidden">
       <CosmicBackground />
       <DataStreamLayer pairs={pairs} />
