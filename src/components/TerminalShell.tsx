@@ -75,6 +75,8 @@ const ADVANCED = [
   { to: "/contradictions", label: "CONTRADICTIONS", icon: GitCompare, keys: "G C" },
   { to: "/timemachine", label: "TIME MACHINE", icon: History, keys: "G X" },
   { to: "/postmortems", label: "POST-MORTEMS", icon: ScrollText, keys: "G P" },
+  { to: "/engine", label: "RESEARCH ENGINE", icon: Target, keys: "G E" },
+  { to: "/providers", label: "PROVIDERS", icon: Plug, keys: "G D" },
   { to: "/calibration", label: "CALIBRATION", icon: Target, keys: "G B" },
   { to: "/performance", label: "PERFORMANCE", icon: Award, keys: "G F" },
   { to: "/neural", label: "STELLARIS BRAIN", icon: Network, keys: "G N" },

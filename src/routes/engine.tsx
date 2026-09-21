@@ -217,7 +217,7 @@ function EnginePage() {
                 <Td><StatePill label={sig.direction} tone={toneFor(sig.direction)} /></Td>
                 <Td className="num">{sig.confidence === null ? "UNSTATED" : `${Math.round(sig.confidence * 100)}%`}</Td>
                 <Td className="num">{sig.regime ?? "UNKNOWN"}</Td>
-                <Td><StatePill label={sig.riskVerdict ?? "UNKNOWN"} tone={sig.riskVerdict === "ACCEPTED" ? "low" : "high"} /></Td>
+                <Td><StatePill label={sig.riskVerdict ?? "UNKNOWN"} tone={sig.riskVerdict === "ACCEPTED" ? "ok" : "bad"} /></Td>
                 <Td className="max-w-[20rem] truncate text-muted-foreground">{sig.riskReason ?? "—"}</Td>
                 <Td className="num">{sig.strategy} {sig.version}</Td>
                 <Td className="num">{secondsSince(sig.createdAt)}</Td>
