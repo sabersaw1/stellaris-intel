@@ -265,3 +265,73 @@ function MemePage() {
     </TerminalShell>
   );
 }
+
+/** Renders one research dossier: supporting, contradicting and unknown evidence side by side. */
+function Dossier({ d }: { d: DossierPayload }) {
+  return (
+    <div className="grid gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        <StatePill label={d.tokenLabel} tone="info" />
+        <StatePill label={d.state} tone={toneFor(d.state)} />
+        {d.disagreement && <StatePill label="ROLES DISAGREE" tone="warn" />}
+        <StatePill label={`FUNNEL: ${d.funnelReached}`} tone="info" />
+        {d.funnelBlockedBy && <StatePill label={`BLOCKED AT ${d.funnelBlockedBy}`} tone="muted" />}
+        <StatePill label="EXECUTION DISABLED" tone="muted" />
+      </div>
+      <p className="text-xs text-muted-foreground">{d.observation}</p>
+      <div className="grid gap-3 md:grid-cols-3">
+        <EvidenceList title="SUPPORTING" items={d.supporting} tone="ok" />
+        <EvidenceList title="CONTRADICTING" items={d.contradicting} tone="warn" />
+        <EvidenceList title="UNKNOWN" items={d.unknown} tone="muted" />
+      </div>
+      <div>
+        <p className="label-xs">WHAT WOULD CHANGE THIS</p>
+        {d.whatWouldChangeIt.length ? (
+          <ul className="mt-1 grid gap-1 text-xs text-muted-foreground">
+            {d.whatWouldChangeIt.map((w) => (
+              <li key={w}>• {w}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-1 text-xs text-unknown">No invalidation condition could be derived from stored evidence.</p>
+        )}
+      </div>
+      <div>
+        <p className="label-xs">ROLE FINDINGS</p>
+        <ul className="mt-1 grid gap-1 text-xs">
+          {d.findings.map((f, i) => (
+            <li key={`${f.role}-${i}`} className="border-l-2 border-border/50 pl-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatePill label={f.role} tone="agent" />
+                <StatePill label={f.stance} tone={f.stance === "SUPPORTING" ? "ok" : f.stance === "CONTRADICTING" ? "warn" : "muted"} />
+                <StatePill label={f.confidence} tone={toneFor(f.confidence)} />
+              </div>
+              <p className="mt-1 text-muted-foreground">{f.statement}</p>
+              {f.missing && <p className="text-unknown">Missing: {f.missing}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function EvidenceList({ title, items, tone }: { title: string; items: string[]; tone: "ok" | "warn" | "muted" }) {
+  return (
+    <div>
+      <p className="label-xs">{title}</p>
+      {items.length ? (
+        <ul className="mt-1 grid gap-1 text-xs text-muted-foreground">
+          {items.map((i) => (
+            <li key={i} className="flex gap-1">
+              <StatePill label="•" tone={tone} />
+              <span>{i}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-1 text-xs text-unknown">Nothing recorded.</p>
+      )}
+    </div>
+  );
+}
