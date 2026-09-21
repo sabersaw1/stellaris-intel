@@ -92,6 +92,7 @@ const ADVANCED = [
   { to: "/workflows", label: "WORKFLOWS", icon: Workflow, keys: "G Y" },
   { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "G V" },
   { to: "/audit", label: "AUDIT LOG", icon: ScrollText, keys: "G U" },
+  { to: "/connections", label: "CONNECTIONS", icon: Plug, keys: "" },
 ] as const;
 
 export function TerminalShell({ children }: { children: ReactNode }) {
