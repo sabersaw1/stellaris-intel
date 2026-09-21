@@ -196,14 +196,14 @@ function MemePage() {
           ) : (
             <ul className="grid gap-2 text-xs">
               {(events.data?.rows ?? []).slice(0, 25).map((e, i) => (
-                <li key={`${String(e["received_at"])}-${i}`} className="border-l-2 border-border/50 pl-2">
+                <li key={`${e.receivedAt ?? i}-${i}`} className="border-l-2 border-border/50 pl-2">
                   <div className="flex items-center gap-2">
-                    <StatePill label={String(e["kind"]).replace(/_/g, " ")} tone="info" />
-                    <span className="text-muted-foreground">{String(e["source"])}</span>
+                    <StatePill label={e.kind.replace(/_/g, " ")} tone="info" />
+                    <span className="text-muted-foreground">{e.source}</span>
                   </div>
-                  <p className="mt-1">{String(e["summary"] ?? "")}</p>
+                  <p className="mt-1">{e.summary ?? ""}</p>
                   <p className="text-muted-foreground">
-                    {e["observed_at"] ? secondsSince(Date.parse(String(e["observed_at"]))) : "NO SOURCE TIMESTAMP"}
+                    {e.observedAt ? secondsSince(Date.parse(e.observedAt)) : "NO SOURCE TIMESTAMP"}
                   </p>
                 </li>
               ))}
@@ -219,13 +219,13 @@ function MemePage() {
           ) : (
             <ul className="grid gap-2 text-xs">
               {(alerts.data?.rows ?? []).map((a) => (
-                <li key={String(a["id"])} className="border-l-2 border-destructive/60 pl-2">
+                <li key={a.id} className="border-l-2 border-destructive/60 pl-2">
                   <div className="flex items-center gap-2">
-                    <StatePill label={String(a["severity"])} tone="bad" />
-                    <span>{String(a["title"])}</span>
+                    <StatePill label={a.severity} tone="bad" />
+                    <span>{a.title}</span>
                   </div>
                   <ul className="mt-1 text-muted-foreground">
-                    {(Array.isArray(a["why"]) ? (a["why"] as string[]) : []).map((w) => (
+                    {a.why.map((w) => (
                       <li key={w}>· {w}</li>
                     ))}
                   </ul>

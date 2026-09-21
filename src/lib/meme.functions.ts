@@ -156,25 +156,86 @@ export const listMemeTokens = createServerFn({ method: "GET" }).handler(async ()
   return { rows, note: null };
 });
 
-export const listMemeEvents = createServerFn({ method: "GET" }).handler(async () => {
-  const { db, memeSchemaReady, recentEvents } = await import("./stellaris/store.server");
-  const client = db();
-  if (!client) return { rows: [] as Record<string, unknown>[], note: "Supabase is not configured." };
-  const schema = await memeSchemaReady(client);
-  if (!schema.ready) return { rows: [] as Record<string, unknown>[], note: schema.error };
-  return { rows: await recentEvents(client, 80), note: null };
-});
+export type MemeEventRow = {
+  kind: string;
+  entityKind: string;
+  entityId: string;
+  source: string;
+  field: string | null;
+  beforeValue: number | null;
+  afterValue: number | null;
+  changePct: number | null;
+  confidence: string | null;
+  severity: string | null;
+  summary: string | null;
+  observedAt: string | null;
+  receivedAt: string | null;
+};
 
-export const listMemeAlerts = createServerFn({ method: "GET" }).handler(async () => {
-  const { db, memeSchemaReady } = await import("./stellaris/store.server");
-  const client = db();
-  if (!client) return { rows: [] as Record<string, unknown>[], note: "Supabase is not configured." };
-  const schema = await memeSchemaReady(client);
-  if (!schema.ready) return { rows: [] as Record<string, unknown>[], note: schema.error };
-  const r = await client
-    .from("stellaris_alerts")
-    .select("id, token_id, category, severity, title, why, created_at, acknowledged_at")
-    .order("created_at", { ascending: false })
-    .limit(50);
-  return { rows: (r.data ?? []) as Record<string, unknown>[], note: r.error?.message ?? null };
-});
+export const listMemeEvents = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ rows: MemeEventRow[]; note: string | null }> => {
+    const { db, memeSchemaReady, recentEvents } = await import("./stellaris/store.server");
+    const client = db();
+    if (!client) return { rows: [], note: "Supabase is not configured." };
+    const schema = await memeSchemaReady(client);
+    if (!schema.ready) return { rows: [], note: schema.error };
+    const raw = await recentEvents(client, 80);
+    const str = (v: unknown): string | null => (typeof v === "string" ? v : null);
+    const nm = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+    return {
+      rows: raw.map((e) => ({
+        kind: str(e["kind"]) ?? "UNKNOWN",
+        entityKind: str(e["entity_kind"]) ?? "UNKNOWN",
+        entityId: str(e["entity_id"]) ?? "",
+        source: str(e["source"]) ?? "",
+        field: str(e["field"]),
+        beforeValue: nm(e["before_value"]),
+        afterValue: nm(e["after_value"]),
+        changePct: nm(e["change_pct"]),
+        confidence: str(e["confidence"]),
+        severity: str(e["severity"]),
+        summary: str(e["summary"]),
+        observedAt: str(e["observed_at"]),
+        receivedAt: str(e["received_at"]),
+      })),
+      note: null,
+    };
+  },
+);
+
+export type MemeAlertRow = {
+  id: string;
+  tokenId: string | null;
+  category: string;
+  severity: string;
+  title: string;
+  why: string[];
+  createdAt: string | null;
+  acknowledgedAt: string | null;
+};
+
+export const listMemeAlerts = createServerFn({ method: "GET" }).handler(
+  async (): Promise<{ rows: MemeAlertRow[]; note: string | null }> => {
+    const { db, memeSchemaReady } = await import("./stellaris/store.server");
+    const client = db();
+    if (!client) return { rows: [], note: "Supabase is not configured." };
+    const schema = await memeSchemaReady(client);
+    if (!schema.ready) return { rows: [], note: schema.error };
+    const r = await client
+      .from("stellaris_alerts")
+      .select("id, token_id, category, severity, title, why, created_at, acknowledged_at")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    const rows: MemeAlertRow[] = ((r.data ?? []) as Record<string, unknown>[]).map((a) => ({
+      id: String(a["id"]),
+      tokenId: (a["token_id"] as string | null) ?? null,
+      category: String(a["category"]),
+      severity: String(a["severity"]),
+      title: String(a["title"]),
+      why: Array.isArray(a["why"]) ? (a["why"] as unknown[]).map((w) => String(w)) : [],
+      createdAt: (a["created_at"] as string | null) ?? null,
+      acknowledgedAt: (a["acknowledged_at"] as string | null) ?? null,
+    }));
+    return { rows, note: r.error?.message ?? null };
+  },
+);
