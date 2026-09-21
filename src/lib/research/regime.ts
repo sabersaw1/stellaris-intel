@@ -39,10 +39,10 @@ export const REGIME_RULES = {
 } as const;
 
 export function classifyRegime(f: FeatureSet, at = Date.now()): RegimeReading {
-  const r20 = f.byKey["return_20"];
-  const vol = f.byKey["volatility"];
-  const volRatio = f.byKey["volume_ratio"];
-  const macd = f.byKey["macd"];
+  const r20 = f.byKey["return_20"] ?? null;
+  const vol = f.byKey["volatility"] ?? null;
+  const volRatio = f.byKey["volume_ratio"] ?? null;
+  const macd = f.byKey["macd"] ?? null;
 
   if (!f.sufficient || (r20 === null && vol === null)) {
     return {

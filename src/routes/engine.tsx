@@ -57,7 +57,7 @@ function EnginePage() {
       </SectionTitle>
 
       {!s?.configured && (
-        <Panel title="NOT CONFIGURED" tone="warn">
+        <Panel title="NOT CONFIGURED" tone="strong">
           <p className="text-xs text-unknown">
             The database is not configured, so no research observation can be stored. Supply your Supabase project values
             and the engine begins recording on the next cycle.
@@ -65,7 +65,7 @@ function EnginePage() {
         </Panel>
       )}
       {s?.configured && !s.migrated && (
-        <Panel title="MIGRATION REQUIRED" tone="warn">
+        <Panel title="MIGRATION REQUIRED" tone="strong">
           <p className="text-xs text-unknown">{s.error}</p>
           <p className="mt-2 text-xs text-muted-foreground">
             Apply db/migrations/0006_stellaris_research_engine.sql in your Supabase SQL Editor.

@@ -250,8 +250,8 @@ export async function runResearchCycle(db: Db): Promise<ResearchCycleResult> {
           {
             asset: market.asset,
             notionalUsd: Math.min(risk.maxPositionUsd, 1000),
-            volatilityPct: f.byKey["volatility"],
-            liquidityUsd: f.byKey["liquidity"],
+            volatilityPct: f.byKey["volatility"] ?? null,
+            liquidityUsd: f.byKey["liquidity"] ?? null,
           },
           portfolio,
         );

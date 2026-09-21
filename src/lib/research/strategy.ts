@@ -87,10 +87,10 @@ export function predict(def: StrategyDef, f: FeatureSet, regime: Regime): Predic
     riskNote: "Research observation only. No order is placed by this record.",
   };
 
-  const r20 = f.byKey["return_20"];
-  const rsi = f.byKey["rsi_14"];
-  const macd = f.byKey["macd"];
-  const vol = f.byKey["volatility"];
+  const r20 = f.byKey["return_20"] ?? null;
+  const rsi = f.byKey["rsi_14"] ?? null;
+  const macd = f.byKey["macd"] ?? null;
+  const vol = f.byKey["volatility"] ?? null;
 
   if (def.name === "momentum-continuation") {
     if (r20 === null || rsi === null || macd === null || vol === null) {
