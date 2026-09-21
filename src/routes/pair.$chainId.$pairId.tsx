@@ -153,7 +153,7 @@ function PairIntel() {
         </div>
       </Panel>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-4">
           <Panel title="RAW OBSERVATIONS" right={<Tag kind="LIVE" />}>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
