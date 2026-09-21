@@ -6,30 +6,12 @@
  * inferred, defaulted to zero, or invented.
  */
 
-import { runFunnel, type FunnelStage, type StageResult } from "./funnel";
-import type { AgentFinding, AnalysisInput, ResearchState, Snapshot } from "./roles";
+import { runFunnel } from "./funnel";
+import type { AnalysisInput, Snapshot } from "./roles";
+import type { AnalyzeResult, Dossier } from "./dossier-types";
 
-export type Dossier = {
-  tokenId: string;
-  tokenLabel: string;
-  observation: string;
-  state: ResearchState;
-  disagreement: boolean;
-  supporting: string[];
-  contradicting: string[];
-  unknown: string[];
-  findings: AgentFinding[];
-  whatWouldChangeIt: string[];
-  funnelReached: FunnelStage;
-  funnelBlockedBy: FunnelStage | null;
-  funnelStages: StageResult[];
-  executionAllowed: false;
-  producedAt: number;
-};
+export type { AnalyzeResult, Dossier } from "./dossier-types";
 
-export type AnalyzeResult =
-  | { ok: true; dossier: Dossier; persisted: boolean }
-  | { ok: false; state: string; detail: string | null };
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const ts = (v: unknown): number | null => {

@@ -7,7 +7,7 @@
  */
 
 import { createServerFn } from "@tanstack/react-start";
-import type { AnalyzeResult } from "./agents/analyze.server";
+import type { AnalyzeResult } from "./agents/dossier-types";
 
 export const analyzeToken = createServerFn({ method: "POST" })
   .inputValidator((data: { tokenId: string; persist?: boolean }) => ({

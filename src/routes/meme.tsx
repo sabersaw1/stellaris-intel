@@ -20,7 +20,7 @@ import {
   runMemeCollection,
 } from "@/lib/meme.functions";
 import { analyzeToken } from "@/lib/intel.functions";
-import type { Dossier as DossierPayload } from "@/lib/agents/analyze.server";
+import type { Dossier as DossierPayload } from "@/lib/agents/dossier-types";
 import { secondsSince, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/meme")({
