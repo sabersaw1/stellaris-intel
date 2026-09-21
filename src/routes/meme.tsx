@@ -19,6 +19,8 @@ import {
   memePipelineStatus,
   runMemeCollection,
 } from "@/lib/meme.functions";
+import { analyzeToken } from "@/lib/intel.functions";
+import type { Dossier as DossierPayload } from "@/lib/agents/analyze.server";
 import { secondsSince, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/meme")({
@@ -55,6 +57,9 @@ function MemePage() {
   const collect = useMutation({
     mutationFn: () => runMemeCollection(),
     onSuccess: () => void qc.invalidateQueries({ queryKey: ["meme"] }),
+  });
+  const analyze = useMutation({
+    mutationFn: (vars: { data: { tokenId: string; persist: boolean } }) => analyzeToken(vars),
   });
 
   const s = status.data;
