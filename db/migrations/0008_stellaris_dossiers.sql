@@ -42,7 +42,7 @@ alter table public.wallet_events add column if not exists reported_by text;
 alter table public.wallet_events add column if not exists verified boolean not null default false;
 alter table public.wallet_events add column if not exists verified_at timestamptz;
 alter table public.wallet_events add column if not exists verification_source text;
-alter table public.wallet_events add column if not exists tx_signature text;
+-- the on-chain transaction identifier already exists as wallet_events.tx_hash
 alter table public.wallet_events add column if not exists source_confidence text;
 
 create index if not exists wallet_events_verified_idx on public.wallet_events (verified, observed_at desc);
