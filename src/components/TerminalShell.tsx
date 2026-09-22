@@ -48,15 +48,16 @@ import { acknowledgeAlerts, getAlerts, subscribeStore } from "@/lib/local-store"
 import { getPrefs, subscribePrefs } from "@/lib/workspaces";
 import { CommandPalette } from "@/components/CommandPalette";
 
-/** PRIMARY SURFACES — the only six entries in primary navigation. */
+/** PRIMARY SURFACES — meme radar and connections sit alongside the core six. */
 const NAV = [
   { to: "/command", label: "COMMAND", icon: Command, keys: "G D" },
-  { to: "/radar", label: "RADAR", icon: Radar, keys: "G R" },
+  { to: "/radar", label: "RADAR", icon: Radar, keys: "G 6" },
   { to: "/scan", label: "RAPID SCAN", icon: Radar, keys: "G L" },
   { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
   { to: "/investigations", label: "INVESTIGATIONS", icon: FlaskConical, keys: "G Z" },
   { to: "/memory", label: "MEMORY", icon: Database, keys: "G E" },
   { to: "/system", label: "SYSTEM", icon: ServerCog, keys: "G S" },
+  { to: "/connections", label: "CONNECTIONS", icon: Plug, keys: "G 4" },
 ] as const;
 
 /**
@@ -83,7 +84,7 @@ const ADVANCED = [
   { to: "/performance", label: "PERFORMANCE", icon: Award, keys: "G F" },
   { to: "/neural", label: "STELLARIS BRAIN", icon: Network, keys: "G N" },
   { to: "/stream", label: "STREAM", icon: Activity, keys: "G I" },
-  { to: "/risk", label: "RISK", icon: Gauge, keys: "G R" },
+  { to: "/risk", label: "RISK", icon: Gauge, keys: "" },
   { to: "/anomalies", label: "ANOMALIES", icon: Radar, keys: "" },
   { to: "/agents", label: "AGENTS", icon: Bot, keys: "" },
   { to: "/alerts", label: "NOTIFICATIONS", icon: Bell, keys: "G A" },
@@ -93,7 +94,6 @@ const ADVANCED = [
   { to: "/workflows", label: "WORKFLOWS", icon: Workflow, keys: "G Y" },
   { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "G V" },
   { to: "/audit", label: "AUDIT LOG", icon: ScrollText, keys: "G U" },
-  { to: "/connections", label: "CONNECTIONS", icon: Plug, keys: "G 4" },
   { to: "/help", label: "HELP & DEFINITIONS", icon: HelpCircle, keys: "G 5" },
 ] as const;
 
@@ -204,6 +204,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
         "3": "/providers",
         "4": "/connections",
         "5": "/help",
+        "6": "/radar",
       };
       const to = map[e.key.toLowerCase()];
       if (to) void navigate({ to });
@@ -359,6 +360,8 @@ export function TerminalShell({ children }: { children: ReactNode }) {
                 ["CTRL/⌘ K", "Command palette and universal search"],
                 ["/", "Open discovery search"],
                 ["G D", "Command"],
+                ["G 6", "Radar"],
+                ["G 4", "Connections"],
                 ["G L", "Rapid Scan"],
                 ["G Z", "Investigations"],
                 ["G T", "Attention"],
