@@ -47,9 +47,16 @@ export type CollectionSummary = {
   snapshotsStored: number;
   eventsStored: number;
   alertsRaised: number;
+  /** Canonical events the significance engine graded SIGNIFICANT or URGENT. */
+  significantEvents: number;
+  /** Entities queued for a deeper research pass by the significance engine. */
+  researchQueued: string[];
+  /** Truthful statement of how data was collected this cycle. */
+  collectionMode: string;
   errors: string[];
   notes: string[];
 };
+
 
 /** Search terms used to surface meme pairs on DEX Screener. Operator-editable. */
 const DEFAULT_QUERIES = ["pump", "wif", "bonk", "pepe", "doge", "cat", "moon"];
