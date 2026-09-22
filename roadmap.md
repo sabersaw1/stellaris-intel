@@ -125,3 +125,13 @@ Still requires the user, and only the user:
 - `src/lib/intel/gaps.ts` — truthful collection gaps, OFFLINE vs QUOTA_EXHAUSTED, POLLING / BOUNDED_WINDOW / HYBRID statements. No continuous-monitoring claim.
 - Pipeline wired: validation gate -> canonical events with provenance -> significance grading -> research queue. Verified live: 180 discovered, 90 memes, 64 snapshots, 27 canonical events, 7 significant, 6 alerts, 0 errors, mode HYBRID.
 - 93 tests, typecheck clean, build OK.
+
+
+## Final finish pass (verified)
+- Radar cards can TRACK a token; Watchlist shows TRACKED MEME TOKENS from Supabase rows with dossier links.
+- Alerts surface now shows MEME PIPELINE ALERTS from stellaris_alerts with WHY and WHAT WOULD CHANGE IT.
+- Connections shows an honest DELIVERY mode per provider; optional Bitquery and Solana Tracker entries added (not connected, not required).
+- Verified live: 180 listings -> 91 meme tokens, 64 readings, 26 canonical events, 7 significant, HYBRID mode, 0 errors.
+- Stored totals: 78 tokens, 193 readings, 142 events, 12 alerts, 3 dossiers. Analyzer persisted a WATCH dossier with execution denied.
+- Unsigned cron 401, unauthenticated agent API 503, no secret values in client code.
+- 93 tests pass, typecheck clean, build OK, no console errors and no horizontal scroll at 390px and 1440px.

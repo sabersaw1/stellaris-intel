@@ -11,7 +11,34 @@
  * is marked CAPABILITY UNAVAILABLE rather than faked.
  */
 
-export type ConnectionId = "pumpportal" | "dexscreener" | "solana" | "x" | "fomo" | "ai" | "local_agent";
+export type ConnectionId =
+  | "pumpportal"
+  | "bitquery"
+  | "solana_tracker"
+  | "dexscreener"
+  | "solana"
+  | "x"
+  | "fomo"
+  | "ai"
+  | "local_agent";
+
+/**
+ * HONEST DELIVERY MODE per connection. Nothing is called realtime unless the
+ * transport actually pushes data; polling and bounded listening windows say so.
+ */
+export type Delivery = "POLLING" | "LISTENING WINDOW" | "REQUEST ON DEMAND" | "STREAMING" | "OFFLINE — NOT CONNECTED";
+
+export const DELIVERY: Record<ConnectionId, Delivery> = {
+  dexscreener: "POLLING",
+  pumpportal: "LISTENING WINDOW",
+  bitquery: "REQUEST ON DEMAND",
+  solana_tracker: "REQUEST ON DEMAND",
+  solana: "REQUEST ON DEMAND",
+  x: "REQUEST ON DEMAND",
+  fomo: "REQUEST ON DEMAND",
+  ai: "REQUEST ON DEMAND",
+  local_agent: "REQUEST ON DEMAND",
+};
 
 export type Requirement = "REQUIRED NOW" | "OPTIONAL" | "NOT AVAILABLE" | "FUTURE";
 
@@ -85,6 +112,36 @@ export const CATALOG: CatalogEntry[] = [
       "FOMO trader identities",
       "Anything on chains other than Solana",
     ],
+    howToTest: "Stellaris performs one documented read with the configured key and reports the real HTTP result.",
+  },
+  {
+    id: "bitquery",
+    name: "BITQUERY (OPTIONAL PUMP.FUN / DEX HISTORY)",
+    providerId: null,
+    requirement: "OPTIONAL",
+    purpose: "Historical and queryable Pump.fun and Solana DEX trade data through a documented GraphQL API.",
+    whyStellarisNeedsIt: "It fills launch and trade history that a bounded live listening window cannot see. Stellaris runs fine without it.",
+    credentialType: "Application API token (GraphQL)",
+    envVars: ["BITQUERY_API_TOKEN"],
+    whereToGet: "bitquery.io — create an account and generate an application token. A free developer allowance is available; Stellaris never purchases anything.",
+    cost: "FREE TIER AVAILABLE",
+    unlocks: ["Historical Pump.fun launches and trades", "Backfill for launches missed while not listening", "Queryable Solana DEX trade history"],
+    doesNotUnlock: ["A push stream (queries are made on demand)", "Social posts", "Anything once the free allowance is exhausted — Stellaris then continues on the other providers"],
+    howToTest: "Stellaris runs one small documented GraphQL query with the configured token and reports the real HTTP result.",
+  },
+  {
+    id: "solana_tracker",
+    name: "SOLANA TRACKER (OPTIONAL)",
+    providerId: null,
+    requirement: "OPTIONAL",
+    purpose: "Second opinion on Solana meme market data: token detail, holders and trade activity.",
+    whyStellarisNeedsIt: "A second independent source lets an observation be CORROBORATED instead of merely REPORTED. Never required.",
+    credentialType: "API key",
+    envVars: ["SOLANA_TRACKER_API_KEY"],
+    whereToGet: "solanatracker.io — create an account and copy the data API key. A free tier is available.",
+    cost: "FREE TIER AVAILABLE",
+    unlocks: ["Independent price / liquidity readings for cross-verification", "Holder counts where published", "Trade activity for a token"],
+    doesNotUnlock: ["On-chain proof (that is the Solana RPC)", "Social evidence", "Anything on non-Solana chains"],
     howToTest: "Stellaris performs one documented read with the configured key and reports the real HTTP result.",
   },
   {

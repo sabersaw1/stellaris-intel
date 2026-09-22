@@ -7,6 +7,7 @@ import { acknowledgeAlerts, clearAlerts, getAlerts, subscribeStore, type AlertEv
 import { clockOf, secondsSince } from "@/lib/format";
 import { useMarketIntelligence } from "@/hooks/useMarket";
 import { useStoredAlerts } from "@/hooks/useMemory";
+import { PipelineAlertsPanel } from "@/components/stellaris/PipelinePanels";
 
 export const Route = createFileRoute("/alerts")({
   // Browser-local stores drive this page, so it renders on the client only.
@@ -59,6 +60,10 @@ function Alerts() {
       <p className="num mb-2 text-[9px] tracking-[0.16em] text-unknown">
         RECORD OF TRUTH · {!stored.data ? "READING DATABASE" : persisted ? "SUPABASE (YOUR PROJECT)" : "BROWSER ONLY — DATABASE UNAVAILABLE"}
       </p>
+
+      <div className="mb-3">
+        <PipelineAlertsPanel />
+      </div>
 
       <Panel
         right={

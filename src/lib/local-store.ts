@@ -269,3 +269,30 @@ export function deletePreset(id: string) {
     getPresets().filter((p) => p.id !== id),
   );
 }
+
+/* ------------------------- tracked meme tokens ------------------------ */
+
+/**
+ * Meme tokens the operator is tracking, stored by their database id. The
+ * tokens themselves live in Supabase; this only records which of them the
+ * operator chose to watch, so the watchlist can read the live pipeline rows.
+ */
+const K_TOKENS = "stellaris.watch.tokens.v1";
+
+export type WatchedToken = { tokenId: string; symbol: string | null; chainId: string; addedAt: number };
+
+export function getWatchedTokens(): WatchedToken[] {
+  return read<WatchedToken[]>(K_TOKENS, []);
+}
+
+export function isTokenWatched(tokenId: string): boolean {
+  return getWatchedTokens().some((t) => t.tokenId === tokenId);
+}
+
+export function toggleWatchToken(t: { tokenId: string; symbol: string | null; chainId: string }): boolean {
+  const list = getWatchedTokens();
+  const exists = list.some((w) => w.tokenId === t.tokenId);
+  const next = exists ? list.filter((w) => w.tokenId !== t.tokenId) : [...list, { ...t, addedAt: Date.now() }];
+  write(K_TOKENS, next);
+  return !exists;
+}
