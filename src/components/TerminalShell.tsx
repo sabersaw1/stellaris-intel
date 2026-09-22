@@ -48,16 +48,30 @@ import { acknowledgeAlerts, getAlerts, subscribeStore } from "@/lib/local-store"
 import { getPrefs, subscribePrefs } from "@/lib/workspaces";
 import { CommandPalette } from "@/components/CommandPalette";
 
-/** PRIMARY SURFACES — meme radar and connections sit alongside the core six. */
+/** PRIMARY SURFACES — desktop sidebar. */
 const NAV = [
-  { to: "/command", label: "COMMAND", icon: Command, keys: "G D" },
+  { to: "/command", label: "HOME", icon: Command, keys: "G D" },
   { to: "/radar", label: "RADAR", icon: Radar, keys: "G 6" },
-  { to: "/scan", label: "RAPID SCAN", icon: Radar, keys: "G L" },
+  { to: "/meme", label: "DOSSIERS", icon: Activity, keys: "G 1" },
+  { to: "/traders", label: "TRADERS", icon: Users, keys: "G 7" },
+  { to: "/wallets", label: "WALLETS", icon: Network, keys: "G 8" },
+  { to: "/narratives", label: "NARRATIVES", icon: Lightbulb, keys: "G 9" },
   { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
-  { to: "/investigations", label: "INVESTIGATIONS", icon: FlaskConical, keys: "G Z" },
-  { to: "/memory", label: "MEMORY", icon: Database, keys: "G E" },
-  { to: "/system", label: "SYSTEM", icon: ServerCog, keys: "G S" },
+  { to: "/alerts", label: "ALERTS", icon: Bell, keys: "G A" },
+  { to: "/paper", label: "PAPER TRADING", icon: ClipboardList, keys: "G 0" },
+  { to: "/learning", label: "LEARNING", icon: Brain, keys: "G R" },
   { to: "/connections", label: "CONNECTIONS", icon: Plug, keys: "G 4" },
+  { to: "/settings", label: "SETTINGS", icon: ServerCog, keys: "G S" },
+  { to: "/more", label: "ALL SURFACES", icon: LayoutDashboard, keys: "" },
+] as const;
+
+/** MOBILE BOTTOM NAV — five destinations only, MORE opens the full hub. */
+const MOBILE_NAV = [
+  { to: "/command", label: "HOME", icon: Command },
+  { to: "/radar", label: "RADAR", icon: Radar },
+  { to: "/traders", label: "TRADERS", icon: Users },
+  { to: "/watchlist", label: "WATCH", icon: Star },
+  { to: "/more", label: "MORE", icon: LayoutDashboard },
 ] as const;
 
 /**

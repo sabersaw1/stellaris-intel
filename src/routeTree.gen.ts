@@ -30,6 +30,7 @@ import { Route as LearningRouteImport } from './routes/learning'
 import { Route as MarketsRouteImport } from './routes/markets'
 import { Route as MemeRouteImport } from './routes/meme'
 import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as MoreRouteImport } from './routes/more'
 import { Route as NarrativesRouteImport } from './routes/narratives'
 import { Route as NeuralRouteImport } from './routes/neural'
 import { Route as PaperRouteImport } from './routes/paper'
@@ -164,6 +165,11 @@ const MemeRoute = MemeRouteImport.update({
 const MemoryRoute = MemoryRouteImport.update({
   id: '/memory',
   path: '/memory',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoreRoute = MoreRouteImport.update({
+  id: '/more',
+  path: '/more',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NarrativesRoute = NarrativesRouteImport.update({
@@ -343,6 +349,7 @@ export interface FileRoutesByFullPath {
   '/markets': typeof MarketsRoute
   '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
+  '/more': typeof MoreRoute
   '/narratives': typeof NarrativesRoute
   '/neural': typeof NeuralRoute
   '/paper': typeof PaperRoute
@@ -396,6 +403,7 @@ export interface FileRoutesByTo {
   '/markets': typeof MarketsRoute
   '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
+  '/more': typeof MoreRoute
   '/narratives': typeof NarrativesRoute
   '/neural': typeof NeuralRoute
   '/paper': typeof PaperRoute
@@ -450,6 +458,7 @@ export interface FileRoutesById {
   '/markets': typeof MarketsRoute
   '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
+  '/more': typeof MoreRoute
   '/narratives': typeof NarrativesRoute
   '/neural': typeof NeuralRoute
   '/paper': typeof PaperRoute
@@ -505,6 +514,7 @@ export interface FileRouteTypes {
     | '/markets'
     | '/meme'
     | '/memory'
+    | '/more'
     | '/narratives'
     | '/neural'
     | '/paper'
@@ -558,6 +568,7 @@ export interface FileRouteTypes {
     | '/markets'
     | '/meme'
     | '/memory'
+    | '/more'
     | '/narratives'
     | '/neural'
     | '/paper'
@@ -611,6 +622,7 @@ export interface FileRouteTypes {
     | '/markets'
     | '/meme'
     | '/memory'
+    | '/more'
     | '/narratives'
     | '/neural'
     | '/paper'
@@ -665,6 +677,7 @@ export interface RootRouteChildren {
   MarketsRoute: typeof MarketsRoute
   MemeRoute: typeof MemeRoute
   MemoryRoute: typeof MemoryRoute
+  MoreRoute: typeof MoreRoute
   NarrativesRoute: typeof NarrativesRoute
   NeuralRoute: typeof NeuralRoute
   PaperRoute: typeof PaperRoute
@@ -844,6 +857,13 @@ declare module '@tanstack/react-router' {
       path: '/memory'
       fullPath: '/memory'
       preLoaderRoute: typeof MemoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/more': {
+      id: '/more'
+      path: '/more'
+      fullPath: '/more'
+      preLoaderRoute: typeof MoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/narratives': {
@@ -1081,6 +1101,7 @@ const rootRouteChildren: RootRouteChildren = {
   MarketsRoute: MarketsRoute,
   MemeRoute: MemeRoute,
   MemoryRoute: MemoryRoute,
+  MoreRoute: MoreRoute,
   NarrativesRoute: NarrativesRoute,
   NeuralRoute: NeuralRoute,
   PaperRoute: PaperRoute,
