@@ -94,3 +94,10 @@ Still requires the user, and only the user:
    PumpPortal or Bitquery (Pump.fun launches), Solana RPC URL (on-chain
    verification), X API credentials (social), `FOMO_API_KEY` (trader activity),
    `STELLARIS_AGENT_TOKEN` (machine/Jarvis API access).
+
+## Final pass — meme-only universe, Connections control center, Radar (2026-09-22)
+- Active universe is meme coins only: `src/lib/research/universe.ts` now ships meme symbols, exports `EXCLUDED_MAJORS` / `isExcludedMajor`, and strips BTC/ETH/SOL/XRP/BNB/ADA/AVAX/LINK/DOT/stables from any override. Every discovery query that uses `universeSymbols` (dex, backend, research engine) is therefore meme-only, and the classifier filters again.
+- `src/lib/providers/catalog.ts`: browser-safe setup facts per connection (purpose, why needed, credential type, exact env var, where to get it, free/paid, unlocks, does-not-unlock, how the test works, requirement class).
+- `src/lib/connections.functions.ts`: `connectionCenterReport` (live state, presence of credential, last success/error, latency, checklist) and `testConnection` (real read-only probe per provider; unsupported vendor capability reported as CAPABILITY UNAVAILABLE).
+- `/connections` rebuilt as the control center with per-card Test Connection, and added to primary navigation (G 4). `/radar` added (G 6) with NEW / ACCELERATING / TRENDING / TRADER ACTIVITY / SOCIAL / HIGH RISK / DETERIORATING built from stored observations and change events only.
+- Verified: typecheck clean, build OK, 70 tests pass, no console errors, no horizontal overflow at 390px, DEX Screener test probe passed live (49 ms, 30 observations). Meme schema now reports APPLIED.
