@@ -116,3 +116,12 @@ Still requires the user, and only the user:
   horizontal overflow and zero console errors at 320/390/768/1440 across 12 screens.
 - Still user-only: apply `db/migrations/0008_stellaris_dossiers.sql` (only missing table).
   Optional: Solana RPC URL, X credentials, FOMO_API_KEY, STELLARIS_AGENT_TOKEN.
+
+## Root completion pass — intelligence layer (done)
+- `src/lib/intel/observation.ts` — one normalized observation model for every provider; unknown stays null, impossible/future records rejected with a stated reason.
+- `src/lib/intel/canonical.ts` — canonical events: one real-world change = one event, with every observing provider kept as provenance; REPORTED / CROSS-VERIFIED / ON-CHAIN VERIFIED.
+- `src/lib/intel/significance.ts` — cheap, explainable gate before expensive research; returns level, weight and drivers.
+- `src/lib/intel/baseline.ts` — per-token baselines and activity assessment; INSUFFICIENT EVIDENCE when history is too thin.
+- `src/lib/intel/gaps.ts` — truthful collection gaps, OFFLINE vs QUOTA_EXHAUSTED, POLLING / BOUNDED_WINDOW / HYBRID statements. No continuous-monitoring claim.
+- Pipeline wired: validation gate -> canonical events with provenance -> significance grading -> research queue. Verified live: 180 discovered, 90 memes, 64 snapshots, 27 canonical events, 7 significant, 6 alerts, 0 errors, mode HYBRID.
+- 93 tests, typecheck clean, build OK.
