@@ -12,7 +12,12 @@
  */
 
 import { classifyMeme } from "../meme/classify";
-import { changeEvent, dedupe, discoveryEvent, type EventKind, type StellarisEvent } from "../events/model";
+import { changeEvent, discoveryEvent, type EventKind, type StellarisEvent } from "../events/model";
+import { canonicalReference, canonicalize } from "../intel/canonical";
+import { assessSignificance, eventCountsByEntity } from "../intel/significance";
+import { collectionMode } from "../intel/gaps";
+import { normalizeObservation } from "../intel/observation";
+
 import { dexscreenerProvider } from "../providers/dexscreener.provider.server";
 import { pumpfunProvider } from "../providers/pumpfun.server";
 import type { PairObservation } from "../dex-types";
