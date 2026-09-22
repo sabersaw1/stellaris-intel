@@ -12,7 +12,12 @@
  */
 
 import { classifyMeme } from "../meme/classify";
-import { changeEvent, dedupe, discoveryEvent, type EventKind, type StellarisEvent } from "../events/model";
+import { changeEvent, discoveryEvent, type EventKind, type StellarisEvent } from "../events/model";
+import { canonicalReference, canonicalize } from "../intel/canonical";
+import { assessSignificance, eventCountsByEntity } from "../intel/significance";
+import { collectionMode } from "../intel/gaps";
+import { normalizeObservation } from "../intel/observation";
+
 import { dexscreenerProvider } from "../providers/dexscreener.provider.server";
 import { pumpfunProvider } from "../providers/pumpfun.server";
 import type { PairObservation } from "../dex-types";
@@ -42,9 +47,16 @@ export type CollectionSummary = {
   snapshotsStored: number;
   eventsStored: number;
   alertsRaised: number;
+  /** Canonical events the significance engine graded SIGNIFICANT or URGENT. */
+  significantEvents: number;
+  /** Entities queued for a deeper research pass by the significance engine. */
+  researchQueued: string[];
+  /** Truthful statement of how data was collected this cycle. */
+  collectionMode: string;
   errors: string[];
   notes: string[];
 };
+
 
 /** Search terms used to surface meme pairs on DEX Screener. Operator-editable. */
 const DEFAULT_QUERIES = ["pump", "wif", "bonk", "pepe", "doge", "cat", "moon"];
@@ -111,8 +123,36 @@ async function storeObservation(
     summary.rejected++;
     return;
   }
+
+  // Validation gate: a record with no entity, an impossible value or a future
+  // timestamp is rejected with a stated reason rather than silently stored.
+  const normalized = normalizeObservation({
+    entityId: `${obs.chainId}:${obs.baseAddress}`,
+    provider: "dexscreener",
+    providerRecordId: obs.pairAddress,
+    observedAt: obs.observedAt,
+    metrics: {
+      price_usd: obs.priceUsd,
+      market_cap_usd: obs.marketCap,
+      fdv_usd: obs.fdv,
+      liquidity_usd: obs.liquidityUsd,
+      volume_5m_usd: obs.volume.m5,
+      volume_1h_usd: obs.volume.h1,
+      volume_24h_usd: obs.volume.h24,
+      txns_5m_buys: obs.txns.m5?.buys ?? null,
+      txns_5m_sells: obs.txns.m5?.sells ?? null,
+    },
+    provenance: "DEX Screener pair search",
+  });
+  if (!normalized.ok) {
+    summary.rejected++;
+    summary.notes.push(`${obs.baseSymbol || obs.baseAddress}: record rejected — ${normalized.reason}`);
+    return;
+  }
+
   if (cls.verdict === "UNKNOWN") summary.unknown++;
   else summary.memes++;
+
 
   const token = await upsertToken(client, {
     ...classifierInput,
@@ -298,9 +338,13 @@ export async function runCollectionCycle(opts: { queries?: string[] } = {}): Pro
     snapshotsStored: 0,
     eventsStored: 0,
     alertsRaised: 0,
+    significantEvents: 0,
+    researchQueued: [],
+    collectionMode: "NOT COLLECTING",
     errors: [],
     notes: [],
   };
+
 
   const client = db();
   if (!client) {
@@ -335,14 +379,39 @@ export async function runCollectionCycle(opts: { queries?: string[] } = {}): Pro
     }
   }
 
+  const pumpfunActive = pumpfunProvider.configured();
   await collectPumpfunLaunches(client, summary, events, tokenIds);
+  const mode = collectionMode({ pollingActive: summary.discovered > 0, boundedWindowActive: pumpfunActive });
+  summary.collectionMode = mode.mode;
+  summary.notes.push(mode.statement);
 
-  const stored = await insertEvents(client, dedupe(events), (e) => tokenIds.get(e.entityId) ?? null);
+  /* One real-world change becomes ONE canonical event, no matter how many
+     providers observed it; every observing provider survives as provenance. */
+  const canonical = canonicalize(events);
+  const counts = eventCountsByEntity(canonical);
+  const graded = canonical.map((e) => {
+    const significance = assessSignificance(e, { entityEventCount: counts.get(e.entityId) ?? 1 });
+    if (significance.level === "SIGNIFICANT" || significance.level === "URGENT") summary.significantEvents++;
+    if (significance.triggersResearch && !summary.researchQueued.includes(e.entityId))
+      summary.researchQueued.push(e.entityId);
+    return {
+      ...e,
+      reference: {
+        ...canonicalReference(e),
+        significance: significance.level,
+        significance_weight: significance.weight,
+        significance_drivers: significance.drivers,
+      },
+    };
+  });
+
+  const stored = await insertEvents(client, graded, (e) => tokenIds.get(e.entityId) ?? null);
   if (stored.error) summary.errors.push(`events: ${stored.error}`);
   summary.eventsStored = stored.stored;
 
   summary.ok = summary.errors.length === 0;
   summary.finishedAt = Date.now();
+
 
   await audit({
     action: "COLLECTION_CYCLE",
