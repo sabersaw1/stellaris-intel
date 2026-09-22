@@ -8,6 +8,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 
 import { TerminalShell } from "@/components/TerminalShell";
 import { Panel, SectionTitle } from "@/components/kit";
@@ -42,12 +43,16 @@ export const Route = createFileRoute("/meme")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  /* Radar links here with ?token=<id> so a radar card opens that token's dossier. */
+  validateSearch: (search: Record<string, unknown>): { token?: string } =>
+    typeof search["token"] === "string" && search["token"] ? { token: search["token"] as string } : {},
   component: MemePage,
 });
 
 const n = (v: number | null | undefined): string => (v === null || v === undefined ? "UNAVAILABLE" : v.toLocaleString());
 
 function MemePage() {
+  const { token: requestedToken } = Route.useSearch();
   const qc = useQueryClient();
   const status = useQuery({ queryKey: ["meme", "status"], queryFn: () => memePipelineStatus(), refetchInterval: 30_000 });
   const tokens = useQuery({ queryKey: ["meme", "tokens"], queryFn: () => listMemeTokens(), refetchInterval: 20_000 });
@@ -64,6 +69,14 @@ function MemePage() {
 
   const s = status.data;
   const rows = tokens.data?.rows ?? [];
+
+  /* Open the dossier for a token arrived at from RADAR, exactly once. */
+  const opened = useRef<string | null>(null);
+  useEffect(() => {
+    if (!requestedToken || opened.current === requestedToken) return;
+    opened.current = requestedToken;
+    analyze.mutate({ data: { tokenId: requestedToken, persist: true } });
+  }, [requestedToken, analyze]);
 
   return (
     <TerminalShell>
