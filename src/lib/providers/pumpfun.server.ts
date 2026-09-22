@@ -156,7 +156,7 @@ async function bitqueryLaunches(limit: number): Promise<ProviderResult<PumpfunLa
  * window and closes again. Launches that happen while nothing is listening are
  * simply not observed — they are never back-filled or guessed.
  */
-async function drainPumpPortal(limit: number, windowMs: number): Promise<ProviderResult<PumpfunLaunch>> {
+async function drainPumpPortal(limit: number, windowMs: number): Promise<ProviderResult<PumpfunLaunch[]>> {
   if (typeof WebSocket !== "function")
     return providerUnsupported("pumpfun", "This runtime has no websocket client, so the PumpPortal stream cannot be drained here.");
 
