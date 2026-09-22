@@ -23,9 +23,9 @@ export function Panel({
   return (
     <section className={cn("panel anim-in p-4", tone === "strong" && "bg-surface-strong", className)}>
       {(title || right) && (
-        <header className="mb-3 flex items-center justify-between gap-3">
-          {title ? <h2 className="label-xs text-foreground/80">{title}</h2> : <span />}
-          {right}
+        <header className="mb-3 grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
+          {title ? <h2 className="label-xs min-w-0 break-words text-foreground/80">{title}</h2> : <span />}
+          {right ? <div className="min-w-0 shrink-0">{right}</div> : null}
         </header>
       )}
       {children}

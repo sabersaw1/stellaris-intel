@@ -29,10 +29,10 @@ const PILL_TONE: Record<string, string> = {
 export function StatePill({ label, tone = "muted", title }: { label: string; tone?: keyof typeof PILL_TONE; title?: string }) {
   return (
     <span
-      className={cn("inline-flex items-center gap-1 rounded-sm border bg-background/40 px-1.5 py-0.5 font-mono text-[10px] tracking-[0.12em]", PILL_TONE[tone])}
+      className={cn("inline-flex min-w-0 items-center gap-1 rounded-sm border bg-background/40 px-1.5 py-0.5 font-mono text-[10px] tracking-[0.12em]", PILL_TONE[tone])}
       title={title}
     >
-      {label}
+      <span className="min-w-0 truncate">{label}</span>
     </span>
   );
 }
@@ -124,7 +124,7 @@ export function Btn({
       disabled={disabled}
       title={title}
       className={cn(
-        "num rounded-sm border px-2.5 py-1.5 text-[10px] tracking-[0.14em] transition-colors disabled:cursor-not-allowed disabled:opacity-40",
+        "num min-h-10 rounded-sm border px-3 py-2 text-[10px] tracking-[0.14em] transition-colors disabled:cursor-not-allowed disabled:opacity-40",
         tone === "primary"
           ? "border-cyan/50 text-cyan hover:bg-cyan/10"
           : tone === "danger"

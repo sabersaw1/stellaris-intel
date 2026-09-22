@@ -18,6 +18,8 @@ export const Route = createFileRoute("/alerts")({
       { name: "description", content: "Deduplicated, cooldown-gated alerts for anomalies, risk classification changes, stale data and promotional events." },
       { property: "og:title", content: "Alerts — DEX Market Intelligence" },
       { property: "og:description", content: "Alert engine output with severity, confidence and source pair links." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Alerts,
@@ -67,7 +69,7 @@ function Alerts() {
 
       <Panel
         right={
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             <button
               onClick={acknowledgeAlerts}
               className="num rounded-sm border border-border px-2 py-1 text-[10px] tracking-[0.14em] text-muted-foreground hover:border-cyan/50 hover:text-cyan"

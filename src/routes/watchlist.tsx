@@ -22,6 +22,8 @@ export const Route = createFileRoute("/watchlist")({
       { name: "description", content: "Monitor saved pairs with observed price, liquidity, volume, risk, confidence and anomaly counts." },
       { property: "og:title", content: "Watchlist — Stellaris Intel" },
       { property: "og:description", content: "Grouped monitoring of saved DEX pairs with risk and confidence context." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Watchlist,
