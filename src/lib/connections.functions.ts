@@ -51,8 +51,8 @@ export const connectionCenterReport = createServerFn({ method: "GET" }).handler(
 
   const rows: ConnectionRow[] = CATALOG.map((entry) => {
     const presentEnv = present(entry.envVars);
-    const configured = entry.envVars.length === 0 ? true : presentEnv.length > 0;
     const h = entry.providerId ? byId.get(entry.providerId as never) : undefined;
+    const configured = entry.id === "solana" ? Boolean(h?.configured) : entry.envVars.length === 0 ? true : presentEnv.length > 0;
 
     let state: ConnectionState;
     if (entry.requirement === "NOT AVAILABLE") state = "CAPABILITY UNAVAILABLE";
@@ -90,7 +90,7 @@ export const connectionCenterReport = createServerFn({ method: "GET" }).handler(
     name: r.name,
     steps: [
       { label: r.envVars.length ? `${r.envVars.join(" or ")} configured` : "public access — nothing to configure", done: r.configured },
-      { label: "test successful", done: Boolean(r.lastOkAt) && (!r.lastErrorAt || r.lastOkAt! >= r.lastErrorAt) },
+      { label: "test successful", done: Boolean(r.lastOkAt) && (!r.lastErrorAt || (r.lastOkAt ?? 0) >= r.lastErrorAt) },
     ],
     unlocks: r.unlocks.slice(0, 3).join(" · "),
   }));
