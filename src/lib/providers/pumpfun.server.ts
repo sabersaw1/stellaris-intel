@@ -193,13 +193,10 @@ export const pumpfunProvider: Provider<PumpfunLaunch, never> = {
   },
   discover: async (input) => {
     const limit = typeof input?.["limit"] === "number" ? (input["limit"] as number) : 50;
+    const windowMs = typeof input?.["windowMs"] === "number" ? (input["windowMs"] as number) : 8_000;
     const b = backend();
     if (b === "bitquery") return bitqueryLaunches(limit);
-    if (b === "pumpportal")
-      return providerUnsupported(
-        "pumpfun",
-        "PumpPortal delivers launches over its websocket stream, not a request/response endpoint. Use the stream, or set STELLARIS_PUMPFUN_PROVIDER=bitquery for pull-based discovery.",
-      );
+    if (b === "pumpportal") return drainPumpPortal(limit, windowMs);
     return providerUnsupported(
       "pumpfun",
       "No Pump.fun data backend is configured. Provide PUMPPORTAL_API_KEY or BITQUERY_API_TOKEN.",
