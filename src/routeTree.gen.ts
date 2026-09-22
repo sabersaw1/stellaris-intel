@@ -26,10 +26,14 @@ import { Route as HypothesesRouteImport } from './routes/hypotheses'
 import { Route as IncidentsRouteImport } from './routes/incidents'
 import { Route as IntegrationsRouteImport } from './routes/integrations'
 import { Route as InvestigationsRouteImport } from './routes/investigations'
+import { Route as LearningRouteImport } from './routes/learning'
 import { Route as MarketsRouteImport } from './routes/markets'
 import { Route as MemeRouteImport } from './routes/meme'
 import { Route as MemoryRouteImport } from './routes/memory'
+import { Route as MoreRouteImport } from './routes/more'
+import { Route as NarrativesRouteImport } from './routes/narratives'
 import { Route as NeuralRouteImport } from './routes/neural'
+import { Route as PaperRouteImport } from './routes/paper'
 import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as PostmortemsRouteImport } from './routes/postmortems'
 import { Route as ProvidersRouteImport } from './routes/providers'
@@ -39,10 +43,13 @@ import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as RoomRouteImport } from './routes/room'
 import { Route as ScanRouteImport } from './routes/scan'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StreamRouteImport } from './routes/stream'
 import { Route as SystemRouteImport } from './routes/system'
 import { Route as TimemachineRouteImport } from './routes/timemachine'
+import { Route as TradersRouteImport } from './routes/traders'
 import { Route as TrendsRouteImport } from './routes/trends'
+import { Route as WalletsRouteImport } from './routes/wallets'
 import { Route as WatchlistRouteImport } from './routes/watchlist'
 import { Route as WorkflowsRouteImport } from './routes/workflows'
 import { Route as WorkspacesRouteImport } from './routes/workspaces'
@@ -140,6 +147,11 @@ const InvestigationsRoute = InvestigationsRouteImport.update({
   path: '/investigations',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearningRoute = LearningRouteImport.update({
+  id: '/learning',
+  path: '/learning',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MarketsRoute = MarketsRouteImport.update({
   id: '/markets',
   path: '/markets',
@@ -155,9 +167,24 @@ const MemoryRoute = MemoryRouteImport.update({
   path: '/memory',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MoreRoute = MoreRouteImport.update({
+  id: '/more',
+  path: '/more',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NarrativesRoute = NarrativesRouteImport.update({
+  id: '/narratives',
+  path: '/narratives',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NeuralRoute = NeuralRouteImport.update({
   id: '/neural',
   path: '/neural',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaperRoute = PaperRouteImport.update({
+  id: '/paper',
+  path: '/paper',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PerformanceRoute = PerformanceRouteImport.update({
@@ -205,6 +232,11 @@ const ScanRoute = ScanRouteImport.update({
   path: '/scan',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StreamRoute = StreamRouteImport.update({
   id: '/stream',
   path: '/stream',
@@ -220,9 +252,19 @@ const TimemachineRoute = TimemachineRouteImport.update({
   path: '/timemachine',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TradersRoute = TradersRouteImport.update({
+  id: '/traders',
+  path: '/traders',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TrendsRoute = TrendsRouteImport.update({
   id: '/trends',
   path: '/trends',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WalletsRoute = WalletsRouteImport.update({
+  id: '/wallets',
+  path: '/wallets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WatchlistRoute = WatchlistRouteImport.update({
@@ -303,10 +345,14 @@ export interface FileRoutesByFullPath {
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
   '/investigations': typeof InvestigationsRoute
+  '/learning': typeof LearningRoute
   '/markets': typeof MarketsRoute
   '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
+  '/more': typeof MoreRoute
+  '/narratives': typeof NarrativesRoute
   '/neural': typeof NeuralRoute
+  '/paper': typeof PaperRoute
   '/performance': typeof PerformanceRoute
   '/postmortems': typeof PostmortemsRoute
   '/providers': typeof ProvidersRoute
@@ -316,10 +362,13 @@ export interface FileRoutesByFullPath {
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
   '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
   '/timemachine': typeof TimemachineRoute
+  '/traders': typeof TradersRoute
   '/trends': typeof TrendsRoute
+  '/wallets': typeof WalletsRoute
   '/watchlist': typeof WatchlistRoute
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
@@ -350,10 +399,14 @@ export interface FileRoutesByTo {
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
   '/investigations': typeof InvestigationsRoute
+  '/learning': typeof LearningRoute
   '/markets': typeof MarketsRoute
   '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
+  '/more': typeof MoreRoute
+  '/narratives': typeof NarrativesRoute
   '/neural': typeof NeuralRoute
+  '/paper': typeof PaperRoute
   '/performance': typeof PerformanceRoute
   '/postmortems': typeof PostmortemsRoute
   '/providers': typeof ProvidersRoute
@@ -363,10 +416,13 @@ export interface FileRoutesByTo {
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
   '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
   '/timemachine': typeof TimemachineRoute
+  '/traders': typeof TradersRoute
   '/trends': typeof TrendsRoute
+  '/wallets': typeof WalletsRoute
   '/watchlist': typeof WatchlistRoute
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
@@ -398,10 +454,14 @@ export interface FileRoutesById {
   '/incidents': typeof IncidentsRoute
   '/integrations': typeof IntegrationsRoute
   '/investigations': typeof InvestigationsRoute
+  '/learning': typeof LearningRoute
   '/markets': typeof MarketsRoute
   '/meme': typeof MemeRoute
   '/memory': typeof MemoryRoute
+  '/more': typeof MoreRoute
+  '/narratives': typeof NarrativesRoute
   '/neural': typeof NeuralRoute
+  '/paper': typeof PaperRoute
   '/performance': typeof PerformanceRoute
   '/postmortems': typeof PostmortemsRoute
   '/providers': typeof ProvidersRoute
@@ -411,10 +471,13 @@ export interface FileRoutesById {
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
   '/scan': typeof ScanRoute
+  '/settings': typeof SettingsRoute
   '/stream': typeof StreamRoute
   '/system': typeof SystemRoute
   '/timemachine': typeof TimemachineRoute
+  '/traders': typeof TradersRoute
   '/trends': typeof TrendsRoute
+  '/wallets': typeof WalletsRoute
   '/watchlist': typeof WatchlistRoute
   '/workflows': typeof WorkflowsRoute
   '/workspaces': typeof WorkspacesRoute
@@ -447,10 +510,14 @@ export interface FileRouteTypes {
     | '/incidents'
     | '/integrations'
     | '/investigations'
+    | '/learning'
     | '/markets'
     | '/meme'
     | '/memory'
+    | '/more'
+    | '/narratives'
     | '/neural'
+    | '/paper'
     | '/performance'
     | '/postmortems'
     | '/providers'
@@ -460,10 +527,13 @@ export interface FileRouteTypes {
     | '/risk'
     | '/room'
     | '/scan'
+    | '/settings'
     | '/stream'
     | '/system'
     | '/timemachine'
+    | '/traders'
     | '/trends'
+    | '/wallets'
     | '/watchlist'
     | '/workflows'
     | '/workspaces'
@@ -494,10 +564,14 @@ export interface FileRouteTypes {
     | '/incidents'
     | '/integrations'
     | '/investigations'
+    | '/learning'
     | '/markets'
     | '/meme'
     | '/memory'
+    | '/more'
+    | '/narratives'
     | '/neural'
+    | '/paper'
     | '/performance'
     | '/postmortems'
     | '/providers'
@@ -507,10 +581,13 @@ export interface FileRouteTypes {
     | '/risk'
     | '/room'
     | '/scan'
+    | '/settings'
     | '/stream'
     | '/system'
     | '/timemachine'
+    | '/traders'
     | '/trends'
+    | '/wallets'
     | '/watchlist'
     | '/workflows'
     | '/workspaces'
@@ -541,10 +618,14 @@ export interface FileRouteTypes {
     | '/incidents'
     | '/integrations'
     | '/investigations'
+    | '/learning'
     | '/markets'
     | '/meme'
     | '/memory'
+    | '/more'
+    | '/narratives'
     | '/neural'
+    | '/paper'
     | '/performance'
     | '/postmortems'
     | '/providers'
@@ -554,10 +635,13 @@ export interface FileRouteTypes {
     | '/risk'
     | '/room'
     | '/scan'
+    | '/settings'
     | '/stream'
     | '/system'
     | '/timemachine'
+    | '/traders'
     | '/trends'
+    | '/wallets'
     | '/watchlist'
     | '/workflows'
     | '/workspaces'
@@ -589,10 +673,14 @@ export interface RootRouteChildren {
   IncidentsRoute: typeof IncidentsRoute
   IntegrationsRoute: typeof IntegrationsRoute
   InvestigationsRoute: typeof InvestigationsRoute
+  LearningRoute: typeof LearningRoute
   MarketsRoute: typeof MarketsRoute
   MemeRoute: typeof MemeRoute
   MemoryRoute: typeof MemoryRoute
+  MoreRoute: typeof MoreRoute
+  NarrativesRoute: typeof NarrativesRoute
   NeuralRoute: typeof NeuralRoute
+  PaperRoute: typeof PaperRoute
   PerformanceRoute: typeof PerformanceRoute
   PostmortemsRoute: typeof PostmortemsRoute
   ProvidersRoute: typeof ProvidersRoute
@@ -602,10 +690,13 @@ export interface RootRouteChildren {
   RiskRoute: typeof RiskRoute
   RoomRoute: typeof RoomRoute
   ScanRoute: typeof ScanRoute
+  SettingsRoute: typeof SettingsRoute
   StreamRoute: typeof StreamRoute
   SystemRoute: typeof SystemRoute
   TimemachineRoute: typeof TimemachineRoute
+  TradersRoute: typeof TradersRoute
   TrendsRoute: typeof TrendsRoute
+  WalletsRoute: typeof WalletsRoute
   WatchlistRoute: typeof WatchlistRoute
   WorkflowsRoute: typeof WorkflowsRoute
   WorkspacesRoute: typeof WorkspacesRoute
@@ -740,6 +831,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvestigationsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learning': {
+      id: '/learning'
+      path: '/learning'
+      fullPath: '/learning'
+      preLoaderRoute: typeof LearningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/markets': {
       id: '/markets'
       path: '/markets'
@@ -761,11 +859,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MemoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/more': {
+      id: '/more'
+      path: '/more'
+      fullPath: '/more'
+      preLoaderRoute: typeof MoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/narratives': {
+      id: '/narratives'
+      path: '/narratives'
+      fullPath: '/narratives'
+      preLoaderRoute: typeof NarrativesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/neural': {
       id: '/neural'
       path: '/neural'
       fullPath: '/neural'
       preLoaderRoute: typeof NeuralRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paper': {
+      id: '/paper'
+      path: '/paper'
+      fullPath: '/paper'
+      preLoaderRoute: typeof PaperRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/performance': {
@@ -831,6 +950,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ScanRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stream': {
       id: '/stream'
       path: '/stream'
@@ -852,11 +978,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TimemachineRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/traders': {
+      id: '/traders'
+      path: '/traders'
+      fullPath: '/traders'
+      preLoaderRoute: typeof TradersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trends': {
       id: '/trends'
       path: '/trends'
       fullPath: '/trends'
       preLoaderRoute: typeof TrendsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wallets': {
+      id: '/wallets'
+      path: '/wallets'
+      fullPath: '/wallets'
+      preLoaderRoute: typeof WalletsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/watchlist': {
@@ -957,10 +1097,14 @@ const rootRouteChildren: RootRouteChildren = {
   IncidentsRoute: IncidentsRoute,
   IntegrationsRoute: IntegrationsRoute,
   InvestigationsRoute: InvestigationsRoute,
+  LearningRoute: LearningRoute,
   MarketsRoute: MarketsRoute,
   MemeRoute: MemeRoute,
   MemoryRoute: MemoryRoute,
+  MoreRoute: MoreRoute,
+  NarrativesRoute: NarrativesRoute,
   NeuralRoute: NeuralRoute,
+  PaperRoute: PaperRoute,
   PerformanceRoute: PerformanceRoute,
   PostmortemsRoute: PostmortemsRoute,
   ProvidersRoute: ProvidersRoute,
@@ -970,10 +1114,13 @@ const rootRouteChildren: RootRouteChildren = {
   RiskRoute: RiskRoute,
   RoomRoute: RoomRoute,
   ScanRoute: ScanRoute,
+  SettingsRoute: SettingsRoute,
   StreamRoute: StreamRoute,
   SystemRoute: SystemRoute,
   TimemachineRoute: TimemachineRoute,
+  TradersRoute: TradersRoute,
   TrendsRoute: TrendsRoute,
+  WalletsRoute: WalletsRoute,
   WatchlistRoute: WatchlistRoute,
   WorkflowsRoute: WorkflowsRoute,
   WorkspacesRoute: WorkspacesRoute,
