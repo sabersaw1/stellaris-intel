@@ -338,9 +338,13 @@ export async function runCollectionCycle(opts: { queries?: string[] } = {}): Pro
     snapshotsStored: 0,
     eventsStored: 0,
     alertsRaised: 0,
+    significantEvents: 0,
+    researchQueued: [],
+    collectionMode: "NOT COLLECTING",
     errors: [],
     notes: [],
   };
+
 
   const client = db();
   if (!client) {
