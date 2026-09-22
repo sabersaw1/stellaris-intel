@@ -8,7 +8,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/api/public/intelligence/")({
+export const Route = createFileRoute("/api/public/intelligence/directory")({
   server: {
     handlers: {
       GET: async ({ request }) => {
