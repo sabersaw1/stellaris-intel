@@ -34,6 +34,7 @@ import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as PostmortemsRouteImport } from './routes/postmortems'
 import { Route as ProvidersRouteImport } from './routes/providers'
 import { Route as QuestionsRouteImport } from './routes/questions'
+import { Route as RadarRouteImport } from './routes/radar'
 import { Route as ResearchRouteImport } from './routes/research'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as RoomRouteImport } from './routes/room'
@@ -179,6 +180,11 @@ const QuestionsRoute = QuestionsRouteImport.update({
   path: '/questions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RadarRoute = RadarRouteImport.update({
+  id: '/radar',
+  path: '/radar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResearchRoute = ResearchRouteImport.update({
   id: '/research',
   path: '/research',
@@ -305,6 +311,7 @@ export interface FileRoutesByFullPath {
   '/postmortems': typeof PostmortemsRoute
   '/providers': typeof ProvidersRoute
   '/questions': typeof QuestionsRoute
+  '/radar': typeof RadarRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
@@ -351,6 +358,7 @@ export interface FileRoutesByTo {
   '/postmortems': typeof PostmortemsRoute
   '/providers': typeof ProvidersRoute
   '/questions': typeof QuestionsRoute
+  '/radar': typeof RadarRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
@@ -398,6 +406,7 @@ export interface FileRoutesById {
   '/postmortems': typeof PostmortemsRoute
   '/providers': typeof ProvidersRoute
   '/questions': typeof QuestionsRoute
+  '/radar': typeof RadarRoute
   '/research': typeof ResearchRoute
   '/risk': typeof RiskRoute
   '/room': typeof RoomRoute
@@ -446,6 +455,7 @@ export interface FileRouteTypes {
     | '/postmortems'
     | '/providers'
     | '/questions'
+    | '/radar'
     | '/research'
     | '/risk'
     | '/room'
@@ -492,6 +502,7 @@ export interface FileRouteTypes {
     | '/postmortems'
     | '/providers'
     | '/questions'
+    | '/radar'
     | '/research'
     | '/risk'
     | '/room'
@@ -538,6 +549,7 @@ export interface FileRouteTypes {
     | '/postmortems'
     | '/providers'
     | '/questions'
+    | '/radar'
     | '/research'
     | '/risk'
     | '/room'
@@ -585,6 +597,7 @@ export interface RootRouteChildren {
   PostmortemsRoute: typeof PostmortemsRoute
   ProvidersRoute: typeof ProvidersRoute
   QuestionsRoute: typeof QuestionsRoute
+  RadarRoute: typeof RadarRoute
   ResearchRoute: typeof ResearchRoute
   RiskRoute: typeof RiskRoute
   RoomRoute: typeof RoomRoute
@@ -783,6 +796,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/radar': {
+      id: '/radar'
+      path: '/radar'
+      fullPath: '/radar'
+      preLoaderRoute: typeof RadarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/research': {
       id: '/research'
       path: '/research'
@@ -945,6 +965,7 @@ const rootRouteChildren: RootRouteChildren = {
   PostmortemsRoute: PostmortemsRoute,
   ProvidersRoute: ProvidersRoute,
   QuestionsRoute: QuestionsRoute,
+  RadarRoute: RadarRoute,
   ResearchRoute: ResearchRoute,
   RiskRoute: RiskRoute,
   RoomRoute: RoomRoute,

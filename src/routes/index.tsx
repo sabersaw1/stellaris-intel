@@ -6,16 +6,16 @@ import { CosmicBackground } from "@/components/cosmos/CosmicBackground";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Stellaris Intel — Market Intelligence Command Center" },
+      { title: "Stellaris — Meme-Coin Intelligence Command Center" },
       {
         name: "description",
         content:
-          "Real-time decentralized market intelligence, risk analysis, and anomaly detection over live DEX Screener observations.",
+          "Continuous meme-coin market intelligence: discovery, on-chain and social evidence, risk analysis and change detection over live observations.",
       },
-      { property: "og:title", content: "Stellaris Intel — Market Intelligence Command Center" },
+      { property: "og:title", content: "Stellaris — Meme-Coin Intelligence Command Center" },
       {
         property: "og:description",
-        content: "Enter the terminal: live pair observations, transparent risk scoring, multi-agent analysis, anomaly detection.",
+        content: "Enter the terminal: live meme radar, transparent risk scoring, independent analysts that may disagree, and honest unknowns.",
       },
     ],
   }),
@@ -28,7 +28,7 @@ function Landing() {
       <CosmicBackground intensity={1.2} />
 
       <span className="num mb-6 rounded-full border border-border px-3 py-1 text-[10px] tracking-[0.28em] text-muted-foreground">
-        CONTINUOUS MARKET INTELLIGENCE SYSTEM
+        CONTINUOUS MEME-COIN INTELLIGENCE SYSTEM
       </span>
 
       <h1 className="display text-4xl leading-tight tracking-[0.12em] text-foreground sm:text-6xl lg:text-7xl">
@@ -38,7 +38,7 @@ function Landing() {
       </h1>
 
       <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-        Stellaris continuously discovers markets, triages what deserves attention, investigates what matters and remembers what it found — and says UNKNOWN when it cannot verify something.
+        Stellaris continuously discovers meme coins, triages what deserves attention, investigates what matters and remembers what it found — and says UNKNOWN when it cannot verify something. Mainstream large caps and stablecoins are excluded by design.
       </p>
 
       <Link
