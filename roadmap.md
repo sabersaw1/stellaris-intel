@@ -135,3 +135,10 @@ Still requires the user, and only the user:
 - Stored totals: 78 tokens, 193 readings, 142 events, 12 alerts, 3 dossiers. Analyzer persisted a WATCH dossier with execution denied.
 - Unsigned cron 401, unauthenticated agent API 503, no secret values in client code.
 - 93 tests pass, typecheck clean, build OK, no console errors and no horizontal scroll at 390px and 1440px.
+
+## Completion pass (final)
+- [x] Help: topic deep-links (`/help?topic=<key>`) and observed fact vs interpretation shown separately.
+- [x] Radar: RESEARCH, IGNORE / UN-IGNORE, SHOW IGNORED (ignoring is local; the token keeps being observed).
+- [x] Watchlist tracked tokens: RESEARCH NOW with state, supporting/contradicting/unknown counts and what would change it.
+- [x] Command bar: slash commands (/show …, /find …, /explain …).
+- [x] Agent API: bearer-protected /api/public/intelligence/directory, /tokens, /alerts, /providers. Execution stays hard disabled.
