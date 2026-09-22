@@ -15,7 +15,12 @@ export type Explanation = {
   freshness: string;
   limitations: string;
   doesNotMean: string;
+  /** What is literally observed and recorded, with no reasoning applied. */
+  observedFact?: string;
+  /** What a reader may reasonably infer — clearly separated from the fact. */
+  interpretation?: string;
 };
+
 
 export const EXPLANATIONS: Explanation[] = [
   {
