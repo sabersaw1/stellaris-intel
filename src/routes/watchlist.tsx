@@ -10,6 +10,7 @@ import { StateBadge } from "@/components/stellaris/InvestigationPanel";
 import { getWatchlist, setWatchGroup, subscribeStore, toggleWatch, type WatchItem } from "@/lib/local-store";
 import { useStoredWatchlist } from "@/hooks/useMemory";
 import { StoredChangesPanel } from "@/components/stellaris/MemoryPanels";
+import { TrackedMemeTokensPanel } from "@/components/stellaris/PipelinePanels";
 import { secondsSince, usd } from "@/lib/format";
 
 export const Route = createFileRoute("/watchlist")({
@@ -64,6 +65,9 @@ function Watchlist() {
       <TerminalShell>
         <p className="num mb-2 text-[9px] tracking-[0.16em] text-unknown">RECORD OF TRUTH · {memoryState}</p>
         <SectionTitle sub="Saved pairs are monitored on every ingestion cycle.">WATCHLIST</SectionTitle>
+        <div className="mb-3">
+          <TrackedMemeTokensPanel />
+        </div>
         <Panel>
           <EmptyState
             title="NO WATCHLIST ITEMS"
@@ -85,6 +89,10 @@ function Watchlist() {
       <SectionTitle sub="Your priority universe. A watched market receives elevated research priority, is checked for meaningful change on every observation cycle, and keeps its investigation record.">
         WATCHLIST
       </SectionTitle>
+
+      <div className="mb-3">
+        <TrackedMemeTokensPanel />
+      </div>
 
       <div className="space-y-4">
         {byGroup.map(([group, list]) => (

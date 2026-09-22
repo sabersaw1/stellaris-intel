@@ -9,12 +9,13 @@
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { TerminalShell } from "@/components/TerminalShell";
 import { Panel, SectionTitle } from "@/components/kit";
 import { KV, StatePill } from "@/components/kit2";
 import { listMemeAlerts, listMemeEvents, listMemeTokens, type MemeEventRow, type MemeTokenRow } from "@/lib/meme.functions";
+import { getWatchedTokens, subscribeStore, toggleWatchToken } from "@/lib/local-store";
 import { usd } from "@/lib/format";
 
 export const Route = createFileRoute("/radar")({
@@ -94,6 +95,13 @@ function RadarPage() {
   const events = useQuery({ queryKey: ["meme", "events"], queryFn: () => listMemeEvents(), refetchInterval: 15_000 });
   const alerts = useQuery({ queryKey: ["meme", "alerts"], queryFn: () => listMemeAlerts(), refetchInterval: 30_000 });
 
+  const [watched, setWatched] = useState<string[]>([]);
+  useEffect(() => {
+    const sync = () => setWatched(getWatchedTokens().map((w) => w.tokenId));
+    sync();
+    return subscribeStore(sync);
+  }, []);
+
   const rows = tokens.data?.rows ?? [];
   const evs = events.data?.rows ?? [];
   const note = tokens.data?.note ?? events.data?.note ?? null;
@@ -148,13 +156,24 @@ function RadarPage() {
                         <KV label="24H VOLUME" value={e.token.volume24hUsd === null ? "UNAVAILABLE" : usd(e.token.volume24hUsd)} />
                         <KV label="RESEARCH STATUS" value={e.cats.has("HIGH RISK") ? "DEVELOPING — RISK FLAGGED" : "DEVELOPING"} />
                       </div>
-                      <Link
-                        to="/meme"
-                        search={{ token: e.token.id }}
-                        className="mt-1 inline-block rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-cyan hover:border-cyan/60"
-                      >
-                        OPEN DOSSIER
-                      </Link>
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        <Link
+                          to="/meme"
+                          search={{ token: e.token.id }}
+                          className="inline-block rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-cyan hover:border-cyan/60"
+                        >
+                          OPEN DOSSIER
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            toggleWatchToken({ tokenId: e.token.id, symbol: e.token.symbol, chainId: e.token.chainId })
+                          }
+                          className="rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-foreground hover:border-cyan/60"
+                        >
+                          {watched.includes(e.token.id) ? "TRACKED — REMOVE" : "TRACK"}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

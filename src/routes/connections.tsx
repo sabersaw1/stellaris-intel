@@ -16,7 +16,7 @@ import { TerminalShell } from "@/components/TerminalShell";
 import { Panel, SectionTitle } from "@/components/kit";
 import { Btn, KV, StatePill } from "@/components/kit2";
 import { connectionCenterReport, testConnection, type ConnectionRow, type ConnectionTestResult } from "@/lib/connections.functions";
-import type { ConnectionId } from "@/lib/providers/catalog";
+import { DELIVERY, type ConnectionId } from "@/lib/providers/catalog";
 
 export const Route = createFileRoute("/connections")({
   ssr: false,
@@ -155,6 +155,7 @@ function ConnectionCard({
         <KV label="CREDENTIAL" value={row.credentialType} />
         <KV label="VARIABLE" value={row.envVars.length ? row.envVars.join("  or  ") : "NONE REQUIRED"} />
         <KV label="COST" value={row.cost} />
+        <KV label="DELIVERY" value={DELIVERY[row.id]} />
         <KV label="WHERE TO OBTAIN" value={row.whereToGet} />
         <KV label="LAST SUCCESSFUL REQUEST" value={ago(row.lastOkAt)} />
         <KV label="LAST RECEIVED DATA" value={row.lastOkAt ? ago(row.lastOkAt) : "NO DATA RECEIVED YET"} />
