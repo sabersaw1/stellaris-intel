@@ -222,7 +222,9 @@ async function collectPumpfunLaunches(
     );
     return;
   }
-  const launches = await pumpfunProvider.discover?.({ limit: 50 });
+  // PumpPortal is a stream: drain a bounded window per cycle. Launches that
+  // occur outside the listening window are simply not observed.
+  const launches = await pumpfunProvider.discover?.({ limit: 50, windowMs: 8_000 });
   if (!launches) return;
   if (launches.unsupportedReason) {
     summary.notes.push(launches.unsupportedReason);

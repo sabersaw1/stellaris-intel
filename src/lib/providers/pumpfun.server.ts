@@ -149,6 +149,80 @@ async function bitqueryLaunches(limit: number): Promise<ProviderResult<PumpfunLa
   }
 }
 
+/**
+ * PumpPortal publishes new launches over a websocket stream, not a REST
+ * endpoint. Each collection cycle therefore opens one short-lived connection,
+ * subscribes to subscribeNewToken, drains whatever arrives inside a bounded
+ * window and closes again. Launches that happen while nothing is listening are
+ * simply not observed — they are never back-filled or guessed.
+ */
+async function drainPumpPortal(limit: number, windowMs: number): Promise<ProviderResult<PumpfunLaunch[]>> {
+  if (typeof WebSocket !== "function")
+    return providerUnsupported("pumpfun", "This runtime has no websocket client, so the PumpPortal stream cannot be drained here.");
+
+  const started = Date.now();
+  state.lastRequestAt = started;
+  const launches: PumpfunLaunch[] = [];
+
+  try {
+    const result = await new Promise<{ error: string | null }>((resolve) => {
+      const ws = new WebSocket("wss://pumpportal.fun/api/data");
+      let settled = false;
+      const finish = (error: string | null) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        try {
+          ws.close();
+        } catch {
+          /* already closing */
+        }
+        resolve({ error });
+      };
+      const timer = setTimeout(() => finish(null), Math.max(2_000, Math.min(20_000, windowMs)));
+
+      ws.onopen = () => ws.send(JSON.stringify({ method: "subscribeNewToken" }));
+      ws.onerror = () => finish("PumpPortal websocket connection failed.");
+      ws.onclose = () => finish(null);
+      ws.onmessage = (ev: MessageEvent) => {
+        try {
+          const raw = typeof ev.data === "string" ? ev.data : "";
+          if (!raw) return;
+          const msg = JSON.parse(raw) as Record<string, unknown>;
+          const mint = typeof msg["mint"] === "string" ? (msg["mint"] as string) : null;
+          if (!mint) return; // subscription acknowledgements carry no mint
+          launches.push({
+            mint,
+            symbol: typeof msg["symbol"] === "string" ? (msg["symbol"] as string) : null,
+            name: typeof msg["name"] === "string" ? (msg["name"] as string) : null,
+            creator: typeof msg["traderPublicKey"] === "string" ? (msg["traderPublicKey"] as string) : null,
+            uri: typeof msg["uri"] === "string" ? (msg["uri"] as string) : null,
+            observedAt: Date.now(),
+            raw: msg,
+          });
+          if (launches.length >= limit) finish(null);
+        } catch {
+          /* a malformed frame is ignored rather than invented */
+        }
+      };
+    });
+
+    state.latencyMs = Date.now() - started;
+    if (result.error) {
+      state.lastErrorAt = Date.now();
+      state.lastError = result.error;
+      return providerFailed("pumpfun", result.error);
+    }
+    state.lastOkAt = Date.now();
+    state.lastError = null;
+    return providerOk("pumpfun", launches, launches[0]?.observedAt ?? null);
+  } catch (e) {
+    state.lastErrorAt = Date.now();
+    state.lastError = e instanceof Error ? e.message : "PumpPortal stream failed.";
+    return providerFailed("pumpfun", state.lastError);
+  }
+}
+
 export const pumpfunProvider: Provider<PumpfunLaunch, never> = {
   id: "pumpfun",
   name: "Pump.fun (via documented third-party API)",
@@ -193,13 +267,10 @@ export const pumpfunProvider: Provider<PumpfunLaunch, never> = {
   },
   discover: async (input) => {
     const limit = typeof input?.["limit"] === "number" ? (input["limit"] as number) : 50;
+    const windowMs = typeof input?.["windowMs"] === "number" ? (input["windowMs"] as number) : 8_000;
     const b = backend();
     if (b === "bitquery") return bitqueryLaunches(limit);
-    if (b === "pumpportal")
-      return providerUnsupported(
-        "pumpfun",
-        "PumpPortal delivers launches over its websocket stream, not a request/response endpoint. Use the stream, or set STELLARIS_PUMPFUN_PROVIDER=bitquery for pull-based discovery.",
-      );
+    if (b === "pumpportal") return drainPumpPortal(limit, windowMs);
     return providerUnsupported(
       "pumpfun",
       "No Pump.fun data backend is configured. Provide PUMPPORTAL_API_KEY or BITQUERY_API_TOKEN.",

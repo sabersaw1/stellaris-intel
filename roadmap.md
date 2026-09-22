@@ -101,3 +101,18 @@ Still requires the user, and only the user:
 - `src/lib/connections.functions.ts`: `connectionCenterReport` (live state, presence of credential, last success/error, latency, checklist) and `testConnection` (real read-only probe per provider; unsupported vendor capability reported as CAPABILITY UNAVAILABLE).
 - `/connections` rebuilt as the control center with per-card Test Connection, and added to primary navigation (G 4). `/radar` added (G 6) with NEW / ACCELERATING / TRENDING / TRADER ACTIVITY / SOCIAL / HIGH RISK / DETERIORATING built from stored observations and change events only.
 - Verified: typecheck clean, build OK, 70 tests pass, no console errors, no horizontal overflow at 390px, DEX Screener test probe passed live (49 ms, 30 observations). Meme schema now reports APPLIED.
+
+## Surfaces + live Pump.fun stream (2026-09-22)
+- New mobile-first surfaces from stored Supabase data only:
+  `/traders`, `/wallets`, `/narratives`, `/paper`, `/learning`, `/settings`, `/more`
+  (`src/lib/surfaces.functions.ts` server-only readers + `src/components/surface.tsx`).
+- `TerminalShell`: 13-item desktop nav, 5-item mobile bottom nav (HOME/RADAR/TRADERS/WATCH/MORE),
+  duplicate keyboard shortcuts removed.
+- Pump.fun is live: `PUMPPORTAL_API_KEY` configured; `drainPumpPortal` opens one
+  short-lived websocket per cycle (subscribeNewToken), drains a bounded window and
+  closes. Launches outside the window are not observed and never back-filled.
+- Verified live: collection cycle stored 65 observations / 89 change events / 6 alerts
+  from 93 meme-classified tokens; typecheck clean, 70 tests pass, build OK, zero
+  horizontal overflow and zero console errors at 320/390/768/1440 across 12 screens.
+- Still user-only: apply `db/migrations/0008_stellaris_dossiers.sql` (only missing table).
+  Optional: Solana RPC URL, X credentials, FOMO_API_KEY, STELLARIS_AGENT_TOKEN.
