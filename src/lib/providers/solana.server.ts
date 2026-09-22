@@ -11,7 +11,6 @@ import {
   capability,
   providerFailed,
   providerOk,
-  providerUnsupported,
   type CapabilityDeclaration,
   type Provider,
   type ProviderHealth,
