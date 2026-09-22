@@ -259,10 +259,10 @@ export function TerminalShell({ children }: { children: ReactNode }) {
 
           <div className="flex flex-1 flex-wrap items-center gap-x-5 gap-y-1">
             <TopStat label="SYSTEM STATUS" value={status.label} tone={status.tone} />
-            <TopStat label="LIVE DATA" value={market.data?.ok ? "CONNECTED" : "UNAVAILABLE"} tone={market.data?.ok ? "text-signal-low" : "text-signal-extreme"} />
+            <span className="hidden sm:contents"><TopStat label="LIVE DATA" value={market.data?.ok ? "CONNECTED" : "UNAVAILABLE"} tone={market.data?.ok ? "text-signal-low" : "text-signal-extreme"} />
             <TopStat label="LAST UPDATE" value={clockOf(market.data?.observedAt ?? null)} />
             <TopStat label="ACTIVE CHAINS" value={pairs.length ? String(chains) : "—"} />
-            <TopStat label="ACTIVE DEXS" value={pairs.length ? String(dexs) : "—"} />
+            <TopStat label="ACTIVE DEXS" value={pairs.length ? String(dexs) : "—"} /></span>
             <Link to="/alerts" className="group">
               <TopStat label="ALERTS" value={String(alertCount)} tone={alertCount ? "text-signal-high" : "text-muted-foreground"} />
             </Link>
@@ -275,7 +275,7 @@ export function TerminalShell({ children }: { children: ReactNode }) {
             >
               <Keyboard className="h-3 w-3" /> ?
             </button>
-            <span className="num flex items-center gap-2 rounded-sm border border-border px-2 py-1 text-[10px] tracking-[0.14em] text-muted-foreground">
+            <span className="num hidden items-center gap-2 rounded-sm border border-border px-2 py-1 text-[10px] tracking-[0.14em] text-muted-foreground sm:flex">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan" /> LOCAL ANALYST
             </span>
           </div>
