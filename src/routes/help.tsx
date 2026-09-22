@@ -40,11 +40,14 @@ function HelpPage() {
           <Panel key={e.key} title={e.title.toUpperCase()}>
             <dl className="space-y-2 text-xs">
               <Row term="What it means" desc={e.meaning} />
+              {e.observedFact ? <Row term="Observed fact" desc={e.observedFact} /> : null}
+              {e.interpretation ? <Row term="Interpretation (not a fact)" desc={e.interpretation} /> : null}
               <Row term="How it is calculated" desc={e.calculation} />
               <Row term="Where it comes from" desc={e.source} />
               <Row term="How fresh it is" desc={e.freshness} />
               <Row term="Limitations" desc={e.limitations} />
               <Row term="What it does NOT mean" desc={e.doesNotMean} emphasis />
+
             </dl>
           </Panel>
         ))}
