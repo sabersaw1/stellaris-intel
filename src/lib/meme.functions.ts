@@ -211,7 +211,7 @@ export type MemeAlertRow = {
   title: string;
   why: string[];
   createdAt: string | null;
-  acknowledgedAt: string | null;
+  acknowledged: boolean;
 };
 
 export const listMemeAlerts = createServerFn({ method: "GET" }).handler(
@@ -223,7 +223,7 @@ export const listMemeAlerts = createServerFn({ method: "GET" }).handler(
     if (!schema.ready) return { rows: [], note: schema.error };
     const r = await client
       .from("stellaris_alerts")
-      .select("id, token_id, category, severity, title, why, created_at, acknowledged_at")
+      .select("id, token_id, category, severity, title, why, created_at, acknowledged")
       .order("created_at", { ascending: false })
       .limit(50);
     const rows: MemeAlertRow[] = ((r.data ?? []) as Record<string, unknown>[]).map((a) => ({
@@ -234,7 +234,7 @@ export const listMemeAlerts = createServerFn({ method: "GET" }).handler(
       title: String(a["title"]),
       why: Array.isArray(a["why"]) ? (a["why"] as unknown[]).map((w) => String(w)) : [],
       createdAt: (a["created_at"] as string | null) ?? null,
-      acknowledgedAt: (a["acknowledged_at"] as string | null) ?? null,
+      acknowledged: Boolean(a["acknowledged"]),
     }));
     return { rows, note: r.error?.message ?? null };
   },

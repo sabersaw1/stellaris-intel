@@ -76,7 +76,7 @@ export function PipelineAlertsPanel() {
               </p>
               <div className="mt-1 flex flex-wrap items-center gap-2">
                 <KV label="RAISED" value={a.createdAt ?? "UNKNOWN"} />
-                <StatePill label={a.acknowledgedAt ? "ACKNOWLEDGED" : "UNACKNOWLEDGED"} tone={a.acknowledgedAt ? "muted" : "info"} />
+                <StatePill label={a.acknowledged ? "ACKNOWLEDGED" : "UNACKNOWLEDGED"} tone={a.acknowledged ? "muted" : "info"} />
                 {a.tokenId ? <DossierLink tokenId={a.tokenId} /> : null}
               </div>
             </div>
