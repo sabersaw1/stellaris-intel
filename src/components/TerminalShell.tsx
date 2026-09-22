@@ -82,6 +82,10 @@ const MOBILE_NAV = [
  */
 const ADVANCED = [
   { to: "/discover", label: "DISCOVER", icon: Compass, keys: "/" },
+  { to: "/scan", label: "RAPID SCAN", icon: Radar, keys: "G L" },
+  { to: "/investigations", label: "INVESTIGATIONS", icon: FlaskConical, keys: "G Z" },
+  { to: "/memory", label: "MEMORY", icon: Database, keys: "G E" },
+  { to: "/system", label: "SYSTEM HEALTH", icon: ServerCog, keys: "G V" },
   { to: "/markets", label: "MARKETS", icon: LineChart, keys: "G M" },
   { to: "/attention", label: "ATTENTION", icon: Brain, keys: "G T" },
   { to: "/research", label: "RESEARCH QUEUE", icon: ClipboardList, keys: "G J" },
@@ -91,7 +95,6 @@ const ADVANCED = [
   { to: "/contradictions", label: "CONTRADICTIONS", icon: GitCompare, keys: "G C" },
   { to: "/timemachine", label: "TIME MACHINE", icon: History, keys: "G X" },
   { to: "/postmortems", label: "POST-MORTEMS", icon: ScrollText, keys: "G P" },
-  { to: "/meme", label: "MEME INTELLIGENCE", icon: Activity, keys: "G 1" },
   { to: "/engine", label: "RESEARCH ENGINE", icon: Target, keys: "G 2" },
   { to: "/providers", label: "PROVIDERS", icon: Plug, keys: "G 3" },
   { to: "/calibration", label: "CALIBRATION", icon: Target, keys: "G B" },
@@ -106,7 +109,7 @@ const ADVANCED = [
   { to: "/workspaces", label: "WORKSPACES", icon: LayoutDashboard, keys: "G K" },
   { to: "/integrations", label: "INTEGRATIONS", icon: Plug, keys: "G G" },
   { to: "/workflows", label: "WORKFLOWS", icon: Workflow, keys: "G Y" },
-  { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "G V" },
+  { to: "/incidents", label: "INCIDENTS", icon: AlertTriangle, keys: "" },
   { to: "/audit", label: "AUDIT LOG", icon: ScrollText, keys: "G U" },
   { to: "/help", label: "HELP & DEFINITIONS", icon: HelpCircle, keys: "G 5" },
 ] as const;
@@ -192,7 +195,8 @@ export function TerminalShell({ children }: { children: ReactNode }) {
         a: "/alerts",
         r: "/risk",
         m: "/markets",
-        s: "/system",
+        s: "/settings",
+        v: "/system",
         l: "/scan",
         z: "/investigations",
         t: "/attention",
@@ -219,6 +223,11 @@ export function TerminalShell({ children }: { children: ReactNode }) {
         "4": "/connections",
         "5": "/help",
         "6": "/radar",
+        "7": "/traders",
+        "8": "/wallets",
+        "9": "/narratives",
+        "0": "/paper",
+        r: "/learning",
       };
       const to = map[e.key.toLowerCase()];
       if (to) void navigate({ to });
@@ -337,22 +346,22 @@ export function TerminalShell({ children }: { children: ReactNode }) {
         </main>
       </div>
 
-      {/* MOBILE NAV */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/90 backdrop-blur-xl lg:hidden">
-        <div className="flex overflow-x-auto">
-          {NAV.map((n) => {
-            const active = pathname.startsWith(n.to);
+      {/* MOBILE BOTTOM NAV — five fixed destinations, safe-area aware. */}
+      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden">
+        <div className="grid grid-cols-5">
+          {MOBILE_NAV.map((n) => {
+            const active = n.to === "/more" ? pathname === "/more" : pathname.startsWith(n.to);
             return (
               <Link
                 key={n.to}
                 to={n.to}
                 className={cn(
-                  "flex min-w-[4.5rem] flex-col items-center gap-1 px-2 py-2 text-[9px] tracking-[0.1em]",
+                  "flex min-w-0 flex-col items-center justify-center gap-1 px-1 py-2.5 text-[9px] tracking-[0.1em]",
                   active ? "text-cyan" : "text-muted-foreground",
                 )}
               >
-                <n.icon className="h-4 w-4" />
-                <span className="num">{n.label.split(" ")[0]}</span>
+                <n.icon className="h-4 w-4 shrink-0" />
+                <span className="num truncate">{n.label}</span>
               </Link>
             );
           })}
