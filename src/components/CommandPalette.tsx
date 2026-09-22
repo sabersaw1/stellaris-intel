@@ -11,6 +11,7 @@ import { runWorkflow, getWorkflows } from "@/lib/workflows";
 import { emitAlert } from "@/lib/local-store";
 import { audit } from "@/lib/incidents";
 import { emitEvent } from "@/lib/events";
+import { EXPLANATIONS } from "@/lib/explain";
 
 type Command = { id: string; label: string; hint: string; run: () => void };
 
@@ -71,6 +72,24 @@ export function CommandPalette() {
       { id: "c-inc", label: "Open Incidents", hint: "/incidents", run: () => go("/incidents") },
       { id: "c-aud", label: "Open Audit Log", hint: "/audit", run: () => go("/audit") },
       { id: "c-sys", label: "Open System Health", hint: "/system", run: () => go("/system") },
+      { id: "s-search", label: "/search — search every stored record", hint: "type after opening: markets, research, memory, workflows", run: () => inputRef.current?.focus() },
+      { id: "s-find-token", label: "/find token — find a meme token", hint: "opens market search", run: () => go("/discover", { q: "", focus: true }) },
+      { id: "s-find-trader", label: "/find trader — traders observed acting", hint: "/traders", run: () => go("/traders") },
+      { id: "s-find-wallet", label: "/find wallet — wallets observed acting", hint: "/wallets", run: () => go("/wallets") },
+      { id: "s-radar", label: "/show radar — live meme radar", hint: "/radar", run: () => go("/radar") },
+      { id: "s-alerts", label: "/show alerts — alerts raised from real events", hint: "/alerts", run: () => go("/alerts") },
+      { id: "s-research", label: "/show research — research and dossiers", hint: "/meme", run: () => go("/meme") },
+      { id: "s-watchlist", label: "/show watchlist — tracked tokens", hint: "/watchlist", run: () => go("/watchlist") },
+      { id: "s-providers", label: "/show providers — connection states", hint: "/connections", run: () => go("/connections") },
+      { id: "s-paper", label: "/show paper trades — simulated positions only", hint: "/paper", run: () => go("/paper") },
+      { id: "s-narratives", label: "/show narratives — shared meme themes", hint: "/narratives", run: () => go("/narratives") },
+      { id: "s-learning", label: "/show learning — outcomes and calibration", hint: "/learning", run: () => go("/learning") },
+      ...EXPLANATIONS.map((e) => ({
+        id: `s-explain-${e.key}`,
+        label: `/explain ${e.title.toLowerCase()}`,
+        hint: "opens the definition, with observed fact separated from interpretation",
+        run: () => go("/help", { topic: e.key }),
+      })),
       {
         id: "c-job",
         label: "Create research job on the highest-attention target",

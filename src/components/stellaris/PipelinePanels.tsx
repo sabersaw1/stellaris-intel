@@ -8,7 +8,7 @@
  */
 
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { Panel } from "@/components/kit";
@@ -16,6 +16,8 @@ import { KV, StatePill } from "@/components/kit2";
 import { listMemeAlerts, listMemeTokens } from "@/lib/meme.functions";
 import { getWatchedTokens, subscribeStore, toggleWatchToken } from "@/lib/local-store";
 import { usd } from "@/lib/format";
+import { analyzeToken } from "@/lib/intel.functions";
+import type { AnalyzeResult } from "@/lib/agents/dossier-types";
 
 function DossierLink({ tokenId }: { tokenId: string }) {
   return (
@@ -87,6 +89,49 @@ export function PipelineAlertsPanel() {
   );
 }
 
+/** Runs the shared research pass for one tracked token and reports the result. */
+function ResearchNow({ tokenId }: { tokenId: string }) {
+  const [result, setResult] = useState<AnalyzeResult | null>(null);
+  const run = useMutation({
+    mutationFn: () => analyzeToken({ data: { tokenId, persist: true } }),
+    onSuccess: (r) => setResult(r),
+  });
+
+  return (
+    <div className="min-w-0">
+      <button
+        type="button"
+        onClick={() => run.mutate()}
+        disabled={run.isPending}
+        className="rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-cyan hover:border-cyan/60 disabled:opacity-50"
+      >
+        {run.isPending ? "RESEARCHING…" : "RESEARCH NOW"}
+      </button>
+      {result && result.ok === false ? (
+        <p className="mt-1 text-[11px] text-signal-mid">
+          {result.state}
+          {result.detail ? ` — ${result.detail}` : ""}
+        </p>
+      ) : null}
+      {result && result.ok === true ? (
+        <div className="mt-1 space-y-0.5 text-[11px] text-muted-foreground">
+          <p className="num tracking-[0.1em] text-foreground">{result.dossier.state}</p>
+          <p>
+            SUPPORTING {result.dossier.supporting.length} · CONTRADICTING {result.dossier.contradicting.length} · UNKNOWN{" "}
+            {result.dossier.unknown.length}
+            {result.dossier.disagreement ? " · ANALYSTS DISAGREE" : ""}
+          </p>
+          {result.dossier.whatWouldChangeIt.slice(0, 2).map((w, i) => (
+            <p key={i} className="text-unknown">
+              WOULD CHANGE IT — {w}
+            </p>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function TrackedMemeTokensPanel() {
   const tokens = useQuery({ queryKey: ["meme", "tokens"], queryFn: () => listMemeTokens(), refetchInterval: 15_000 });
   const [watched, setWatched] = useState<string[]>([]);
@@ -127,6 +172,7 @@ export function TrackedMemeTokensPanel() {
               </div>
               <div className="mt-1 flex flex-wrap gap-2">
                 <DossierLink tokenId={t.id} />
+                <ResearchNow tokenId={t.id} />
                 <button
                   type="button"
                   onClick={() => toggleWatchToken({ tokenId: t.id, symbol: t.symbol, chainId: t.chainId })}
