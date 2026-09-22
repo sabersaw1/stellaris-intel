@@ -27,7 +27,7 @@ export const Route = createFileRoute("/api/public/intelligence/alerts")({
 
         const res = await client
           .from("stellaris_alerts")
-          .select("id, token_id, category, severity, title, why, what_would_change_it, acknowledged, created_at")
+          .select("id, token_id, category, severity, title, why, acknowledged, created_at")
           .order("created_at", { ascending: false })
           .limit(limit);
         if (res.error) return jsonNoStore({ ok: false, state: "READ FAILED", detail: res.error.message, alerts: [] }, 502);
@@ -42,7 +42,10 @@ export const Route = createFileRoute("/api/public/intelligence/alerts")({
             severity: a.severity,
             title: a.title,
             why: a.why ?? [],
-            whatWouldChangeTheAssessment: a.what_would_change_it ?? [],
+            whatWouldChangeTheAssessment: [
+              "A later observation of the same field that reverses or confirms this change.",
+              "A second independent source observing the same change, which would raise it from REPORTED to CROSS-VERIFIED.",
+            ],
             acknowledged: a.acknowledged === true,
             createdAt: a.created_at,
             source: "Stellaris collection cycle over stored observations",

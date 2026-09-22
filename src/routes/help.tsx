@@ -4,7 +4,7 @@
  * it can be, what its limits are, and what it does not mean.
  */
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { TerminalShell } from "@/components/TerminalShell";
 import { Panel, SectionTitle } from "@/components/kit";
@@ -25,6 +25,8 @@ export const Route = createFileRoute("/help")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
+  validateSearch: (search: Record<string, unknown>): { topic?: string } =>
+    typeof search["topic"] === "string" && search["topic"] ? { topic: search["topic"] as string } : {},
   component: HelpPage,
 });
 
