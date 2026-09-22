@@ -7,7 +7,7 @@
  * them and the meme classifier excludes them again.
  */
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -148,6 +148,13 @@ function RadarPage() {
                         <KV label="24H VOLUME" value={e.token.volume24hUsd === null ? "UNAVAILABLE" : usd(e.token.volume24hUsd)} />
                         <KV label="RESEARCH STATUS" value={e.cats.has("HIGH RISK") ? "DEVELOPING — RISK FLAGGED" : "DEVELOPING"} />
                       </div>
+                      <Link
+                        to="/meme"
+                        search={{ token: e.token.id }}
+                        className="mt-1 inline-block rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-cyan hover:border-cyan/60"
+                      >
+                        OPEN DOSSIER
+                      </Link>
                     </div>
                   ))}
                 </div>

@@ -173,3 +173,55 @@ export function capability(
 ): CapabilityDeclaration {
   return { capability: cap, state, note };
 }
+
+/* ---------------------------------------------------------------------------
+ * CONTINUOUS EVENT STREAMS (contract only — no provider fakes one)
+ *
+ * Today's launch collection opens a websocket, drains a bounded window and
+ * closes, so anything that happens while it is not listening is simply absent.
+ * That is declared, not hidden: a provider states its real delivery mode.
+ * A future continuous provider (Bitquery, Solana Tracker, a hosted websocket
+ * relay) implements `openStream` and declares CONTINUOUS — the engine consumes
+ * the same normalized events either way, so nothing else has to be rebuilt.
+ * ------------------------------------------------------------------------- */
+
+export type DeliveryMode =
+  /** No push channel at all; the engine must poll. */
+  | "POLL_ONLY"
+  /** Push channel exists, but is drained in short windows; gaps are expected. */
+  | "BOUNDED_WINDOW"
+  /** Long-lived subscription with reconnect; gaps only on recorded disconnects. */
+  | "CONTINUOUS";
+
+export type StreamEvent = {
+  provider: ProviderId;
+  /** Provider-native event name, kept verbatim for provenance. */
+  kind: string;
+  /** When the upstream says it happened, when it says so at all. */
+  observedAt: number | null;
+  receivedAt: number;
+  payload: unknown;
+};
+
+export type StreamHandle = {
+  /** Delivery mode actually in force for this handle. */
+  mode: DeliveryMode;
+  /** Set when the subscription ended early; describes the gap truthfully. */
+  closedReason: () => string | null;
+  /** Events dropped or missed while disconnected, when countable. */
+  missed: () => number | null;
+  close: () => Promise<void> | void;
+};
+
+export type StreamCapableProvider = Provider & {
+  deliveryMode: DeliveryMode;
+  /** Only present when the provider can hold a subscription open. */
+  openStream?: (
+    onEvent: (event: StreamEvent) => void,
+    options?: { subscriptions?: string[]; signal?: AbortSignal },
+  ) => Promise<ProviderResult<StreamHandle>>;
+};
+
+export function isStreamCapable(p: Provider): p is StreamCapableProvider {
+  return typeof (p as StreamCapableProvider).openStream === "function";
+}
