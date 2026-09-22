@@ -296,3 +296,28 @@ export function toggleWatchToken(t: { tokenId: string; symbol: string | null; ch
   write(K_TOKENS, next);
   return !exists;
 }
+
+/**
+ * Tokens the operator explicitly dismissed on RADAR. Ignoring is a local
+ * decision only: the token keeps being observed and stored, it is simply not
+ * shown on the radar until the operator asks to see ignored cards again.
+ */
+const K_IGNORED = "stellaris.ignored.tokens.v1";
+
+export type IgnoredToken = { tokenId: string; at: number };
+
+export function getIgnoredTokens(): IgnoredToken[] {
+  return read<IgnoredToken[]>(K_IGNORED, []);
+}
+
+export function isTokenIgnored(tokenId: string): boolean {
+  return getIgnoredTokens().some((t) => t.tokenId === tokenId);
+}
+
+export function toggleIgnoreToken(tokenId: string): boolean {
+  const list = getIgnoredTokens();
+  const exists = list.some((t) => t.tokenId === tokenId);
+  const next = exists ? list.filter((t) => t.tokenId !== tokenId) : [...list, { tokenId, at: Date.now() }];
+  write(K_IGNORED, next);
+  return !exists;
+}
