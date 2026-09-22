@@ -379,14 +379,39 @@ export async function runCollectionCycle(opts: { queries?: string[] } = {}): Pro
     }
   }
 
+  const pumpfunActive = pumpfunProvider.configured();
   await collectPumpfunLaunches(client, summary, events, tokenIds);
+  const mode = collectionMode({ pollingActive: summary.discovered > 0, boundedWindowActive: pumpfunActive });
+  summary.collectionMode = mode.mode;
+  summary.notes.push(mode.statement);
 
-  const stored = await insertEvents(client, dedupe(events), (e) => tokenIds.get(e.entityId) ?? null);
+  /* One real-world change becomes ONE canonical event, no matter how many
+     providers observed it; every observing provider survives as provenance. */
+  const canonical = canonicalize(events);
+  const counts = eventCountsByEntity(canonical);
+  const graded = canonical.map((e) => {
+    const significance = assessSignificance(e, { entityEventCount: counts.get(e.entityId) ?? 1 });
+    if (significance.level === "SIGNIFICANT" || significance.level === "URGENT") summary.significantEvents++;
+    if (significance.triggersResearch && !summary.researchQueued.includes(e.entityId))
+      summary.researchQueued.push(e.entityId);
+    return {
+      ...e,
+      reference: {
+        ...canonicalReference(e),
+        significance: significance.level,
+        significance_weight: significance.weight,
+        significance_drivers: significance.drivers,
+      },
+    };
+  });
+
+  const stored = await insertEvents(client, graded, (e) => tokenIds.get(e.entityId) ?? null);
   if (stored.error) summary.errors.push(`events: ${stored.error}`);
   summary.eventsStored = stored.stored;
 
   summary.ok = summary.errors.length === 0;
   summary.finishedAt = Date.now();
+
 
   await audit({
     action: "COLLECTION_CYCLE",
