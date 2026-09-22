@@ -1,5 +1,5 @@
 /**
- * GET /api/public/intelligence/index
+ * GET /api/public/intelligence/directory
  *
  * Machine-readable directory of the agent API. Bearer authenticated. It states
  * every available endpoint and, explicitly, that no endpoint can move real
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/api/public/intelligence/")({
           level: auth.level,
           execution: { realMoney: "HARD DISABLED", proposalsOnly: true },
           endpoints: [
-            { method: "GET", path: "/api/public/intelligence/index", returns: "this directory" },
+            { method: "GET", path: "/api/public/intelligence/directory", returns: "this directory" },
             { method: "GET", path: "/api/public/intelligence/status", returns: "provider health, capability coverage, schema readiness" },
             { method: "GET", path: "/api/public/intelligence/events", returns: "deduplicated change events with source and timestamps" },
             { method: "GET", path: "/api/public/intelligence/tokens", returns: "stored meme tokens with their latest observation" },
