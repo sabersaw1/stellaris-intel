@@ -15,7 +15,7 @@ import { TerminalShell } from "@/components/TerminalShell";
 import { Panel, SectionTitle } from "@/components/kit";
 import { KV, StatePill } from "@/components/kit2";
 import { listMemeAlerts, listMemeEvents, listMemeTokens, type MemeEventRow, type MemeTokenRow } from "@/lib/meme.functions";
-import { getWatchedTokens, subscribeStore, toggleWatchToken } from "@/lib/local-store";
+import { getIgnoredTokens, getWatchedTokens, subscribeStore, toggleIgnoreToken, toggleWatchToken } from "@/lib/local-store";
 import { usd } from "@/lib/format";
 
 export const Route = createFileRoute("/radar")({
@@ -96,8 +96,13 @@ function RadarPage() {
   const alerts = useQuery({ queryKey: ["meme", "alerts"], queryFn: () => listMemeAlerts(), refetchInterval: 30_000 });
 
   const [watched, setWatched] = useState<string[]>([]);
+  const [ignored, setIgnored] = useState<string[]>([]);
+  const [showIgnored, setShowIgnored] = useState(false);
   useEffect(() => {
-    const sync = () => setWatched(getWatchedTokens().map((w) => w.tokenId));
+    const sync = () => {
+      setWatched(getWatchedTokens().map((w) => w.tokenId));
+      setIgnored(getIgnoredTokens().map((i) => i.tokenId));
+    };
     sync();
     return subscribeStore(sync);
   }, []);
@@ -106,7 +111,10 @@ function RadarPage() {
   const evs = events.data?.rows ?? [];
   const note = tokens.data?.note ?? events.data?.note ?? null;
 
-  const enriched = useMemo(() => rows.map((t) => ({ token: t, ...categoriesFor(t, evs) })), [rows, evs]);
+  const enriched = useMemo(
+    () => rows.filter((t) => showIgnored || !ignored.includes(t.id)).map((t) => ({ token: t, ...categoriesFor(t, evs) })),
+    [rows, evs, ignored, showIgnored],
+  );
 
   return (
     <TerminalShell>
@@ -128,6 +136,13 @@ function RadarPage() {
         <StatePill label={`CHANGE EVENTS ${evs.length}`} tone={evs.length ? "info" : "muted"} />
         <StatePill label={`ALERTS ${(alerts.data?.rows ?? []).length}`} tone={(alerts.data?.rows ?? []).length ? "warn" : "muted"} />
         <StatePill label="RESEARCH TOOL — NO TRADING" tone="muted" />
+        <button
+          type="button"
+          onClick={() => setShowIgnored((v) => !v)}
+          className="rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-foreground hover:border-cyan/60"
+        >
+          {showIgnored ? `HIDE IGNORED (${ignored.length})` : `SHOW IGNORED (${ignored.length})`}
+        </button>
       </div>
 
       <div className="mt-4 grid gap-3 lg:grid-cols-2">
@@ -172,6 +187,20 @@ function RadarPage() {
                           className="rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-foreground hover:border-cyan/60"
                         >
                           {watched.includes(e.token.id) ? "TRACKED — REMOVE" : "TRACK"}
+                        </button>
+                        <Link
+                          to="/meme"
+                          search={{ token: e.token.id }}
+                          className="inline-block rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-foreground hover:border-cyan/60"
+                        >
+                          RESEARCH
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => toggleIgnoreToken(e.token.id)}
+                          className="rounded-sm border border-border/60 px-2 py-1 text-[11px] tracking-[0.1em] text-unknown hover:border-signal-mid/60"
+                        >
+                          {ignored.includes(e.token.id) ? "UN-IGNORE" : "IGNORE"}
                         </button>
                       </div>
                     </div>
