@@ -23,10 +23,16 @@ function series(prices: number[], stepMinutes = 5): SeriesPoint[] {
 }
 
 describe("universe", () => {
-  it("defaults to the ten major assets and accepts an override", () => {
-    expect(universeSymbols(null)).toContain("BTC");
-    expect(universeSymbols(null)).toHaveLength(10);
-    expect(universeSymbols("btc, eth")).toEqual(["BTC", "ETH"]);
+  it("contains meme coins only and never mainstream majors", () => {
+    const u = universeSymbols(null);
+    expect(u).toContain("DOGE");
+    expect(u).toHaveLength(10);
+    for (const major of ["BTC", "ETH", "SOL", "XRP", "USDC"]) expect(u).not.toContain(major);
+  });
+
+  it("strips majors out of an override instead of tracking them", () => {
+    expect(universeSymbols("btc, eth, pepe")).toEqual(["PEPE"]);
+    expect(universeSymbols("btc, eth")).toEqual(universeSymbols(null));
   });
 });
 

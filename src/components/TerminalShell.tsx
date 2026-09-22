@@ -51,6 +51,7 @@ import { CommandPalette } from "@/components/CommandPalette";
 /** PRIMARY SURFACES — the only six entries in primary navigation. */
 const NAV = [
   { to: "/command", label: "COMMAND", icon: Command, keys: "G D" },
+  { to: "/radar", label: "RADAR", icon: Radar, keys: "G R" },
   { to: "/scan", label: "RAPID SCAN", icon: Radar, keys: "G L" },
   { to: "/watchlist", label: "WATCHLIST", icon: Star, keys: "G W" },
   { to: "/investigations", label: "INVESTIGATIONS", icon: FlaskConical, keys: "G Z" },
