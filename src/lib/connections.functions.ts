@@ -142,8 +142,9 @@ export const testConnection = createServerFn({ method: "POST" })
         ? fail(r.unsupportedReason, "CAPABILITY UNAVAILABLE")
         : fail(r.error ?? "The probe failed.");
 
-    const entry = CATALOG.find((c) => c.id === data.id)!;
-    if (entry.envVars.length && present(entry.envVars).length === 0)
+    const entry = CATALOG.find((c) => c.id === data.id);
+    if (!entry) return fail("Unknown connection id.", "CAPABILITY UNAVAILABLE");
+    if (entry.id !== "solana" && entry.envVars.length && present(entry.envVars).length === 0)
       return fail(`No credential configured. Stellaris needs ${entry.envVars.join(" or ")}.`, "NOT CONNECTED");
 
     if (data.id === "ai") return pass("LOVABLE_API_KEY is present. It is only called when a research event fires.");
