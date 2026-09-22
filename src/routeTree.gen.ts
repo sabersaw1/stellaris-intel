@@ -55,8 +55,12 @@ import { Route as WorkflowsRouteImport } from './routes/workflows'
 import { Route as WorkspacesRouteImport } from './routes/workspaces'
 import { Route as PairChainIdPairIdRouteImport } from './routes/pair.$chainId.$pairId'
 import { Route as ApiPublicCronTickRouteImport } from './routes/api/public/cron/tick'
+import { Route as ApiPublicIntelligenceIndexRouteImport } from './routes/api/public/intelligence/index'
+import { Route as ApiPublicIntelligenceAlertsRouteImport } from './routes/api/public/intelligence/alerts'
 import { Route as ApiPublicIntelligenceEventsRouteImport } from './routes/api/public/intelligence/events'
+import { Route as ApiPublicIntelligenceProvidersRouteImport } from './routes/api/public/intelligence/providers'
 import { Route as ApiPublicIntelligenceStatusRouteImport } from './routes/api/public/intelligence/status'
+import { Route as ApiPublicIntelligenceTokensRouteImport } from './routes/api/public/intelligence/tokens'
 import { Route as ApiPublicResearchAnalyzeRouteImport } from './routes/api/public/research/analyze'
 import { Route as ApiPublicTradeProposeRouteImport } from './routes/api/public/trade/propose'
 import { Route as ApiPublicWebhooksN8nRouteImport } from './routes/api/public/webhooks/n8n'
@@ -292,16 +296,40 @@ const ApiPublicCronTickRoute = ApiPublicCronTickRouteImport.update({
   path: '/api/public/cron/tick',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicIntelligenceIndexRoute =
+  ApiPublicIntelligenceIndexRouteImport.update({
+    id: '/api/public/intelligence/',
+    path: '/api/public/intelligence/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicIntelligenceAlertsRoute =
+  ApiPublicIntelligenceAlertsRouteImport.update({
+    id: '/api/public/intelligence/alerts',
+    path: '/api/public/intelligence/alerts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicIntelligenceEventsRoute =
   ApiPublicIntelligenceEventsRouteImport.update({
     id: '/api/public/intelligence/events',
     path: '/api/public/intelligence/events',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicIntelligenceProvidersRoute =
+  ApiPublicIntelligenceProvidersRouteImport.update({
+    id: '/api/public/intelligence/providers',
+    path: '/api/public/intelligence/providers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicIntelligenceStatusRoute =
   ApiPublicIntelligenceStatusRouteImport.update({
     id: '/api/public/intelligence/status',
     path: '/api/public/intelligence/status',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicIntelligenceTokensRoute =
+  ApiPublicIntelligenceTokensRouteImport.update({
+    id: '/api/public/intelligence/tokens',
+    path: '/api/public/intelligence/tokens',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicResearchAnalyzeRoute =
@@ -374,12 +402,16 @@ export interface FileRoutesByFullPath {
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
   '/api/public/cron/tick': typeof ApiPublicCronTickRoute
+  '/api/public/intelligence/alerts': typeof ApiPublicIntelligenceAlertsRoute
   '/api/public/intelligence/events': typeof ApiPublicIntelligenceEventsRoute
+  '/api/public/intelligence/providers': typeof ApiPublicIntelligenceProvidersRoute
   '/api/public/intelligence/status': typeof ApiPublicIntelligenceStatusRoute
+  '/api/public/intelligence/tokens': typeof ApiPublicIntelligenceTokensRoute
   '/api/public/research/analyze': typeof ApiPublicResearchAnalyzeRoute
   '/api/public/trade/propose': typeof ApiPublicTradeProposeRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
+  '/api/public/intelligence/': typeof ApiPublicIntelligenceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -428,12 +460,16 @@ export interface FileRoutesByTo {
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
   '/api/public/cron/tick': typeof ApiPublicCronTickRoute
+  '/api/public/intelligence/alerts': typeof ApiPublicIntelligenceAlertsRoute
   '/api/public/intelligence/events': typeof ApiPublicIntelligenceEventsRoute
+  '/api/public/intelligence/providers': typeof ApiPublicIntelligenceProvidersRoute
   '/api/public/intelligence/status': typeof ApiPublicIntelligenceStatusRoute
+  '/api/public/intelligence/tokens': typeof ApiPublicIntelligenceTokensRoute
   '/api/public/research/analyze': typeof ApiPublicResearchAnalyzeRoute
   '/api/public/trade/propose': typeof ApiPublicTradeProposeRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
+  '/api/public/intelligence': typeof ApiPublicIntelligenceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -483,12 +519,16 @@ export interface FileRoutesById {
   '/workspaces': typeof WorkspacesRoute
   '/pair/$chainId/$pairId': typeof PairChainIdPairIdRoute
   '/api/public/cron/tick': typeof ApiPublicCronTickRoute
+  '/api/public/intelligence/alerts': typeof ApiPublicIntelligenceAlertsRoute
   '/api/public/intelligence/events': typeof ApiPublicIntelligenceEventsRoute
+  '/api/public/intelligence/providers': typeof ApiPublicIntelligenceProvidersRoute
   '/api/public/intelligence/status': typeof ApiPublicIntelligenceStatusRoute
+  '/api/public/intelligence/tokens': typeof ApiPublicIntelligenceTokensRoute
   '/api/public/research/analyze': typeof ApiPublicResearchAnalyzeRoute
   '/api/public/trade/propose': typeof ApiPublicTradeProposeRoute
   '/api/public/webhooks/n8n': typeof ApiPublicWebhooksN8nRoute
   '/api/public/webhooks/tradingview': typeof ApiPublicWebhooksTradingviewRoute
+  '/api/public/intelligence/': typeof ApiPublicIntelligenceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -539,12 +579,16 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/pair/$chainId/$pairId'
     | '/api/public/cron/tick'
+    | '/api/public/intelligence/alerts'
     | '/api/public/intelligence/events'
+    | '/api/public/intelligence/providers'
     | '/api/public/intelligence/status'
+    | '/api/public/intelligence/tokens'
     | '/api/public/research/analyze'
     | '/api/public/trade/propose'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
+    | '/api/public/intelligence/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -593,12 +637,16 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/pair/$chainId/$pairId'
     | '/api/public/cron/tick'
+    | '/api/public/intelligence/alerts'
     | '/api/public/intelligence/events'
+    | '/api/public/intelligence/providers'
     | '/api/public/intelligence/status'
+    | '/api/public/intelligence/tokens'
     | '/api/public/research/analyze'
     | '/api/public/trade/propose'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
+    | '/api/public/intelligence'
   id:
     | '__root__'
     | '/'
@@ -647,12 +695,16 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/pair/$chainId/$pairId'
     | '/api/public/cron/tick'
+    | '/api/public/intelligence/alerts'
     | '/api/public/intelligence/events'
+    | '/api/public/intelligence/providers'
     | '/api/public/intelligence/status'
+    | '/api/public/intelligence/tokens'
     | '/api/public/research/analyze'
     | '/api/public/trade/propose'
     | '/api/public/webhooks/n8n'
     | '/api/public/webhooks/tradingview'
+    | '/api/public/intelligence/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -702,12 +754,16 @@ export interface RootRouteChildren {
   WorkspacesRoute: typeof WorkspacesRoute
   PairChainIdPairIdRoute: typeof PairChainIdPairIdRoute
   ApiPublicCronTickRoute: typeof ApiPublicCronTickRoute
+  ApiPublicIntelligenceAlertsRoute: typeof ApiPublicIntelligenceAlertsRoute
   ApiPublicIntelligenceEventsRoute: typeof ApiPublicIntelligenceEventsRoute
+  ApiPublicIntelligenceProvidersRoute: typeof ApiPublicIntelligenceProvidersRoute
   ApiPublicIntelligenceStatusRoute: typeof ApiPublicIntelligenceStatusRoute
+  ApiPublicIntelligenceTokensRoute: typeof ApiPublicIntelligenceTokensRoute
   ApiPublicResearchAnalyzeRoute: typeof ApiPublicResearchAnalyzeRoute
   ApiPublicTradeProposeRoute: typeof ApiPublicTradeProposeRoute
   ApiPublicWebhooksN8nRoute: typeof ApiPublicWebhooksN8nRoute
   ApiPublicWebhooksTradingviewRoute: typeof ApiPublicWebhooksTradingviewRoute
+  ApiPublicIntelligenceIndexRoute: typeof ApiPublicIntelligenceIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1034,6 +1090,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicCronTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/intelligence/': {
+      id: '/api/public/intelligence/'
+      path: '/api/public/intelligence'
+      fullPath: '/api/public/intelligence/'
+      preLoaderRoute: typeof ApiPublicIntelligenceIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/intelligence/alerts': {
+      id: '/api/public/intelligence/alerts'
+      path: '/api/public/intelligence/alerts'
+      fullPath: '/api/public/intelligence/alerts'
+      preLoaderRoute: typeof ApiPublicIntelligenceAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/intelligence/events': {
       id: '/api/public/intelligence/events'
       path: '/api/public/intelligence/events'
@@ -1041,11 +1111,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicIntelligenceEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/intelligence/providers': {
+      id: '/api/public/intelligence/providers'
+      path: '/api/public/intelligence/providers'
+      fullPath: '/api/public/intelligence/providers'
+      preLoaderRoute: typeof ApiPublicIntelligenceProvidersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/intelligence/status': {
       id: '/api/public/intelligence/status'
       path: '/api/public/intelligence/status'
       fullPath: '/api/public/intelligence/status'
       preLoaderRoute: typeof ApiPublicIntelligenceStatusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/intelligence/tokens': {
+      id: '/api/public/intelligence/tokens'
+      path: '/api/public/intelligence/tokens'
+      fullPath: '/api/public/intelligence/tokens'
+      preLoaderRoute: typeof ApiPublicIntelligenceTokensRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/research/analyze': {
@@ -1126,12 +1210,16 @@ const rootRouteChildren: RootRouteChildren = {
   WorkspacesRoute: WorkspacesRoute,
   PairChainIdPairIdRoute: PairChainIdPairIdRoute,
   ApiPublicCronTickRoute: ApiPublicCronTickRoute,
+  ApiPublicIntelligenceAlertsRoute: ApiPublicIntelligenceAlertsRoute,
   ApiPublicIntelligenceEventsRoute: ApiPublicIntelligenceEventsRoute,
+  ApiPublicIntelligenceProvidersRoute: ApiPublicIntelligenceProvidersRoute,
   ApiPublicIntelligenceStatusRoute: ApiPublicIntelligenceStatusRoute,
+  ApiPublicIntelligenceTokensRoute: ApiPublicIntelligenceTokensRoute,
   ApiPublicResearchAnalyzeRoute: ApiPublicResearchAnalyzeRoute,
   ApiPublicTradeProposeRoute: ApiPublicTradeProposeRoute,
   ApiPublicWebhooksN8nRoute: ApiPublicWebhooksN8nRoute,
   ApiPublicWebhooksTradingviewRoute: ApiPublicWebhooksTradingviewRoute,
+  ApiPublicIntelligenceIndexRoute: ApiPublicIntelligenceIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
