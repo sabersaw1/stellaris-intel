@@ -123,8 +123,36 @@ async function storeObservation(
     summary.rejected++;
     return;
   }
+
+  // Validation gate: a record with no entity, an impossible value or a future
+  // timestamp is rejected with a stated reason rather than silently stored.
+  const normalized = normalizeObservation({
+    entityId: `${obs.chainId}:${obs.baseAddress}`,
+    provider: "dexscreener",
+    providerRecordId: obs.pairAddress,
+    observedAt: obs.observedAt,
+    metrics: {
+      price_usd: obs.priceUsd,
+      market_cap_usd: obs.marketCap,
+      fdv_usd: obs.fdv,
+      liquidity_usd: obs.liquidityUsd,
+      volume_5m_usd: obs.volume.m5,
+      volume_1h_usd: obs.volume.h1,
+      volume_24h_usd: obs.volume.h24,
+      txns_5m_buys: obs.txns.m5?.buys ?? null,
+      txns_5m_sells: obs.txns.m5?.sells ?? null,
+    },
+    provenance: "DEX Screener pair search",
+  });
+  if (!normalized.ok) {
+    summary.rejected++;
+    summary.notes.push(`${obs.baseSymbol || obs.baseAddress}: record rejected — ${normalized.reason}`);
+    return;
+  }
+
   if (cls.verdict === "UNKNOWN") summary.unknown++;
   else summary.memes++;
+
 
   const token = await upsertToken(client, {
     ...classifierInput,
