@@ -137,6 +137,11 @@ export const testConnection = createServerFn({ method: "POST" })
       testedAt: Date.now(),
     });
 
+    const probeFail = (r: { error: string | null; unsupportedReason: string | null }): ConnectionTestResult =>
+      r.unsupportedReason
+        ? fail(r.unsupportedReason, "CAPABILITY UNAVAILABLE")
+        : fail(r.error ?? "The probe failed.");
+
     const entry = CATALOG.find((c) => c.id === data.id)!;
     if (entry.envVars.length && present(entry.envVars).length === 0)
       return fail(`No credential configured. Stellaris needs ${entry.envVars.join(" or ")}.`, "NOT CONNECTED");
@@ -152,33 +157,31 @@ export const testConnection = createServerFn({ method: "POST" })
     if (data.id === "dexscreener") {
       const r = await p.discover?.({ query: "bonk" });
       if (!r) return fail("This adapter does not support a discovery probe.");
-      return r.ok
-        ? pass(`Public API answered with ${Array.isArray(r.data) ? r.data.length : 0} pair observations.`, "CONNECTED — PUBLIC ACCESS")
-        : fail(r.error ?? r.unsupportedReason ?? "The probe failed.");
+      return r.ok ? pass(`Public API answered with ${Array.isArray(r.data) ? r.data.length : 0} pair observations.`, "CONNECTED — PUBLIC ACCESS") : probeFail(r);
     }
 
     if (data.id === "solana") {
       const r = await p.fetch?.({ mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263" });
       if (!r) return fail("This adapter does not support a read probe.");
-      return r.ok ? pass("The RPC endpoint answered a live token read.") : fail(r.error ?? r.unsupportedReason ?? "The RPC endpoint did not answer.");
+      return r.ok ? pass("The RPC endpoint answered a live token read.") : probeFail(r);
     }
 
     if (data.id === "x") {
       const r = await p.discover?.({ query: "bonk" });
       if (!r) return fail("This adapter does not support a search probe.");
-      return r.ok ? pass("X answered an authenticated recent-search request.") : fail(r.error ?? r.unsupportedReason ?? "X rejected the request.");
+      return r.ok ? pass("X answered an authenticated recent-search request.") : probeFail(r);
     }
 
     if (data.id === "fomo") {
       const r = await p.discover?.({ window: "all" });
       if (!r) return fail("This adapter does not support a leaderboard probe.");
-      return r.ok ? pass("The FOMO API answered a leaderboard request.") : fail(r.error ?? r.unsupportedReason ?? "The FOMO API rejected the request.");
+      return r.ok ? pass("The FOMO API answered a leaderboard request.") : probeFail(r);
     }
 
     if (data.id === "pumpportal") {
       const r = await p.discover?.({});
       if (!r) return fail("This adapter does not support a pull probe.");
-      return r.ok ? pass("The configured launch backend answered.") : fail(r.error ?? r.unsupportedReason ?? "The launch backend did not answer.");
+      return r.ok ? pass("The configured launch backend answered.") : probeFail(r);
     }
 
     const h = await p.health();
