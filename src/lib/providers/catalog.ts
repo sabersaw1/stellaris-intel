@@ -151,9 +151,9 @@ export const CATALOG: CatalogEntry[] = [
     requirement: "OPTIONAL",
     purpose: "Independent on-chain verification: transactions, transfers, holders, liquidity movement, creator activity, mint and freeze authority.",
     whyStellarisNeedsIt: "It is the only way to turn a reported trade into an ON-CHAIN VERIFIED fact instead of a claim.",
-    credentialType: "RPC URL (any legitimate Solana RPC — vendor-neutral; the key, if any, is embedded in the URL)",
+    credentialType: "None for the initial public read. Optional RPC URL for reliable/private quota; the key, if any, is embedded in the URL.",
     envVars: ["STELLARIS_SOLANA_RPC_URL"],
-    whereToGet: "Helius, QuickNode, Triton, Alchemy or your own validator. Copy the HTTPS RPC endpoint including its key.",
+    whereToGet: "Starts with https://api.mainnet.solana.com. Optional upgrade: Helius, QuickNode, Triton, Alchemy or your own validator; copy the HTTPS RPC endpoint including its key.",
     cost: "FREE TIER AVAILABLE",
     unlocks: [
       "Token supply and decimals",
@@ -163,7 +163,7 @@ export const CATALOG: CatalogEntry[] = [
       "On-chain confirmation of reported trades",
     ],
     doesNotUnlock: ["X posts", "FOMO account information", "DEX Screener market metadata", "Any off-chain narrative"],
-    howToTest: "Stellaris calls getHealth and one token read against the URL and reports the real response.",
+    howToTest: "Stellaris calls one read-only token request against the configured URL, or the public Solana mainnet endpoint when no private URL exists, and reports the real response.",
   },
   {
     id: "x",

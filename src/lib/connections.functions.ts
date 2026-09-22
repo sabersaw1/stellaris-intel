@@ -51,8 +51,8 @@ export const connectionCenterReport = createServerFn({ method: "GET" }).handler(
 
   const rows: ConnectionRow[] = CATALOG.map((entry) => {
     const presentEnv = present(entry.envVars);
-    const configured = entry.envVars.length === 0 ? true : presentEnv.length > 0;
     const h = entry.providerId ? byId.get(entry.providerId as never) : undefined;
+    const configured = entry.id === "solana" ? Boolean(h?.configured) : entry.envVars.length === 0 ? true : presentEnv.length > 0;
 
     let state: ConnectionState;
     if (entry.requirement === "NOT AVAILABLE") state = "CAPABILITY UNAVAILABLE";
@@ -90,7 +90,7 @@ export const connectionCenterReport = createServerFn({ method: "GET" }).handler(
     name: r.name,
     steps: [
       { label: r.envVars.length ? `${r.envVars.join(" or ")} configured` : "public access — nothing to configure", done: r.configured },
-      { label: "test successful", done: Boolean(r.lastOkAt) && (!r.lastErrorAt || r.lastOkAt! >= r.lastErrorAt) },
+      { label: "test successful", done: Boolean(r.lastOkAt) && (!r.lastErrorAt || (r.lastOkAt ?? 0) >= r.lastErrorAt) },
     ],
     unlocks: r.unlocks.slice(0, 3).join(" · "),
   }));
@@ -142,8 +142,9 @@ export const testConnection = createServerFn({ method: "POST" })
         ? fail(r.unsupportedReason, "CAPABILITY UNAVAILABLE")
         : fail(r.error ?? "The probe failed.");
 
-    const entry = CATALOG.find((c) => c.id === data.id)!;
-    if (entry.envVars.length && present(entry.envVars).length === 0)
+    const entry = CATALOG.find((c) => c.id === data.id);
+    if (!entry) return fail("Unknown connection id.", "CAPABILITY UNAVAILABLE");
+    if (entry.id !== "solana" && entry.envVars.length && present(entry.envVars).length === 0)
       return fail(`No credential configured. Stellaris needs ${entry.envVars.join(" or ")}.`, "NOT CONNECTED");
 
     if (data.id === "ai") return pass("LOVABLE_API_KEY is present. It is only called when a research event fires.");

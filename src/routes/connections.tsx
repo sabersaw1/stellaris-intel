@@ -72,7 +72,7 @@ function ConnectionsPage() {
         CONNECTIONS
       </SectionTitle>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid min-w-0 gap-3 md:grid-cols-3">
         <Panel title="PERSISTENT MEMORY">
           <KV label="Supabase credentials" value={data ? (data.persistence.configured ? "CONFIGURED" : "MISSING") : "—"} />
           <KV label="Meme schema" value={data ? (data.persistence.schemaReady ? "APPLIED" : "NOT APPLIED") : "—"} />
@@ -87,9 +87,9 @@ function ConnectionsPage() {
         <Panel title="SETUP CHECKLIST">
           <ul className="space-y-1 text-xs">
             {(data?.checklist ?? []).map((c) => (
-              <li key={c.id} className="flex items-start justify-between gap-2 border-b border-border/40 pb-1 last:border-0">
-                <span className="num text-[11px] tracking-[0.1em] text-foreground/80">{c.name}</span>
-                <span className="flex shrink-0 gap-1">
+              <li key={c.id} className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-2 border-b border-border/40 pb-1 last:border-0">
+                <span className="num min-w-0 truncate text-[11px] tracking-[0.1em] text-foreground/80">{c.name}</span>
+                <span className="flex min-w-0 shrink-0 flex-wrap justify-end gap-1">
                   {c.steps.map((s) => (
                     <StatePill key={s.label} label={s.done ? "DONE" : "TODO"} tone={s.done ? "ok" : "warn"} title={s.label} />
                   ))}
@@ -141,7 +141,7 @@ function ConnectionCard({
     <Panel
       title={row.name}
       right={
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
           <StatePill label={row.requirement} tone={row.requirement === "REQUIRED NOW" ? "info" : "muted"} />
           <StatePill label={state} tone={tone(state)} />
           <Btn onClick={onTest} disabled={testing}>{testing ? "TESTING…" : "TEST CONNECTION"}</Btn>
@@ -153,7 +153,7 @@ function ConnectionCard({
 
       <div className="mt-3 grid gap-1 md:grid-cols-2 md:gap-x-6">
         <KV label="CREDENTIAL" value={row.credentialType} />
-        <KV label="VARIABLE" value={row.envVars.length ? row.envVars.join("  or  ") : "NONE REQUIRED"} />
+        <KV label="VARIABLE" value={row.id === "solana" ? "PUBLIC_SOLANA_MAINNET_RPC / optional STELLARIS_SOLANA_RPC_URL" : row.envVars.length ? row.envVars.join("  or  ") : "NONE REQUIRED"} />
         <KV label="COST" value={row.cost} />
         <KV label="DELIVERY" value={DELIVERY[row.id]} />
         <KV label="WHERE TO OBTAIN" value={row.whereToGet} />
